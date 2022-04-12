@@ -1,19 +1,28 @@
 <template>
   <div class="gitlabmanager">
     <div class="gitlabmanager-left">
-      <div v-for="(lab, i) in labs" :key="i">
         <div style="text-align: left">
-           <svg-icon width="20" height="20" icon-class="four" />
-           <span class="gitlabmanager-left-headlab">{{lab.name}}</span>
+           <svg-icon width="15" height="15" icon-class="four" />
+           <span class="gitlabmanager-left-headlab">{{labs[0].name}}</span>
         </div>
-        <div v-for="(labchildren, p) in lab.children" :key="p">
-          <div class="gitlabmanager-left-children">
-            <div class="gitlabmanager-left-children-left">{{labchildren.name}}</div>
-            <div class="gitlabmanager-left-children-right">{{labchildren.number}}</div>
-          </div>
+        <el-menu
+        default-active="0"
+        class="el-menu-vertical-demo"
+      >        
+        <el-menu-item  v-for="(labchildren, p) in labs[0].children" :key="p" :index="String(p)" class="menu-item">
+          <div class="gitlabmanager-left-children-left">{{labchildren.name}}</div>
+          <div class="gitlabmanager-left-children-right">{{labchildren.number}}</div>
+        </el-menu-item>
+        <div style="text-align: left; margin:10px 0">
+           <svg-icon width="15" height="15" icon-class="four" />
+           <span class="gitlabmanager-left-headlab">{{labs[1].name}}</span>
         </div>
+            <el-menu-item  v-for="(labchildren, p) in labs[1].children" :key="p" :index="String(p+5)"  class="menu-item">
+          <span class="gitlabmanager-left-children-left">{{labchildren.name}}</span>
+          <span class="gitlabmanager-left-children-right">{{labchildren.number}}</span>
+        </el-menu-item>
+        </el-menu>
       </div>
-    </div>
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
         <div class="gitlabmanager-right-search-left">Executable Program</div>
@@ -104,17 +113,21 @@ export default {
             name: '所有',
             number: 140
           }, {
-            name: '所有1',
+            name: '我负责的',
             number: 140
           }, {
-            name: '所有2',
+            name: '我参与的',
             number: 140
           }, {
-            name: '所有3',
+            name: '模板仓库',
             number: 140
-          }]
+          },{
+            name: '暂停和关闭的仓库',
+            number: 140
+          }
+          ]
         }, {
-          name: '代码仓库',
+          name: '代码评审',
           children: [{
             name: '开启的',
             number: 140
@@ -165,17 +178,19 @@ export default {
     };
   },
   methods: {
-    handleClick() {
-      console.log('click')
-    }
+   
+    
   }
 }
 </script>
 
 <style lang="less" scoped>
+.menu-item{
+  height: 40px ;
+}
 .gitlabmanager {
   display: flex;
-  padding: 0 10px;
+  padding: 0 20px;
   height: calc(100vh - 90px);
   &-left {
     width: 240px;
@@ -186,7 +201,7 @@ export default {
     }
     &-headlab {
       line-height: 25px;
-      padding-left: 10px;
+      padding-left: 20px;
       align-items: center;
       font-style: normal;
       font-weight: 600;
@@ -199,11 +214,13 @@ export default {
       font-weight: 400;
       font-size: 14px;
       line-height: 22px;
-      &-left {
-        color: #18263C;
+      &-left{
+        margin-left: 20px;
       }
       &-right {
         color: #909AAA;
+        position:absolute;
+        left: 80%;
       }
     }
   }
