@@ -59,8 +59,8 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  background: #f2f3f5;
+ 
 
   .hamburger-container {
     color: #8E8E8E;
