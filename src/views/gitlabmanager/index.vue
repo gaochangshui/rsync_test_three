@@ -175,7 +175,8 @@ export default {
 <style lang="less" scoped>
 .gitlabmanager {
   display: flex;
-  padding: 10px;
+  padding: 0 10px;
+  height: calc(100vh - 90px);
   &-left {
     width: 240px;
     box-shadow: inset -1px 0px 0px #ECECEC;

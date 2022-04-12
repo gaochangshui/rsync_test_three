@@ -32,6 +32,7 @@ export default {
 
 <style lang="less" scoped>
 .navbar {
+  width: 100%;
   height: 40px;
   overflow: hidden;
   position: relative;
