@@ -120,8 +120,10 @@
         <el-pagination
           page-size="100"
           :page-sizes="[10, 20, 30, 40]"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          layout="total, sizes,->, prev, pager, next, jumper,"
+          :total="pageTotal"
+          v-model:current-page="curPage"
+          v-model:page-size="pageSize"
         />
       </div>
     </div>
@@ -135,7 +137,9 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
-      visible:"",
+      pageTotal:400,
+      curPage:1,
+      pageSize:10,
       labs: [
         {
           name: '代码仓库',
@@ -337,21 +341,26 @@ export default {
   },
   methods: {
     onBlur(){
-      console.log(11);
       for(let i in this.tableData){
         this.tableData[i].archived=false
       }
     },
     openPopover(val,val2){
-      console.log(22);
       for(let i in this.tableData){
         this.tableData[i].archived=false
       }
       this.tableData[val].archived=!val2
     },
     emptyInput(){
+      console.log(this.curPage);
       this.input=""
     }
+  },
+  mounted(){
+    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+this.curPage*this.pageSize+' of '+this.tableData.length+' items'
+  },
+  beforeUpdate(){
+    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+this.curPage*this.pageSize+' of '+this.tableData.length+' items'
   }
 }
 </script>
@@ -455,6 +464,15 @@ export default {
   }
   /deep/ .atooltip.el-tooltip__popper[x-placement^="left"] .atooltip:after {
     background: #FFFFFF;
+  }
+  /deep/.el-pagination .el-input--suffix .el-input__inner{
+    box-shadow:none
+  }
+  /deep/.el-pagination .el-select .el-input.is-focus .el-input__inner{
+   box-shadow:none !important
+  }
+  /deep/.el-pagination .el-select .el-input__inner:focus{
+   box-shadow:none !important
   }
   .atooltip-div {
     font-weight: 400;
