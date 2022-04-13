@@ -26,7 +26,13 @@
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
         <div class="gitlabmanager-right-search-left">Executable Program</div>
-        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="context" /></div>
+        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="Please input" size="large" style="width:300px" >
+        <template #suffix>
+          <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
+          <svg class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
+        </template>
+      </el-input>
+        </div>
       </div>
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData" style="width: 100%">
@@ -342,6 +348,9 @@ export default {
         this.tableData[i].archived=false
       }
       this.tableData[val].archived=!val2
+    },
+    emptyInput(){
+      this.input=""
     }
   }
 }
@@ -458,5 +467,13 @@ export default {
   .atooltip-div:hover{
     background: #f3f2f2;
     cursor: pointer;
+  }
+  .input-icon1,.input-icon2{
+    position: relative;
+    top: 30%;
+    cursor: pointer;
+  }
+  .input-icon1{
+    margin-right: 10px;
   }
 </style>
