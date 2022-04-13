@@ -30,30 +30,46 @@
       </div>
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column label="仓库名称" >
+          <el-table-column label="仓库名称" sortable >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
-              <div style="color: #8E8E8E;">{{scope.row.description}}</div>
+              <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="scope.row.description"
+        placement="top"
+      >
+         <div style="color: #8E8E8E;">{{scope.row.description}}</div>
+      </el-tooltip>
+             
             </template>
           </el-table-column>
-          <el-table-column prop="last_activity_at" label="最近更新"/>
-          <el-table-column label="仓库成员">
+          <el-table-column prop="last_activity_at" label="最近更新" sortable/>
+          <el-table-column label="仓库成员" width="100px">
             <template #default="scope">
-              <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
+              <div v-for="(item,index) in scope.row.project_member" :key="index">
+                <img :src="item" :class="'membericon'+index">
+              </div>
             </template>
           </el-table-column>
-          <el-table-column>
+          <el-table-column >
             <template #default>
               <div>999 +</div>
             </template>
           </el-table-column>
-          <el-table-column label="分组名称">
+          <el-table-column label="分组名称" >
             <template #default="scope">
-              <div style="font-weight: 500; font-size: 12px; line-height: 18px; color: #3B82F6;">{{scope.row.group_name}}</div>
+              <el-tag style="font-weight: 500; font-size: 12px; line-height: 18px; ">{{scope.row.group_name}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="group_member" label="分组成员"/>
-          <el-table-column>
+          <el-table-column  label="分组成员" width="100px">
+          <template #default="scope">
+              <div v-for="(item,index) in scope.row.project_member" :key="index">
+                <img :src="item" :class="'membericon'+index">
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column >
             <template #default>
               <div>999 +</div>
             </template>
@@ -153,7 +169,7 @@ export default {
             "archived":true,
             "group_id":"Ut aliqua dolor velit officia",
             "group_name":"et Duis proident deserunt",
-            "project_member":"ipsum et aliquip eiusmod",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
             "group_member":"ut Excepteur",
             "sync_time":null
         },
@@ -169,10 +185,138 @@ export default {
             "archived":true,
             "group_id":"Lorem proident ipsum minim",
             "group_name":"commodo officia ad",
-            "project_member":"reprehenderit null",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
             "group_member":"tempor aute",
             "sync_time":"exercitation sed do cupidat"
-        }
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-11",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
+        {
+            "id":"est",
+            "pj_name":"elit proident cillum do",
+            "creator_id":"aliquip aute eu",
+            "creator_name":"ulla",
+            "created_at":"voluptate",
+            "updated_at":"sint voluptate consequat tempor nisi",
+            "last_activity_at":"2021-04-21",
+            "description":"enim aliqua",
+            "archived":true,
+            "group_id":"Lorem proident ipsum minim",
+            "group_name":"commodo officia ad",
+            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
+            "group_member":"tempor aute",
+            "sync_time":"exercitation sed do cupidat"
+        },
     ],
       input: ''
     };
@@ -185,6 +329,33 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.membericon0{
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid red;
+  z-index: 3;
+}
+.membericon1{
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid blue;
+  left: 25px;
+  z-index: 2;
+}
+.membericon2{
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid gray;
+  left: 35px;
+  z-index: 1;
+}
+.membericon0,.membericon1,.membericon2{
+  position: absolute;
+  top: 30%;
+}
 .menu-item{
   height: 40px ;
 }
