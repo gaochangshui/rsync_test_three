@@ -2,14 +2,8 @@
   <div v-if="!item.hidden">
     
     <el-menu-item :title="item.meta?.title" :index="basePath">
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="item.meta.icon"
-        placement="right"
-      >
       <svg-icon :icon-class="item.meta?.icon" />
-      </el-tooltip>
+      <template #title>{{item.meta?.icon}}</template>
     </el-menu-item>
     
   </div>
