@@ -121,7 +121,7 @@
           page-size="100"
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes,->, prev, pager, next, jumper,"
-          :total="pageTotal"
+          :total="tableData.length"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
         />
@@ -348,7 +348,7 @@ export default {
   },
   watch:{
     toWatch(){
-document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+this.curPage*this.pageSize+' of '+this.tableData.length+' items'
+document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.tableData.length?this.tableData.length:this.curPage*this.pageSize)+' of '+this.tableData.length+' items'
     }
   },
   methods: {
@@ -369,7 +369,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   mounted(){
-    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+this.curPage*this.pageSize+' of '+this.tableData.length+' items'
+    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.tableData.length?this.tableData.length:this.curPage*this.pageSize)+' of '+this.tableData.length+' items'
   },
 }
 </script>
