@@ -49,12 +49,12 @@ export default {
 <style lang="less" scoped>
 .headbar {
   width: 100%;
-  height: 50px;
+  height: 60px;
   background: #f2f3f5;
 }
 .left-title{
     .left-logo{
-        margin-right: 15px;
+        margin-right: 5px;
         margin-left: 30px;
         margin-top: 10px;
         width: 30px;

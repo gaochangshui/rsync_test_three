@@ -28,12 +28,12 @@ export default {
 <style lang="less">
 .sidebar-container {
   width: 54px;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   background-color: #f2f3f5;
   position:absolute ;
 }
 .main-container {
   margin-left: 54px;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
 }
 </style>

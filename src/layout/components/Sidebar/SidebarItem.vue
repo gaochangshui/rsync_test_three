@@ -1,7 +1,7 @@
 <template>
   <div v-if="!item.hidden">
     
-    <el-menu-item :title="item.meta?.title" :index="basePath">
+    <el-menu-item :title="item.meta?.title" :index="'/'+basePath" @click="aaa">
       <svg-icon :icon-class="item.meta?.icon" />
       <template #title>{{item.meta?.icon}}</template>
     </el-menu-item>
@@ -25,6 +25,12 @@ export default {
     basePath: {
       type: String,
       default: ''
+    }
+  },
+  methods:{
+    aaa(){
+      
+      console.log(this.basePath);
     }
   }
 }
