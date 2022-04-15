@@ -35,7 +35,13 @@
         </div>
       </div>
       <div class="gitlabmanager-right-table">
-        <el-table :data="tableData" style="width: 100%" max-height="75vh">
+        <el-table :data="nowDate=tableData
+          .filter(
+            (data) =>
+              !input || data.pj_name.toLowerCase().includes(input.toLowerCase() )||data.last_activity_at.toLowerCase().includes(input.toLowerCase())
+          )
+          .slice((curPage - 1) * pageSize, curPage * pageSize)
+      " style="width: 100%" max-height="75vh">
           <el-table-column label="仓库名称" sortable >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
@@ -59,8 +65,9 @@
             </template>
           </el-table-column>
           <el-table-column >
-            <template #default>
-              <div>999 +</div>
+            <template #default="scope">
+              <div v-show="scope.row.project_member[0].avatar==''">0</div>
+              <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
           </el-table-column>
           <el-table-column label="分组名称" >
@@ -77,8 +84,9 @@
             </template>
           </el-table-column>
           <el-table-column >
-            <template #default>
-              <div>999 +</div>
+            <template #default="scope">
+              <div v-show="scope.row.group_member[0].avatar==''">0</div>
+              <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作">
@@ -123,7 +131,10 @@
           page-size="100"
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes,->, prev, pager, next, jumper,"
-          :total="tableData.length"
+          :total="pageTotal=tableData.filter(
+          (data) =>
+            !input || data.pj_name.toLowerCase().includes(input.toLowerCase())||data.last_activity_at.toLowerCase().includes(input.toLowerCase())
+        ).length"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
         />
@@ -139,7 +150,8 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
-      pageTotal:400,
+      nowDate:[],
+      pageTotal:50,
       curPage:1,
       pageSize:10,
       labs: [
@@ -183,31 +195,35 @@ export default {
   computed: {
     // 同时监听多个参数
     toWatch() {
-      const { pageSize, curPage } = this;
-      return { pageSize, curPage };
+      const { pageSize, curPage ,pageTotal} = this;
+      return { pageSize, curPage,pageTotal };
     },
   },
   watch:{
     toWatch(){
-document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.tableData.length?this.tableData.length:this.curPage*this.pageSize)+' of '+this.tableData.length+' items'
+      this.$nextTick(function(){
+document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' of '+this.pageTotal+' items'
+      })
+
     }
   },
   methods: {
     copyUrl(val){
-      this.$copyText(this.tableData[val].id).then(()=>{
+      this.$copyText(this.nowDate[val].id).then(()=>{
         this.$message.success("Url复制成功！")
       })
     },
     onBlur(){
-      for(let i in this.tableData){
-        this.tableData[i].archived=false
+      for(let i in this.nowDate){
+        this.nowDate[i].archived=false
       }
     },
     openPopover(val,val2){
-      for(let i in this.tableData){
-        this.tableData[i].archived=false
+      console.log(val);
+      for(let i in this.nowDate){
+        this.nowDate[i].archived=false
       }
-      this.tableData[val].archived=!val2
+      this.nowDate[val].archived=!val2
     },
     emptyInput(){
       console.log(this.pageSize);
@@ -246,10 +262,11 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   mounted(){
-    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.tableData.length?this.tableData.length:this.curPage*this.pageSize)+' of '+this.tableData.length+' items'
+    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' of '+this.pageTotal+' items'
   },
   created(){
     this.getTableData()
+    
   }
 }
 </script>
@@ -362,6 +379,10 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
   }
   /deep/.el-pagination .el-select .el-input__inner:focus{
    box-shadow:none !important
+  }
+  /deep/.el-pagination{
+    position: relative;
+    top: 80%;
   }
   .atooltip-div {
     font-weight: 400;
