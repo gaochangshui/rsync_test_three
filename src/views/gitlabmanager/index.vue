@@ -17,7 +17,7 @@
            <svg-icon width="15" height="15" icon-class="four" />
            <span class="gitlabmanager-left-headlab">{{labs[1].name}}</span>
         </div>
-            <el-menu-item  v-for="(labchildren, p) in labs[1].children" :key="p" :index="String(p+5)"  class="menu-item">
+            <el-menu-item  v-for="(labchildren, p) in labs[1].children" :key="p" :index="String(p+labs[0].children.length)"  class="menu-item">
           <span class="gitlabmanager-left-children-left">{{labchildren.name}}</span>
           <span class="gitlabmanager-left-children-right">{{labchildren.number}}</span>
         </el-menu-item>
@@ -113,7 +113,7 @@
                     <svg style="position: relative;top:2px;" t="1649898713350" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9042" width="14" height="14"><path d="M798.72 690.176c-6.144-122.88-126.976-219.136-274.432-219.136h-4.096c-104.448 0-190.464-59.392-210.944-137.216 67.584-16.384 118.784-75.776 118.784-149.504 0-83.968-69.632-153.6-153.6-153.6-86.016 0-153.6 67.584-153.6 153.6 0 73.728 53.248 137.216 122.88 151.552v354.304c-69.632 14.336-122.88 75.776-122.88 151.552 0 83.968 69.632 153.6 153.6 153.6s153.6-69.632 153.6-153.6c0-73.728-53.248-137.216-122.88-151.552v-245.76c51.2 53.248 129.024 86.016 215.04 86.016h4.096c116.736 0 208.896 71.68 212.992 159.744-69.632 14.336-122.88 75.776-122.88 151.552 0 83.968 69.632 153.6 153.6 153.6S921.6 925.696 921.6 839.68c0-73.728-53.248-137.216-122.88-149.504z" p-id="9043" fill="#8a8a8a"></path></svg>
                     保护分支设置
                   </div>
-                  <div class="atooltip-div" @click="scope.row.archived = false">
+                  <div class="atooltip-div" @click="drawer=true">
                     <svg style="position: relative;top:2px;" t="1649829264730" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21539" width="14" height="14"><path d="M836.266667 0H170.666667C114.210133 0 68.266667 45.943467 68.266667 102.4v819.2c0 56.456533 45.943467 102.4 102.4 102.4h665.6c56.456533 0 119.466667-45.943467 119.466666-102.4V102.4c0-56.456533-63.010133-102.4-119.466666-102.4zM324.266667 68.266667h375.466666v119.466666H324.266667V68.266667z m563.2 853.333333a34.133333 34.133333 0 0 1-34.133334 34.133333H170.666667c-18.807467 0-34.133333-15.291733-34.133334-34.133333V102.4c0-18.807467 15.325867-34.133333 34.133334-34.133333h85.333333v119.466666c0 37.649067 30.6176 68.266667 68.266667 68.266667h375.466666c37.649067 0 68.266667-30.6176 68.266667-68.266667V68.266667h85.333333c18.8416 0 34.133333 15.325867 34.133334 34.133333v819.2zM460.032 617.335467l-128.5632-128.3072a34.269867 34.269867 0 0 0-48.384 0 34.065067 34.065067 0 0 0 0 48.264533l152.763733 152.439467c13.3632 13.329067 35.0208 13.329067 48.384 0l290.816-290.133334a34.065067 34.065067 0 0 0 0-48.264533 34.269867 34.269867 0 0 0-48.384 0L460.032 617.335467z" fill="#8a8a8a" p-id="21540"></path></svg>
                     请求技术委员会评审
                   </div>
@@ -140,6 +140,40 @@
         />
       </div>
     </div>
+    <el-drawer
+    v-model="drawer"
+    direction="rtl"
+    size="30%"
+    :show-close="false"
+  >
+  <template #title>
+      <h2 style="text-align: left;">技术委员会评审</h2>
+    </template>
+    <div>
+      <span style="line-height:52px;float: left;">技术栈:</span>
+      <el-input
+    v-model="textarea1"
+    :rows="2"
+    type="textarea"
+    placeholder="Please input"
+    style="width:80%;float: right;"
+  />
+    </div>
+    <div style="margin-top:100px">
+      <span style="line-height:52px;float: left;">审核信息:</span>
+      <el-input
+    v-model="textarea2"
+    :rows="2"
+    type="textarea"
+    placeholder="Please input"
+    style="width:80%;float: right;"
+  />
+    </div>
+    <template #footer>
+      <el-button type="primary" plain size="large">取消</el-button>
+      <el-button type="primary" size="large">确定</el-button>
+    </template>
+  </el-drawer>
   </div>
 </template>
 
@@ -150,6 +184,9 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
+      drawer:false,
+      textarea1:"",
+      textarea2:"",
       nowDate:[],
       pageTotal:50,
       curPage:1,
