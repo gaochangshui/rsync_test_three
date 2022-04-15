@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="gitlabmanager-right-table">
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" style="width: 100%" max-height="75vh">
           <el-table-column label="仓库名称" sortable >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
@@ -53,7 +53,8 @@
           <el-table-column label="仓库成员" width="100px">
             <template #default="scope">
               <div v-for="(item,index) in scope.row.project_member" :key="index">
-                <img :src="item" :class="'membericon'+index">
+                <span v-show="item.avatar==''" >-</span>
+                <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
               </div>
             </template>
           </el-table-column>
@@ -69,8 +70,9 @@
           </el-table-column>
           <el-table-column  label="分组成员" width="100px">
           <template #default="scope">
-              <div v-for="(item,index) in scope.row.project_member" :key="index">
-                <img :src="item" :class="'membericon'+index">
+              <div v-for="(item,index) in scope.row.group_member" :key="index">
+                <span v-show="item.avatar==''" >-</span>
+                <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
               </div>
             </template>
           </el-table-column>
@@ -174,168 +176,7 @@ export default {
           }]
         }
       ],
-      tableData: [
-        {
-            "id":"deserunt qui",
-            "pj_name":"culpa dolor sint commodo",
-            "creator_id":"Duis sit laborum null",
-            "creator_name":"sunt est",
-            "created_at":"ullamco est cillum mollit nulla",
-            "updated_at":"sint occaecat ullamco reprehenderit in",
-            "last_activity_at":"2021-04-21",
-            "description":"magna in dolor",
-            "archived":false,
-            "group_id":"Ut aliqua dolor velit officia",
-            "group_name":"et Duis proident deserunt",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"ut Excepteur",
-            "sync_time":null
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-11",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-        {
-            "id":"est",
-            "pj_name":"elit proident cillum do",
-            "creator_id":"aliquip aute eu",
-            "creator_name":"ulla",
-            "created_at":"voluptate",
-            "updated_at":"sint voluptate consequat tempor nisi",
-            "last_activity_at":"2021-04-21",
-            "description":"enim aliqua",
-            "archived":false,
-            "group_id":"Lorem proident ipsum minim",
-            "group_name":"commodo officia ad",
-            "project_member":['http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico','http://172.17.100.50:8080/static/fe150e16/favicon.ico'],
-            "group_member":"tempor aute",
-            "sync_time":"exercitation sed do cupidat"
-        },
-    ],
+      tableData: [],
       input: ''
     };
   },
@@ -366,11 +207,45 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     emptyInput(){
       console.log(this.pageSize);
       this.input=""
+    },
+    getTableData(){
+      this.axios.get('/actionapi/WarehouseApi/Index').then(e=>{
+        
+        for(let i=0;i<e.data.Warehouses.length;i++){
+          
+        var groupSplit=e.data.Warehouses[i].group_member.split(",")
+        var projectSplit=e.data.Warehouses[i].project_member.split(",")
+        e.data.Warehouses[i].project_member=[]
+        for(let j=0;j<projectSplit.length;j+=3){
+          let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]).replace(/\'/g,'"')
+          if(projectReplace.indexOf(":")==-1){
+            projectReplace='{"name":"","access_level":"","avatar":""}'
+          }
+           let projectParse=JSON.parse(projectReplace)
+          e.data.Warehouses[i].project_member.push(projectParse)
+        }
+        e.data.Warehouses[i].group_member=[]
+        for(let k=0;k<groupSplit.length;k+=3){
+          let groupReplace=(groupSplit[k]+","+groupSplit[k+1]+","+groupSplit[k+2]).replace(/\'/g,'"')
+          if(groupReplace.indexOf('"avatar":')==-1){
+            groupReplace='{"name":"","access_level":"","avatar":""}'
+          }
+          console.log(1);
+           let groupParse=JSON.parse(groupReplace)
+          e.data.Warehouses[i].group_member.push(groupParse)
+        }
+          this.tableData.push(e.data.Warehouses[i])
+        }
+        console.log(this.tableData);
+      })
     }
   },
   mounted(){
     document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.tableData.length?this.tableData.length:this.curPage*this.pageSize)+' of '+this.tableData.length+' items'
   },
+  created(){
+    this.getTableData()
+  }
 }
 </script>
 
