@@ -7,9 +7,13 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import 'element-plus/dist/index.css';
 import './assets/icons'
+import VueClipboard from 'vue-clipboard2'
+
+
 const app = createApp(App)
 app.component('SvgIcon', SvgIcon);
 axios.defaults.withCredentials = true;
 app.use(VueAxios, axios);
 app.use(ElementPlus);
 app.use(router).mount('#app')
+app.use(VueClipboard)

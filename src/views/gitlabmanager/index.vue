@@ -93,7 +93,7 @@
                   <svg style="position: relative;top:2px;" t="1649825398762" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13820" width="14" height="14"><path d="M551.6 276V141.4c12.1-56.3 58.2-22 58.2-22L930 395.9c70.4 48.9 4.8 85.7 4.8 85.7L619.5 755.7c-63.1 46.5-67.9-24.5-67.9-24.5V606.4C231.4 506.1 100.4 907.5 100.4 907.5c-12.1 22-19.4 0-19.4 0C-42.8 305.4 551.6 276 551.6 276z" p-id="13821" fill="#8a8a8a"></path></svg>
                     查看扫码结果
                   </div>
-                  <div class="atooltip-div" @click="scope.row.archived = false">
+                  <div class="atooltip-div" @click="copyUrl(scope.$index)" >
                     <svg style="position: relative;top:2px;" t="1649898986677" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="33423" width="14" height="14"><path d="M682.666667 256c46.933333 0 85.333333 38.741333 85.333333 85.930667v596.138666C768 985.258667 729.685333 1024 682.666667 1024H85.333333c-46.933333 0-85.333333-38.570667-85.333333-85.930667V341.930667C0 294.741333 38.314667 256 85.333333 256z m256-256c47.018667 0 85.504 38.570667 85.333333 85.589333v682.154667C1024 814.762667 985.685333 853.333333 938.666667 853.333333h-85.333334V767.744h85.333334V85.589333H341.333333v85.504H256V85.589333C256 38.570667 294.314667 0 341.333333 0z" p-id="33424" fill="#8a8a8a"></path></svg>
                     复制 Url 到剪切板
                   </div>
@@ -193,6 +193,11 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   methods: {
+    copyUrl(val){
+      this.$copyText(this.tableData[val].id).then(()=>{
+        this.$message.success("Url复制成功！")
+      })
+    },
     onBlur(){
       for(let i in this.tableData){
         this.tableData[i].archived=false
