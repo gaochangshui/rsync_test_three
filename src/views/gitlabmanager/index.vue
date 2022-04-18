@@ -170,7 +170,7 @@
   />
     </div>
     <template #footer>
-      <el-button type="primary" plain size="large">取消</el-button>
+      <el-button type="primary" plain size="large" @click="closeDrawer">取消</el-button>
       <el-button type="primary" size="large">确定</el-button>
     </template>
   </el-drawer>
@@ -184,6 +184,7 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
+      userid:"",
       drawer:false,
       textarea1:"",
       textarea2:"",
@@ -245,18 +246,33 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   methods: {
+    getCookie(){
+      var allCookie = document.cookie
+     var aryCookie =allCookie.split(';')
+     for(let i in aryCookie){
+       let getUserid=aryCookie[i].split("=")
+        if(getUserid[0]==' userid'){
+          this.userid=getUserid[1]
+        }
+     }
+    },
+    closeDrawer(){
+      this.drawer=false;
+      this.textarea1='';
+      this.textarea2=''
+    },
     copyUrl(val){
       this.$copyText(this.nowDate[val].id).then(()=>{
         this.$message.success("Url复制成功！")
       })
     },
     //TODO
-    scanResults(val){
-      window.open("https://code.trechina.cn/gitlab/project-trial/"+this.nowDate[val].group_name+"/"+this.nowDate[val].pj_name+"/-/settings/repository");
+    scanResults(){
+      window.open("https://code.trechina.cn/gitlab/project-internal/code-management-tools/gitlab-manager-frontend/activity");
     },
     //TODO
     protectedBranch(val){
-      window.open("https://code.trechina.cn/gitlab/project-trial/"+this.nowDate[val].group_name+"/"+this.nowDate[val].pj_name+"/-/settings/repository");
+      window.open("https://code.trechina.cn/gitlab/project-internal/code-management-tools/gitlab-manager-frontend");
     },
     onBlur(){
       for(let i in this.nowDate){
@@ -311,6 +327,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
   },
   created(){
     this.getTableData()
+    this.getCookie()
     
   }
 }
