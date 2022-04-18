@@ -42,7 +42,7 @@
           )
           .slice((curPage - 1) * pageSize, curPage * pageSize)
       " style="width: 100%" max-height="75vh">
-          <el-table-column label="仓库名称" sortable >
+          <el-table-column label="仓库名称" sortable :sort-method="sortDevName">
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
               <el-tooltip
@@ -255,6 +255,20 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           this.userid=getUserid[1]
         }
      }
+    },
+    sortDevName(str1,str2){
+      let res = 0
+       for (let i = 0; ;i++) {
+  if (!str1[i] || !str2[i]) {
+   res = str1.length - str2.length
+   break
+  }
+  const char1 = str1[i]
+  const char2 = str2[i]
+   res = char1.charCodeAt(0) - char2.charCodeAt(0)
+   break
+       }
+   return res
     },
     closeDrawer(){
       this.drawer=false;
