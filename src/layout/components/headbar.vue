@@ -55,7 +55,7 @@ export default {
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' userid'){
+        if(getUserid[0]==' csrftoken'){
           this.userid=getUserid[1]
         }
      }

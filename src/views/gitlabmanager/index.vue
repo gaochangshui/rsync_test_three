@@ -251,8 +251,9 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' userid'){
+        if(getUserid[0]==' csrftoken'){
           this.userid=getUserid[1]
+          console.log(this.userid+'2');
         }
      }
     },
@@ -312,19 +313,20 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         var groupSplit=e.data.Warehouses[i].group_member.split(",")
         var projectSplit=e.data.Warehouses[i].project_member.split(",")
         e.data.Warehouses[i].project_member=[]
-        for(let j=0;j<projectSplit.length;j+=3){
-          let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]).replace(/\'/g,'"')
+        for(let j=0;j<projectSplit.length;j+=4){
+          let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]+","+projectSplit[j+3]).replace(/\'/g,'"')
           if(projectReplace.indexOf(":")==-1){
-            projectReplace='{"name":"","access_level":"","avatar":""}'
+            projectReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
+          console.log(projectReplace);
            let projectParse=JSON.parse(projectReplace)
           e.data.Warehouses[i].project_member.push(projectParse)
         }
         e.data.Warehouses[i].group_member=[]
-        for(let k=0;k<groupSplit.length;k+=3){
-          let groupReplace=(groupSplit[k]+","+groupSplit[k+1]+","+groupSplit[k+2]).replace(/\'/g,'"')
+        for(let k=0;k<groupSplit.length;k+=4){
+          let groupReplace=(groupSplit[k]+","+groupSplit[k+1]+","+groupSplit[k+2]+","+groupSplit[k+3]).replace(/\'/g,'"')
           if(groupReplace.indexOf('"avatar":')==-1){
-            groupReplace='{"name":"","access_level":"","avatar":""}'
+            groupReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
           console.log(1);
            let groupParse=JSON.parse(groupReplace)
