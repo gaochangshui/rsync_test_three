@@ -192,6 +192,7 @@ export default {
       pageTotal:50,
       curPage:1,
       pageSize:10,
+      pjUrl:'',
       labs: [
         {
           name: '代码仓库',
@@ -277,17 +278,30 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       this.textarea2=''
     },
     copyUrl(val){
-      this.$copyText(this.nowDate[val].id).then(()=>{
+      this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
+          pj_id:this.nowDate[val].id
+        }}).then(e=>{
+          this.$copyText(e.data.url).then(()=>{
         this.$message.success("Url复制成功！")
       })
+        })    
     },
     //TODO
-    scanResults(){
-      window.open("https://code.trechina.cn/gitlab/project-internal/code-management-tools/gitlab-manager-frontend/activity");
+    scanResults(val){
+      this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
+          pj_id:this.nowDate[val].id
+        }}).then(e=>{
+          window.open(e.data.url+"/activity");
+        })
+      
     },
     //TODO
     protectedBranch(val){
-      window.open("https://code.trechina.cn/gitlab/project-internal/code-management-tools/gitlab-manager-frontend");
+      this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
+          pj_id:this.nowDate[val].id
+        }}).then(e=>{
+          window.open(e.data.url+"/-/settings/repository");
+        })
     },
     onBlur(){
       for(let i in this.nowDate){
