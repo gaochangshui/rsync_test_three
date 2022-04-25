@@ -10,7 +10,7 @@ const routes = [
     path: '/',
     name: 'page',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/gitlabmanager',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',

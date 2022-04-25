@@ -26,7 +26,7 @@
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
         <div class="gitlabmanager-right-search-left">Executable Program</div>
-        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px" >
+        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
           <svg class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
@@ -42,7 +42,7 @@
           )
           .slice((curPage - 1) * pageSize, curPage * pageSize)
       " style="width: 100%" max-height="75vh">
-          <el-table-column label="仓库名称" sortable :sort-method="sortDevName">
+          <el-table-column label="仓库名称" sortable :sort-method="sortDevName" width="400px">
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
               <el-tooltip
@@ -51,7 +51,7 @@
         :content="scope.row.description"
         placement="top"
       >
-         <div style="color: #8E8E8E;">{{scope.row.description}}</div>
+         <div style="color: #8E8E8E;width:50%">{{scope.row.description}}</div>
       </el-tooltip>
             </template>
           </el-table-column>
@@ -64,7 +64,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column >
+          <el-table-column width="100px" >
             <template #default="scope">
               <div v-show="scope.row.project_member[0].avatar==''">0</div>
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
@@ -83,7 +83,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column >
+          <el-table-column>
             <template #default="scope">
               <div v-show="scope.row.group_member[0].avatar==''">0</div>
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
@@ -94,14 +94,14 @@
               
               <el-popover placement="left-start" popper-class="atooltip" ref="popoverRef" trigger="click" effect="light" :enterable="false" class="atooltip" v-model:visible="scope.row.archived" >
                 <template #reference>
-        <svg-icon style="cursor:pointer;" width="5" height="15" icon-class="point" @click="openPopover(scope.$index,scope.row.archived)"  @blur="onBlur" />
+        <svg-icon style="cursor:pointer;margin-left:5px" width="15" height="18" icon-class="point" @click="openPopover(scope.row)"  @blur="onBlur" />
       </template>
               
-                <div class="atooltip-div" @click="scanResults(scope.$index)" >
+                <div class="atooltip-div" @click="scanResults(scope.row)" >
                   <svg style="position: relative;top:2px;" t="1649825398762" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13820" width="14" height="14"><path d="M551.6 276V141.4c12.1-56.3 58.2-22 58.2-22L930 395.9c70.4 48.9 4.8 85.7 4.8 85.7L619.5 755.7c-63.1 46.5-67.9-24.5-67.9-24.5V606.4C231.4 506.1 100.4 907.5 100.4 907.5c-12.1 22-19.4 0-19.4 0C-42.8 305.4 551.6 276 551.6 276z" p-id="13821" fill="#8a8a8a"></path></svg>
                     查看扫描结果
                   </div>
-                  <div class="atooltip-div" @click="copyUrl(scope.$index)" >
+                  <div class="atooltip-div" @click="copyUrl(scope.row)" >
                     <svg style="position: relative;top:2px;" t="1649898986677" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="33423" width="14" height="14"><path d="M682.666667 256c46.933333 0 85.333333 38.741333 85.333333 85.930667v596.138666C768 985.258667 729.685333 1024 682.666667 1024H85.333333c-46.933333 0-85.333333-38.570667-85.333333-85.930667V341.930667C0 294.741333 38.314667 256 85.333333 256z m256-256c47.018667 0 85.504 38.570667 85.333333 85.589333v682.154667C1024 814.762667 985.685333 853.333333 938.666667 853.333333h-85.333334V767.744h85.333334V85.589333H341.333333v85.504H256V85.589333C256 38.570667 294.314667 0 341.333333 0z" p-id="33424" fill="#8a8a8a"></path></svg>
                     复制 Url 到剪切板
                   </div>
@@ -109,7 +109,7 @@
                     <svg style="position: relative;top:5px;left:-2px" t="1649825488695" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14345" width="14" height="18"><path d="M824.018851 478.68115c54.894238-54.782697 66.862827-136.315642 39.917128-201.324238l-96.733135 96.55201c-26.318412 26.27748-71.417563 24.243147-97.735975-2.033309-26.305109-26.27748-28.338419-71.250764-2.034333-97.527221l96.747461-96.553033c-65.12116-26.91807-147.057287-15.186887-201.938222 39.59581-54.349839 54.224995-67.210751 134.225027-39.122019 201.045899l-67.237357 67.098187L284.108175 314.082348l11.716856-25.524327-91.480504-60.82839-58.112536 57.986669 60.940954 91.341335 27.655873-13.793144 171.773202 171.480536L207.144292 733.811852c-12.720719 12.707416-12.720719 33.271778 0 45.949518l61.373813 61.275575c12.706393 12.678764 33.326013 12.678764 46.032406 0l199.456704-199.096501 28.200272 28.14399-7.817036 7.829316c-11.632945 11.592013-14.280238 26.305109-3.162016 37.422308l135.214565 134.978181c11.104919 11.090593 31.375591 13.904685 43.00956 2.312672l62.863746-62.751183c11.618619-11.592013 10.839883-33.912367-0.278339-44.974307L636.809075 609.924263c-11.118222-11.090593-27.92091-6.381337-39.554878 5.210675l-5.754051 5.768377-28.212552-28.14399 71.181179-71.056336C698.892039 543.522947 773.012154 529.590634 824.018851 478.68115L824.018851 478.68115 824.018851 478.68115zM308.79646 774.021645c-13.779841 13.765515-36.099173 13.765515-49.877991 0-13.765515-13.737886-13.765515-36.029588 0-49.795103 13.778818-13.736862 36.098149-13.736862 49.877991 0C322.575278 737.992057 322.575278 760.28376 308.79646 774.021645L308.79646 774.021645 308.79646 774.021645zM308.79646 774.021645" p-id="14346" fill="#8a8a8a"></path></svg>
                     申请权限
                   </div>
-                  <div class="atooltip-div" @click="protectedBranch(scope.$index)">
+                  <div class="atooltip-div" @click="protectedBranch(scope.row)">
                     <svg style="position: relative;top:2px;" t="1649898713350" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9042" width="14" height="14"><path d="M798.72 690.176c-6.144-122.88-126.976-219.136-274.432-219.136h-4.096c-104.448 0-190.464-59.392-210.944-137.216 67.584-16.384 118.784-75.776 118.784-149.504 0-83.968-69.632-153.6-153.6-153.6-86.016 0-153.6 67.584-153.6 153.6 0 73.728 53.248 137.216 122.88 151.552v354.304c-69.632 14.336-122.88 75.776-122.88 151.552 0 83.968 69.632 153.6 153.6 153.6s153.6-69.632 153.6-153.6c0-73.728-53.248-137.216-122.88-151.552v-245.76c51.2 53.248 129.024 86.016 215.04 86.016h4.096c116.736 0 208.896 71.68 212.992 159.744-69.632 14.336-122.88 75.776-122.88 151.552 0 83.968 69.632 153.6 153.6 153.6S921.6 925.696 921.6 839.68c0-73.728-53.248-137.216-122.88-149.504z" p-id="9043" fill="#8a8a8a"></path></svg>
                     保护分支设置
                   </div>
@@ -279,7 +279,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
-          pj_id:this.nowDate[val].id
+          pj_id:val.id
         }}).then(e=>{
           this.$copyText(e.data.url).then(()=>{
         this.$message.success("Url复制成功！")
@@ -289,7 +289,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     //TODO
     scanResults(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
-          pj_id:this.nowDate[val].id
+          pj_id:val.id
         }}).then(e=>{
           window.open(e.data.url+"/activity");
         })
@@ -298,7 +298,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     //TODO
     protectedBranch(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
-          pj_id:this.nowDate[val].id
+          pj_id:val.id
         }}).then(e=>{
           window.open(e.data.url+"/-/settings/repository");
         })
@@ -308,15 +308,18 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         this.nowDate[i].archived=false
       }
     },
-    openPopover(val,val2){
-      console.log(val);
+    openPopover(val2){
       for(let i in this.nowDate){
         this.nowDate[i].archived=false
       }
-      this.nowDate[val].archived=!val2
+      for(let j in this.nowDate){
+        if(this.nowDate[j].id===val2.id){
+          this.nowDate[j].archived=true
+        }
+      }
+      
     },
     emptyInput(){
-      console.log(this.pageSize);
       this.input=""
     },
     getTableData(){
@@ -332,7 +335,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           if(projectReplace.indexOf(":")==-1){
             projectReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
-          console.log(projectReplace);
            let projectParse=JSON.parse(projectReplace)
           e.data.Warehouses[i].project_member.push(projectParse)
         }
@@ -342,11 +344,11 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           if(groupReplace.indexOf('"avatar":')==-1){
             groupReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
-          console.log(1);
            let groupParse=JSON.parse(groupReplace)
           e.data.Warehouses[i].group_member.push(groupParse)
         }
           this.tableData.push(e.data.Warehouses[i])
+          this.tableData[i].last_activity_at=this.tableData[i].last_activity_at.split(" ")[0]
         }
         console.log(this.tableData);
       })
@@ -367,14 +369,14 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
 .membericon0{
   width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: 11px;
   border: 1px solid red;
   z-index: 3;
 }
 .membericon1{
   width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: 11px;
   border: 1px solid blue;
   left: 25px;
   z-index: 2;
@@ -382,7 +384,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
 .membericon2{
   width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: 11px;
   border: 1px solid gray;
   left: 35px;
   z-index: 1;

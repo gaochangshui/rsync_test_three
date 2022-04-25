@@ -3,7 +3,7 @@
     
     <el-menu-item :title="item.meta?.title" :index="'/'+basePath">
       <svg-icon :icon-class="item.meta?.icon" />
-      <template #title>{{item.meta?.icon}}</template>
+      <template #title>{{item.meta?.title}}</template>
     </el-menu-item>
     
   </div>

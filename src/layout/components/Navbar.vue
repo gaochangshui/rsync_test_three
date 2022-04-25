@@ -2,9 +2,8 @@
   <div class="navbar">
     <div class="hamburger-container">
       <el-breadcrumb separator="/">
-    <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
     <el-breadcrumb-item v-for="(hamburger,i) in hamburgerList" :key="i"
-      ><a href="/">{{hamburger}}</a></el-breadcrumb-item
+      ><a :href="hamburger.path">{{hamburger.name}}</a></el-breadcrumb-item
     >
   </el-breadcrumb>
     </div>
@@ -15,17 +14,15 @@
 export default {
   data() {
     return {
-      hamburgerList: ['New Arrivals', 'Game', 'Sausage Man']
     }
   },
+  computed:{
+hamburgerList(){
+  return this.$route.matched
+}
+  },
   methods: {
-    toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
-    },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
+   
   }
 }
 </script>

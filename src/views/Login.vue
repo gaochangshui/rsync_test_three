@@ -13,10 +13,10 @@ export default {
             Password: this.password
         }).then(e => {
            console.log(456, e);
-           this.$router.push('/home');
+           this.$router.push('/gitlabmanager');
         }).catch((error) => {
            console.log(123, error);
-           this.$router.push('/home');
+           this.$router.push('/gitlabmanager');
         });
     }
   }
