@@ -87,7 +87,7 @@
           <el-table-column fixed="right" label="操作">
             <template #default="scope">
               
-              <el-popover placement="left-start" popper-class="atooltip" ref="popoverRef" trigger="click" effect="light" :enterable="false" class="atooltip" v-model:visible="scope.row.archived" >
+              <el-popover placement="left-start" popper-class="atooltip" ref="popoverRef" trigger="click" effect="light" :enterable="false" class="atooltip" v-model:visible="scope.row.openFlag" >
                 <template #reference>
         <svg-icon style="cursor:pointer;margin-left:5px" width="15" height="18" icon-class="point" @click="openPopover(scope.row)"  @blur="onBlur" />
       </template>
@@ -100,7 +100,7 @@
                     <svg style="position: relative;top:2px;" t="1649898986677" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="33423" width="14" height="14"><path d="M682.666667 256c46.933333 0 85.333333 38.741333 85.333333 85.930667v596.138666C768 985.258667 729.685333 1024 682.666667 1024H85.333333c-46.933333 0-85.333333-38.570667-85.333333-85.930667V341.930667C0 294.741333 38.314667 256 85.333333 256z m256-256c47.018667 0 85.504 38.570667 85.333333 85.589333v682.154667C1024 814.762667 985.685333 853.333333 938.666667 853.333333h-85.333334V767.744h85.333334V85.589333H341.333333v85.504H256V85.589333C256 38.570667 294.314667 0 341.333333 0z" p-id="33424" fill="#8a8a8a"></path></svg>
                     复制 Url 到剪切板
                   </div>
-                  <div class="atooltip-div" @click="scope.row.archived = false">
+                  <div class="atooltip-div" @click="applyForRight(scope.row)">
                     <svg style="position: relative;top:5px;left:-2px" t="1649825488695" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14345" width="14" height="18"><path d="M824.018851 478.68115c54.894238-54.782697 66.862827-136.315642 39.917128-201.324238l-96.733135 96.55201c-26.318412 26.27748-71.417563 24.243147-97.735975-2.033309-26.305109-26.27748-28.338419-71.250764-2.034333-97.527221l96.747461-96.553033c-65.12116-26.91807-147.057287-15.186887-201.938222 39.59581-54.349839 54.224995-67.210751 134.225027-39.122019 201.045899l-67.237357 67.098187L284.108175 314.082348l11.716856-25.524327-91.480504-60.82839-58.112536 57.986669 60.940954 91.341335 27.655873-13.793144 171.773202 171.480536L207.144292 733.811852c-12.720719 12.707416-12.720719 33.271778 0 45.949518l61.373813 61.275575c12.706393 12.678764 33.326013 12.678764 46.032406 0l199.456704-199.096501 28.200272 28.14399-7.817036 7.829316c-11.632945 11.592013-14.280238 26.305109-3.162016 37.422308l135.214565 134.978181c11.104919 11.090593 31.375591 13.904685 43.00956 2.312672l62.863746-62.751183c11.618619-11.592013 10.839883-33.912367-0.278339-44.974307L636.809075 609.924263c-11.118222-11.090593-27.92091-6.381337-39.554878 5.210675l-5.754051 5.768377-28.212552-28.14399 71.181179-71.056336C698.892039 543.522947 773.012154 529.590634 824.018851 478.68115L824.018851 478.68115 824.018851 478.68115zM308.79646 774.021645c-13.779841 13.765515-36.099173 13.765515-49.877991 0-13.765515-13.737886-13.765515-36.029588 0-49.795103 13.778818-13.736862 36.098149-13.736862 49.877991 0C322.575278 737.992057 322.575278 760.28376 308.79646 774.021645L308.79646 774.021645 308.79646 774.021645zM308.79646 774.021645" p-id="14346" fill="#8a8a8a"></path></svg>
                     申请权限
                   </div>
@@ -112,7 +112,7 @@
                     <svg style="position: relative;top:2px;" t="1649829264730" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21539" width="14" height="14"><path d="M836.266667 0H170.666667C114.210133 0 68.266667 45.943467 68.266667 102.4v819.2c0 56.456533 45.943467 102.4 102.4 102.4h665.6c56.456533 0 119.466667-45.943467 119.466666-102.4V102.4c0-56.456533-63.010133-102.4-119.466666-102.4zM324.266667 68.266667h375.466666v119.466666H324.266667V68.266667z m563.2 853.333333a34.133333 34.133333 0 0 1-34.133334 34.133333H170.666667c-18.807467 0-34.133333-15.291733-34.133334-34.133333V102.4c0-18.807467 15.325867-34.133333 34.133334-34.133333h85.333333v119.466666c0 37.649067 30.6176 68.266667 68.266667 68.266667h375.466666c37.649067 0 68.266667-30.6176 68.266667-68.266667V68.266667h85.333333c18.8416 0 34.133333 15.325867 34.133334 34.133333v819.2zM460.032 617.335467l-128.5632-128.3072a34.269867 34.269867 0 0 0-48.384 0 34.065067 34.065067 0 0 0 0 48.264533l152.763733 152.439467c13.3632 13.329067 35.0208 13.329067 48.384 0l290.816-290.133334a34.065067 34.065067 0 0 0 0-48.264533 34.269867 34.269867 0 0 0-48.384 0L460.032 617.335467z" fill="#8a8a8a" p-id="21540"></path></svg>
                     请求技术委员会评审
                   </div>
-                  <div class="atooltip-div" @click="scope.row.archived = false">
+                  <div class="atooltip-div" @click="scope.row.openFlag = false">
                    <svg style="position: relative;top:5px;" t="1649899838722" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="115451" width="18" height="18"><path d="M512 938.688A426.624 426.624 0 1 1 512 85.376a426.624 426.624 0 0 1 0 853.312z m205.632-210.112a298.688 298.688 0 0 0-332.224-487.168l41.6 74.88A213.312 213.312 0 0 1 725.376 512h-128l120.32 216.576z m-78.976 54.016l-41.6-74.88A213.312 213.312 0 0 1 298.688 512h128l-120.32-216.576a298.688 298.688 0 0 0 332.288 487.168z" p-id="115452" fill="#8a8a8a"></path></svg>
                     仓库同步设置
                   </div>         
@@ -126,9 +126,9 @@
           page-size="100"
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes,->, prev, pager, next, jumper,"
-          :total="pageTotal"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
+          :page-count="pageTotal"
         />
       </div>
     </div>
@@ -176,11 +176,11 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
-      userid:"",
+      username:'',
+      usercd:'',
       drawer:false,
       textarea1:"",
       textarea2:"",
-      nowDate:[],
       pageTotal:50,
       curPage:1,
       pageSize:10,
@@ -189,7 +189,7 @@ export default {
         {
           name: '代码仓库',
           children: [{
-            name: '所有',
+            name: '所有仓库',
             number: 140
           }, {
             name: '我负责的',
@@ -245,9 +245,13 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' csrftoken'){
-          this.userid=getUserid[1]
-          console.log(this.userid+'2');
+        if(getUserid[0]==' LoginedUserName'){
+          this.username=getUserid[1]
+          console.log(this.username);
+        }
+        if(getUserid[0]==' LoginedUser'){
+          this.usercd=getUserid[1]
+          console.log(this.usercd);
         }
      }
     },
@@ -292,6 +296,14 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         })
       
     },
+    applyForRight(val){
+      this.axios.get('/actionapi/WarehouseApi/RequestForAccess', {params:{
+          pj_id:val.id,
+          user_cd:this.usercd
+        }}).then(()=>{
+          this.$message.success("申请成功，已经申请develop权限，仅1天！")
+        })
+    },
     //TODO
     protectedBranch(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -301,17 +313,17 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         })
     },
     onBlur(){
-      for(let i in this.nowDate){
-        this.nowDate[i].archived=false
+      for(let i in this.tableData){
+        this.tableData[i].openFlag=false
       }
     },
     openPopover(val2){
-      for(let i in this.nowDate){
-        this.nowDate[i].archived=false
+      for(let i in this.tableData){
+        this.tableData[i].openFlag=false
       }
-      for(let j in this.nowDate){
-        if(this.nowDate[j].id===val2.id){
-          this.nowDate[j].archived=true
+      for(let j in this.tableData){
+        if(this.tableData[j].id===val2.id){
+          this.tableData[j].openFlag=true
         }
       }
       
@@ -351,7 +363,9 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
            let groupParse=JSON.parse(groupReplace)
           e.data.Warehouses[i].group_member.push(groupParse)
         }
+        e.data.Warehouses[i]["openFlag"]=false
           this.tableData.push(e.data.Warehouses[i])
+          
           this.tableData[i].last_activity_at=this.tableData[i].last_activity_at.split(" ")[0]
         }
         console.log(this.tableData);
