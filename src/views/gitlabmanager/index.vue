@@ -142,19 +142,54 @@
       <h2 style="text-align: left;">技术委员会评审</h2>
     </template>
     <div>
-      <span style="line-height:52px;float: left;">技术栈:</span>
-      <el-input
-    v-model="textarea1"
-    :rows="2"
-    type="textarea"
-    placeholder="Please input"
-    style="width:80%;float: right;"
-  />
+      <span style="line-height:52px;margin-right:15px">分支:</span>
+      <el-select v-model="branchValue" placeholder="请选择" style="width:30%;margin-right: 15px;">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      
+    >
+    </el-option>
+  </el-select>
+      <span style="line-height:52px;margin-right:15px">数据库操作:</span>
+      <el-select v-model="databaseValue" placeholder="请选择" style="width:30%">
+    <el-option
+      v-for="item in databaseoptions"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      
+    >
+    </el-option>
+  </el-select>
     </div>
-    <div style="margin-top:100px">
-      <span style="line-height:52px;float: left;">审核信息:</span>
+    <div style="margin-top:50px">
+      <span style="line-height:52px;margin-right:15px">期望完成日期:</span>
+      <el-date-picker v-model="completeDate" type="date" placeholder="选择日期" style="width:70%;">
+    </el-date-picker>
+    </div>
+    <div style="margin-top:50px">
+      <span style="line-height:52px;margin-right:15px">主要语言:</span>
+      <el-select v-model="languageValue" multiple placeholder="请选择" style="width:75%">
+    <el-option
+      v-for="item in languageoptions"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    >
+    </el-option>
+  </el-select>
+    </div>
+    <div style="margin-top:50px">
+      <span style="line-height:52px;margin-right:15px">评审信息:</span>
+      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:75%" :props="props" ></el-cascader>
+    </div>
+    <div style="margin-top:50px">
+      <span style="line-height:52px">备注:</span>
       <el-input
-    v-model="textarea2"
+    v-model="noteText"
     :rows="2"
     type="textarea"
     placeholder="Please input"
@@ -176,15 +211,187 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
+      props: { multiple: true },
       username:'',
       usercd:'',
       drawer:false,
-      textarea1:"",
-      textarea2:"",
+      branchValue:"",
+      databaseValue:"",
+      databaseValue:"",
+      languageValue:"",
+      completeDate:'',
+      reviewOptions:'',
+      noteText:"",
       pageTotal:50,
       curPage:1,
       pageSize:10,
       pjUrl:'',
+      databaseoptions:[
+        {
+           value: 'true',
+            label: '有',
+        },
+        {
+           value: 'false',
+            label: '无',
+        }
+      ],
+      languageoptions:[
+        {
+           value: 'XML',
+            label: 'XML',
+        },
+        {
+           value: 'Java',
+            label: 'Java',
+        },
+        {
+           value: 'HTML',
+            label: 'HTML',
+        },
+        {
+           value: 'JavaScript',
+            label: 'JavaScript',
+        },
+        {
+           value: 'SMART Scripts',
+            label: 'SMART Scripts',
+        },
+        {
+           value: 'Python',
+            label: 'Python',
+        },
+        {
+           value: 'CSS',
+            label: 'CSS',
+        },
+        {
+           value: 'TypeScript',
+            label: 'TypeScript',
+        },
+        {
+           value: 'Go',
+            label: 'Go',
+        },
+        {
+           value: 'Kotlin',
+            label: 'Kotlin',
+        },
+        {
+           value: 'JSP',
+            label: 'JSP',
+        },
+        {
+           value: 'Ruby',
+            label: 'Ruby',
+        },
+        {
+           value: 'PHP',
+            label: 'PHP',
+        },
+      ],
+      reviewOptions:[
+        {
+          value:'restful设计',
+          label:'restful设计',
+          children:[
+            {
+              value:'代码是否合理',
+              label:'代码是否合理',
+            },
+            {
+              value:'面向对象',
+              label:'面向对象',
+            },
+            {
+              value:'简洁架构',
+              label:'简洁架构',
+            },
+            {
+              value:'代码原则',
+              label:'代码原则',
+            },
+            {
+              value:'设计模式',
+              label:'设计模式',
+            },
+          ]
+        },
+        {
+          value:'代码安全',
+          label:'代码安全',
+          children:[
+            {
+              value:'代码注入',
+              label:'代码注入',
+            },
+            {
+              value:'敏感数据',
+              label:'敏感数据',
+            },
+            {
+              value:'CSRF攻击',
+              label:'CSRF攻击',
+            },
+            {
+              value:'代码性能',
+              label:'代码性能',
+            },
+            {
+              value:'异常处理',
+              label:'异常处理',
+            },
+          ]
+        },
+        {
+          value:'代码重复',
+          label:'代码重复',
+          children:[
+            {
+              value:'可重用性',
+              label:'可重用性'
+            },
+            {
+              value:'核心代码的注释量',
+              label:'核心代码的注释量'
+            },
+            {
+              value:'复杂表达式',
+              label:'复杂表达式'
+            },
+            {
+              value:'资源释放',
+              label:'资源释放'
+            },
+            {
+              value:'内存泄漏',
+              label:'内存泄漏'
+            },
+          ]
+        },
+        {
+          value:'代码',
+          label:'代码',
+          children:[
+            {
+              value:'可扩展性',
+              label:'可扩展性'
+            },
+            {
+              value:'配置',
+              label:'配置'
+            },
+            {
+              value:'日志处理',
+              label:'日志处理'
+            },
+            {
+              value:'第三方组件使用合理性',
+              label:'第三方组件使用合理性'
+            },
+          ]
+        }
+      ],
       labs: [
         {
           name: '代码仓库',
@@ -275,8 +482,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     },
     closeDrawer(){
       this.drawer=false;
-      this.textarea1='';
-      this.textarea2=''
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
