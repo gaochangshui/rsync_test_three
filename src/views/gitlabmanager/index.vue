@@ -29,18 +29,13 @@
         <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
-          <svg class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
+          <svg @click="selectGitLab" class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
         </template>
       </el-input>
         </div>
       </div>
       <div class="gitlabmanager-right-table">
-        <el-table :data="nowDate=tableData
-          .filter(
-            (data) =>
-              !input || data.pj_name.toLowerCase().includes(input.toLowerCase() )||data.last_activity_at.toLowerCase().includes(input.toLowerCase())
-          )
-          .slice((curPage - 1) * pageSize, curPage * pageSize)
+        <el-table :data="tableData
       " style="width: 100%" max-height="75vh">
           <el-table-column label="仓库名称" sortable :sort-method="sortDevName" width="400px">
             <template #default="scope">
@@ -131,10 +126,7 @@
           page-size="100"
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes,->, prev, pager, next, jumper,"
-          :total="pageTotal=tableData.filter(
-          (data) =>
-            !input || data.pj_name.toLowerCase().includes(input.toLowerCase())||data.last_activity_at.toLowerCase().includes(input.toLowerCase())
-        ).length"
+          :total="pageTotal"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
         />
@@ -240,6 +232,7 @@ export default {
   },
   watch:{
     toWatch(){
+      this.getTableData()
       this.$nextTick(function(){
 document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' of '+this.pageTotal+' items'
       })
@@ -257,6 +250,10 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           console.log(this.userid+'2');
         }
      }
+    },
+    selectGitLab(){
+      this.curPage=1
+      this.getTableData()
     },
     sortDevName(str1,str2){
       let res = 0
@@ -323,16 +320,23 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       this.input=""
     },
     getTableData(){
-      this.axios.get('/actionapi/WarehouseApi/Index').then(e=>{
-        
-        for(let i=0;i<e.data.Warehouses.length;i++){
-          
+      this.tableData=[]
+      this.axios.get('/actionapi/WarehouseApi/Index',{
+        params:{
+          pj_name:this.input,
+          group_name:this.input,
+          pageSize:this.pageSize,
+          pageNum:this.curPage
+        }
+      }).then(e=>{
+        this.pageTotal=e.data.pageNumAll
+        for(let i=0;i<e.data.Warehouses.length;i++){ 
         var groupSplit=e.data.Warehouses[i].group_member.split(",")
         var projectSplit=e.data.Warehouses[i].project_member.split(",")
         e.data.Warehouses[i].project_member=[]
         for(let j=0;j<projectSplit.length;j+=4){
           let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]+","+projectSplit[j+3]).replace(/\'/g,'"')
-          if(projectReplace.indexOf(":")==-1){
+          if(projectReplace.indexOf('"avatar":')==-1){
             projectReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
            let projectParse=JSON.parse(projectReplace)
