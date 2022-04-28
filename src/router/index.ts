@@ -3,6 +3,7 @@ import Layout from '@/layout/index.vue';
 const routes = [
   {
     path: '/login',
+    name: 'login',
     component: () => import('@/views/Login.vue'),
     hidden: true
   },
@@ -10,7 +11,7 @@ const routes = [
     path: '/',
     name: 'page',
     component: Layout,
-    redirect: '/gitlabmanager',
+    redirect: 'gitlabmanager',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -33,10 +34,27 @@ const routes = [
     component: () => import('../views/AboutView.vue')
   }
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
+router.beforeEach((to,from,next)=>{
+  var allCookie = document.cookie
+  var userCD=''
+     var aryCookie =allCookie.split(';')
+     for(let i in aryCookie){
+       let getUserid=aryCookie[i].split("=")
+        if(getUserid[0]==' LoginedUser'){
+           userCD=getUserid[1]                       
+        }
+     }
+     if(to.path==='/login'){
+       next()
+     }else{
+      if(userCD =='') next('/login')  
+     else next()
+     }
+     
+     
+})
 export default router
