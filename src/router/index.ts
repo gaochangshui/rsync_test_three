@@ -44,7 +44,7 @@ router.beforeEach((to,from,next)=>{
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' LoginedUser'){
+        if(getUserid[0].trim()=='LoginedUser'){
            userCD=getUserid[1]                       
         }
      }
