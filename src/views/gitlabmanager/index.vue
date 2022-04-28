@@ -166,15 +166,16 @@
     <el-drawer
     v-model="drawer"
     direction="rtl"
-    size="30%"
+    size="25%"
     :show-close="false"
+    class="reviewDrawer"
   >
   <template #title>
-      <h2 style="text-align: left;">技术委员会评审</h2>
+      <h2>技术委员会评审</h2>
     </template>
     <div>
-      <span style="line-height:52px;margin-right:15px">分支:</span>
-      <el-select v-model="branchValue" placeholder="请选择" style="width:30%;margin-right: 15px;">
+      <span style="line-height:40px;">分支</span>
+      <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -184,26 +185,27 @@
     >
     </el-option>
   </el-select>
-      <span style="line-height:52px;margin-right:15px">数据库操作:</span>
-      <el-select v-model="databaseValue" placeholder="请选择" style="width:30%">
+    </div>
+    <div style="margin-top:20px">
+      <span style="line-height:40px;">数据库操作</span>
+      <el-select v-model="databaseValue" placeholder="请选择" style="width:100%">
     <el-option
       v-for="item in databaseoptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
-      
     >
     </el-option>
   </el-select>
     </div>
-    <div style="margin-top:50px">
-      <span style="line-height:52px;margin-right:15px">期望完成日期:</span>
-      <el-date-picker v-model="completeDate" type="date" placeholder="选择日期" style="width:70%;">
+    <div style="margin-top:20px">
+      <span style="line-height:40px">期望完成日期</span>
+      <el-date-picker :disabled-date="disabledDate" v-model="completeDate" type="date" placeholder="选择日期" style="width:100%;"  value-format="YYYY-MM-DD" >
     </el-date-picker>
     </div>
-    <div style="margin-top:50px">
-      <span style="line-height:52px;margin-right:15px">主要语言:</span>
-      <el-select v-model="languageValue" multiple placeholder="请选择" style="width:75%">
+    <div style="margin-top:20px">
+      <span style="line-height:40px">主要语言</span>
+      <el-select v-model="languageValue" multiple placeholder="请选择" style="width:100%">
     <el-option
       v-for="item in languageoptions"
       :key="item.value"
@@ -213,18 +215,18 @@
     </el-option>
   </el-select>
     </div>
-    <div style="margin-top:50px">
-      <span style="line-height:52px;margin-right:15px">评审信息:</span>
-      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:75%" :props="props" v-model="reviewRadio"></el-cascader>
+    <div style="margin-top:20px">
+      <span style="line-height:40px;">评审信息</span>
+      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:100%" :props="props" v-model="reviewRadio"></el-cascader>
     </div>
-    <div style="margin-top:50px">
-      <span style="line-height:52px">备注:</span>
+    <div style="margin-top:20px">
+      <span style="line-height:40px">备注</span>
       <el-input
     v-model="noteText"
-    :rows="2"
+    :rows="5"
     type="textarea"
     placeholder="Please input"
-    style="width:80%;float: right;"
+    style="width:100%;float: right;"
   />
     </div>
     <template #footer>
@@ -242,6 +244,11 @@ export default {
   data() {
     return {
       name: 'gitlabmanager',
+        disabledDate(time) {
+          var timeNow = Date.now();
+          var before = timeNow - 24 * 60 * 60 * 1000;
+          return time.getTime() < before;
+        },
       props: { multiple: true },
       username:'',
       usercd:'',
@@ -462,6 +469,14 @@ export default {
     },
   },
   watch:{
+    drawer(){
+      this.branchValue='';
+      this.databaseValue='';
+      this.languageValue='';
+      this.completeDate='';
+      this.reviewRadio='';
+      this.noteText='';
+    },
     toWatch(){
       this.getTableData()
       this.$nextTick(function(){
@@ -524,6 +539,7 @@ console.log(this.languageValue);
 console.log(this.completeDate);
 console.log(this.reviewRadio);
 console.log(this.noteText);
+this.drawer=false;
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -768,5 +784,9 @@ console.log(this.noteText);
   }
   .input-icon1{
     margin-right: 10px;
+  }
+  /deep/.el-drawer .el-drawer__header{
+    margin: 0;
+
   }
 </style>
