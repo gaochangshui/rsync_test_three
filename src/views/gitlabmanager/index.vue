@@ -13,14 +13,14 @@
           <div class="gitlabmanager-left-children-left">{{labchildren.name}}</div>
           <div class="gitlabmanager-left-children-right">{{labchildren.number}}</div>
         </el-menu-item>
-        <div style="text-align: left; margin:10px 0">
+        <!-- <div style="text-align: left; margin:10px 0">
            <svg-icon width="15" height="15" icon-class="four" />
            <span class="gitlabmanager-left-headlab">{{labs[1].name}}</span>
         </div>
             <el-menu-item  v-for="(labchildren, p) in labs[1].children" :key="p" :index="String(p+labs[0].children.length)"  class="menu-item">
           <span class="gitlabmanager-left-children-left">{{labchildren.name}}</span>
           <span class="gitlabmanager-left-children-right">{{labchildren.number}}</span>
-        </el-menu-item>
+        </el-menu-item> -->
         </el-menu>
       </div>
     <div class="gitlabmanager-right">
@@ -54,8 +54,15 @@
           <el-table-column label="仓库成员" width="100px">
             <template #default="scope">
               <div v-for="(item,index) in scope.row.project_member" :key="index">
-                <span v-show="item.avatar==''" >-</span>
+                <span v-show="item.avatar==''" style="margin-left:10px" >-</span>
+                <el-tooltip
+      class="item"
+      effect="dark"
+      :content="item.name"
+      placement="top-start"
+    >
                 <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -73,8 +80,15 @@
           <el-table-column  label="分组成员" width="100px">
           <template #default="scope">
               <div v-for="(item,index) in scope.row.group_member" :key="index">
-                <span v-show="item.avatar==''" >-</span>
+                <span v-show="item.avatar==''" style="margin-left:10px" >-</span>
+                <el-tooltip
+      class="item"
+      effect="dark"
+      :content="item.name"
+      placement="top-start"
+    >
                 <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -82,6 +96,14 @@
             <template #default="scope">
               <div v-show="scope.row.group_member[0].avatar==''">0</div>
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="评审" width="100px">
+            <template #default="scope">
+              <span v-show="showj(scope.row.project_member,scope.row.project_member.length)" style="margin-left:10px" >-</span>
+              <div v-for="(item,index) in scope.row.project_member" :key="index">   
+                <img :src="item.avatar" class="membericon0" v-show="item.name=='Code Reviewer'">
+              </div>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作">
@@ -184,7 +206,7 @@
     </div>
     <div style="margin-top:50px">
       <span style="line-height:52px;margin-right:15px">评审信息:</span>
-      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:75%" :props="props" ></el-cascader>
+      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:75%" :props="props" v-model="reviewRadio"></el-cascader>
     </div>
     <div style="margin-top:50px">
       <span style="line-height:52px">备注:</span>
@@ -198,7 +220,7 @@
     </div>
     <template #footer>
       <el-button type="primary" plain size="large" @click="closeDrawer">取消</el-button>
-      <el-button type="primary" size="large">确定</el-button>
+      <el-button type="primary" size="large" @click="reWarehouse">确定</el-button>
     </template>
   </el-drawer>
   </div>
@@ -217,10 +239,9 @@ export default {
       drawer:false,
       branchValue:"",
       databaseValue:"",
-      databaseValue:"",
       languageValue:"",
       completeDate:'',
-      reviewOptions:'',
+      reviewRadio:'',
       noteText:"",
       pageTotal:50,
       curPage:1,
@@ -398,17 +419,11 @@ export default {
           children: [{
             name: '所有仓库',
             number: 140
-          }, {
-            name: '我负责的',
-            number: 140
-          }, {
+          },  {
             name: '我参与的',
             number: 140
           }, {
             name: '模板仓库',
-            number: 140
-          },{
-            name: '暂停和关闭的仓库',
             number: 140
           }
           ]
@@ -447,6 +462,16 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   methods: {
+    showj(val,val2){
+      var showFlag=true
+      for(let i=0;i<val2;i++){
+        if(val[i].name=='Code Reviewer'){
+          showFlag=false
+        }
+      }
+  return showFlag
+      
+    },
     getCookie(){
       var allCookie = document.cookie
      var aryCookie =allCookie.split(';')
@@ -482,6 +507,14 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     },
     closeDrawer(){
       this.drawer=false;
+    },
+    reWarehouse(){
+      console.log(this.branchValue);
+      console.log(this.databaseValue);
+console.log(this.languageValue);
+console.log(this.completeDate);
+console.log(this.reviewRadio);
+console.log(this.noteText);
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -546,7 +579,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           pageNum:this.curPage
         }
       }).then(e=>{
-        this.pageTotal=e.data.pageNumAll
+        this.pageTotal=e.data.pageNumAll-1
         for(let i=0;i<e.data.Warehouses.length;i++){ 
         var groupSplit=e.data.Warehouses[i].group_member.split(",")
         var projectSplit=e.data.Warehouses[i].project_member.split(",")
@@ -617,7 +650,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
   top: 30%;
 }
 .menu-item{
-  height: 40px ;
+  height: 50px ;
 }
 .gitlabmanager {
   display: flex;
