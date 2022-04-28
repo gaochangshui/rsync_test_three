@@ -21,7 +21,7 @@ const routes = [
       path: 'gitlabmanager',
       name: 'GitLabManager',
       component: () => import('@/views/gitlabmanager/index.vue'),
-      meta: { title: 'GitLabManager', icon: 'user' }
+      meta: { title: '代码仓库、评审、配置', icon: 'user',name:'代码' }
     }],
   },
   {
