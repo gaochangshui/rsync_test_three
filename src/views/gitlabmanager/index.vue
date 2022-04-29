@@ -25,7 +25,7 @@
       </div>
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
-        <div class="gitlabmanager-right-search-left">Executable Program</div>
+        <div class="gitlabmanager-right-search-left">项目</div>
         <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
@@ -155,7 +155,7 @@
       <div class="gitlabmanager-right-page">
         <el-pagination
           page-size="100"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[10, 50, 100]"
           layout="total, sizes,->, prev, pager, next, jumper,"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
@@ -205,7 +205,7 @@
     </div>
     <div style="margin-top:20px">
       <span style="line-height:40px">主要语言</span>
-      <el-select v-model="languageValue" multiple placeholder="请选择" style="width:100%">
+      <el-select v-model="languageValue" multiple placeholder="请选择主要语言（多选）" style="width:100%">
     <el-option
       v-for="item in languageoptions"
       :key="item.value"
@@ -217,7 +217,20 @@
     </div>
     <div style="margin-top:20px">
       <span style="line-height:40px;">评审信息</span>
-      <el-cascader :options="reviewOptions" :show-all-levels="false" style="width:100%" :props="props" v-model="reviewRadio"></el-cascader>
+      <el-select v-model="reviewRadio" placeholder="请选择评审信息（多选）" multiple style="width:100%">
+    <el-option-group
+      v-for="group in reviewOptions"
+      :key="group.label"
+      :label="group.label"
+    >
+      <el-option
+        v-for="item in group.options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-option-group>
+  </el-select>
     </div>
     <div style="margin-top:20px">
       <span style="line-height:40px">备注</span>
@@ -225,7 +238,7 @@
     v-model="noteText"
     :rows="5"
     type="textarea"
-    placeholder="Please input"
+    placeholder="请输入"
     style="width:100%;float: right;"
   />
     </div>
@@ -328,106 +341,102 @@ export default {
         },
       ],
       reviewOptions:[
-        {
-          value:'restful设计',
-          label:'restful设计',
-          children:[
-            {
-              value:'代码是否合理',
-              label:'代码是否合理',
-            },
-            {
-              value:'面向对象',
-              label:'面向对象',
-            },
-            {
-              value:'简洁架构',
-              label:'简洁架构',
-            },
-            {
-              value:'代码原则',
-              label:'代码原则',
-            },
-            {
-              value:'设计模式',
-              label:'设计模式',
-            },
-          ]
-        },
-        {
-          value:'代码安全',
-          label:'代码安全',
-          children:[
-            {
-              value:'代码注入',
-              label:'代码注入',
-            },
-            {
-              value:'敏感数据',
-              label:'敏感数据',
-            },
-            {
-              value:'CSRF攻击',
-              label:'CSRF攻击',
-            },
-            {
-              value:'代码性能',
-              label:'代码性能',
-            },
-            {
-              value:'异常处理',
-              label:'异常处理',
-            },
-          ]
-        },
-        {
-          value:'代码重复',
-          label:'代码重复',
-          children:[
-            {
-              value:'可重用性',
-              label:'可重用性'
-            },
-            {
-              value:'核心代码的注释量',
-              label:'核心代码的注释量'
-            },
-            {
-              value:'复杂表达式',
-              label:'复杂表达式'
-            },
-            {
-              value:'资源释放',
-              label:'资源释放'
-            },
-            {
-              value:'内存泄漏',
-              label:'内存泄漏'
-            },
-          ]
-        },
-        {
-          value:'代码',
-          label:'代码',
-          children:[
-            {
-              value:'可扩展性',
-              label:'可扩展性'
-            },
-            {
-              value:'配置',
-              label:'配置'
-            },
-            {
-              value:'日志处理',
-              label:'日志处理'
-            },
-            {
-              value:'第三方组件使用合理性',
-              label:'第三方组件使用合理性'
-            },
-          ]
-        }
+       {
+    label: 'restful设计',
+    options: [
+      {
+        value: '代码是否合理',
+        label: '代码是否合理',
+      },
+      {
+        value: '面向对象',
+        label: '面向对象',
+      },
+      {
+        value: '简洁架构',
+        label: '简洁架构',
+      },
+      {
+        value: '代码原则',
+        label: '代码原则',
+      },
+      {
+        value: '设计模式',
+        label: '设计模式',
+      },
+    ],
+  },
+  {
+    label: '代码安全',
+    options: [
+      {
+        value: '代码注入',
+        label: '代码注入',
+      },
+      {
+        value: '敏感数据',
+        label: '敏感数据',
+      },
+      {
+        value: 'CSRF攻击',
+        label: 'CSRF攻击',
+      },
+      {
+        value: '代码性能',
+        label: '代码性能',
+      },
+      {
+        value:'异常处理',
+        label:'异常处理',
+      },
+    ],
+  },
+  {
+    label: '代码重复',
+    options: [
+      {
+        value: '可重用性',
+        label: '可重用性',
+      },
+      {
+        value: '核心代码的注释量',
+        label: '核心代码的注释量',
+      },
+      {
+        value: '复杂表达式',
+        label: '复杂表达式',
+      },
+      {
+        value: '资源释放',
+        label: '资源释放',
+      },
+      {
+        value:'内存泄漏',
+        label:'内存泄漏',
+      },
+    ],
+  },
+  {
+    label: '代码',
+    options: [
+      {
+        value: '可扩展性',
+        label: '可扩展性',
+      },
+      {
+        value: '配置',
+        label: '配置',
+      },
+      {
+        value: '日志处理',
+        label: '日志处理',
+      },
+      {
+        value:'第三方组件使用合理性',
+        label:'第三方组件使用合理性',
+      },
+    ],
+  },
       ],
       labs: [
         {
@@ -478,9 +487,9 @@ export default {
       this.noteText='';
     },
     toWatch(){
-      this.getTableData()
       this.$nextTick(function(){
-document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' of '+this.pageTotal+' items'
+        this.getTableData()
+document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' 条/共 '+this.pageTotal+' 条'
       })
 
     }
@@ -501,7 +510,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' LoginedUserName'){
+        if(getUserid[0].trim()=='LoginedUserName'){
           this.username=getUserid[1]
           console.log(this.username);
         }
@@ -634,9 +643,6 @@ this.drawer=false;
         console.log(this.tableData);
       })
     }
-  },
-  mounted(){
-    document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' of '+this.pageTotal+' items'
   },
   created(){
     this.getTableData()

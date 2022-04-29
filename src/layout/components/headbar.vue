@@ -56,10 +56,10 @@ export default {
      var aryCookie =allCookie.split(';')
      for(let i in aryCookie){
        let getUserid=aryCookie[i].split("=")
-        if(getUserid[0]==' LoginedUserName'){
+        if(getUserid[0].trim()=='LoginedUserName'){
           this.username=getUserid[1]
         }
-        if(getUserid[0]==' LoginedUserAvatar'){
+        if(getUserid[0].trim()=='LoginedUserAvatar'){
           this.avatar=getUserid[1]
         }
      }
