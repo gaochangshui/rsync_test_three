@@ -9,24 +9,16 @@
         default-active="0"
         class="el-menu-vertical-demo"
       >        
-        <el-menu-item  v-for="(labchildren, p) in labs[0].children" :key="p" :index="String(p)" class="menu-item">
+        <el-menu-item  v-for="(labchildren, p) in labs[0].children" :key="p" :index="String(p)" class="menu-item" @click="getTitle(labchildren.name)">
           <div class="gitlabmanager-left-children-left">{{labchildren.name}}</div>
           <div class="gitlabmanager-left-children-right">{{labchildren.number}}</div>
         </el-menu-item>
-        <!-- <div style="text-align: left; margin:10px 0">
-           <svg-icon width="15" height="15" icon-class="four" />
-           <span class="gitlabmanager-left-headlab">{{labs[1].name}}</span>
-        </div>
-            <el-menu-item  v-for="(labchildren, p) in labs[1].children" :key="p" :index="String(p+labs[0].children.length)"  class="menu-item">
-          <span class="gitlabmanager-left-children-left">{{labchildren.name}}</span>
-          <span class="gitlabmanager-left-children-right">{{labchildren.number}}</span>
-        </el-menu-item> -->
         </el-menu>
       </div>
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
-        <div class="gitlabmanager-right-search-left">项目</div>
-        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" >
+        <div class="gitlabmanager-right-search-left">{{topTitle}}</div>
+        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" @keyup.enter="getTableData" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
           <svg @click="selectGitLab" class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
@@ -50,7 +42,7 @@
       </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="last_activity_at" label="最近更新" sortable/>
+          <el-table-column prop="last_activity_at" label="最近更新" sortable width="200px"/>
           <el-table-column label="仓库成员" width="100px">
             <template #default="scope">
               <div v-for="(item,index) in scope.row.project_member" :key="index">
@@ -72,7 +64,7 @@
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="分组名称" >
+          <el-table-column label="分组名称">
             <template #default="scope">
               <el-tag style="font-weight: 500; font-size: 12px; line-height: 18px; ">{{scope.row.group_name}}</el-tag>
             </template>
@@ -80,25 +72,25 @@
           <el-table-column  label="分组成员" width="100px">
           <template #default="scope">
               <div v-for="(item,index) in scope.row.group_member" :key="index">
-                <span v-show="item.avatar==''" style="margin-left:10px" >-</span>
+                <span v-show="item.avatar==''&&item.name!='jenkins-zgzn'" style="margin-left:10px" >-</span>
                 <el-tooltip
       class="item"
       effect="dark"
       :content="item.name"
       placement="top-start"
-    >
+    >           
                 <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
                 </el-tooltip>
               </div>
             </template>
           </el-table-column>
-          <el-table-column>
+          <el-table-column width="100px">
             <template #default="scope">
               <div v-show="scope.row.group_member[0].avatar==''">0</div>
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="评审" width="150px">
+          <el-table-column label="评审" width="100px">
             <template #default="scope">
               <span v-show="showj(scope.row.project_member,scope.row.project_member.length)" style="margin-left:10px" >-</span>
               <div v-for="(item,index) in scope.row.project_member" :key="index">   
@@ -139,11 +131,11 @@
                     <img src="../../assets/icons/fromicon/Frame-2.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     保护分支设置
                   </div>
-                  <div class="atooltip-div" @click="drawer=true">
+                  <div class="atooltip-div" @click="reviewDrawer=true">
                     <img src="../../assets/icons/fromicon/Frame-1.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     请求技术委员会评审
                   </div>
-                  <div class="atooltip-div" @click="scope.row.openFlag = false">
+                  <div class="atooltip-div" @click="synchronousDrawer=true">
                     <img src="../../assets/icons/fromicon/Frame.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     仓库同步设置
                   </div>         
@@ -164,7 +156,7 @@
       </div>
     </div>
     <el-drawer
-    v-model="drawer"
+    v-model="reviewDrawer"
     direction="rtl"
     size="25%"
     :show-close="false"
@@ -181,7 +173,6 @@
       :key="item.value"
       :label="item.label"
       :value="item.value"
-      
     >
     </el-option>
   </el-select>
@@ -189,13 +180,18 @@
     <div style="margin-top:20px">
       <span style="line-height:40px">主要语言</span>
       <el-select v-model="languageValue" multiple placeholder="请选择主要语言（多选）" style="width:100%">
-    <el-option
-      v-for="item in languageoptions"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
+    <el-option-group
+      v-for="group in languageoptions"
+      :key="group.label"
+      :label="group.label"
     >
-    </el-option>
+      <el-option
+        v-for="item in group.options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-option-group>
   </el-select>
     </div>
     <div style="margin-top:20px">
@@ -247,6 +243,53 @@
       <el-button type="primary" size="large" @click="reWarehouse">确定</el-button>
     </template>
   </el-drawer>
+    <el-drawer
+    v-model="synchronousDrawer"
+    direction="rtl"
+    size="25%"
+    :show-close="false"
+    class="synchronousDrawer"
+  >
+  <template #title>
+      <h2>技术委员会评审</h2>
+    </template>
+    <div>
+      <span style="line-height:40px;">分支</span>
+      <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    >
+    </el-option>
+  </el-select>
+    </div>
+    <div>
+      <span style="line-height:40px;">远程地址</span>
+      <el-select v-model="addressValue" placeholder="请选择地址" style="width:100%;" @change="changeFlag">
+    <el-option
+      v-for="item in addressoptions"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    >
+    </el-option>
+  </el-select>
+    </div>
+    <div v-show="userFlag">
+      <span style="line-height:40px;">用户名</span>
+      <el-input v-model="userinput" placeholder="请输入用户名" style="width:100%;"></el-input>
+    </div>
+    <div v-show="userFlag">
+      <span style="line-height:40px;">Token</span>
+      <el-input v-model="tokeninput" placeholder="请输入Token" style="width:100%;"></el-input>
+    </div>
+    <template #footer>
+      <el-button type="primary" plain size="large" @click="closeDrawer">取消</el-button>
+      <el-button type="primary" size="large" @click="addWarehouse">确定</el-button>
+    </template>
+  </el-drawer>
   </div>
 </template>
 
@@ -264,18 +307,33 @@ export default {
         },
       props: { multiple: true },
       username:'',
+      userinput:'',
+      tokeninput:'',
       usercd:'',
-      drawer:false,
+      reviewDrawer:false,
+      synchronousDrawer:false,
       branchValue:"",
       databaseValue:"",
       languageValue:"",
       completeDate:'',
       reviewRadio:'',
       noteText:"",
+      addressValue:'',
+      userFlag:false,
       pageTotal:50,
       curPage:1,
       pageSize:10,
       pjUrl:'',
+      addressoptions:[
+        {
+           value: 'http://10.2.1.117/',
+            label: 'http://10.2.1.117/',
+        },
+        {
+           value: 'https://github.com/retail-ai-inc/',
+            label: 'https://github.com/retail-ai-inc/',
+        }
+      ],
       databaseoptions:[
         {
            value: 'true',
@@ -288,42 +346,41 @@ export default {
       ],
       languageoptions:[
         {
-           value: 'XML',
-            label: 'XML',
-        },
-        {
-           value: 'Java',
-            label: 'Java',
-        },
-        {
+          label: '前端语言',
+          options:[
+            {
            value: 'HTML',
             label: 'HTML',
-        },
-        {
+        },{
            value: 'JavaScript',
             label: 'JavaScript',
-        },
-        {
-           value: 'SMART Scripts',
-            label: 'SMART Scripts',
-        },
-        {
-           value: 'Python',
-            label: 'Python',
-        },
-        {
+        },{
            value: 'CSS',
             label: 'CSS',
-        },
-        {
+        },{
            value: 'TypeScript',
             label: 'TypeScript',
         },
-        {
+          ],
+        },{
+          label: '后端语言',
+          options:[
+            {
+           value: 'XML',
+            label: 'XML',
+        },{
+           value: 'Java',
+            label: 'Java',
+        }, {
+           value: 'SMART Scripts',
+            label: 'SMART Scripts',
+        },{
+           value: 'Python',
+            label: 'Python',
+        },{
            value: 'Go',
             label: 'Go',
-        },
-        {
+        }, {
            value: 'Kotlin',
             label: 'Kotlin',
         },
@@ -339,6 +396,8 @@ export default {
            value: 'PHP',
             label: 'PHP',
         },
+          ]
+        } 
       ],
       reviewOptions:[
        {
@@ -447,27 +506,19 @@ export default {
           },  {
             name: '我参与的',
             number: 140
-          }, {
+          },{
+            name: '星标项目',
+            number: 140
+          },{
             name: '模板仓库',
             number: 140
           }
           ]
-        }, {
-          name: '代码评审',
-          children: [{
-            name: '开启的',
-            number: 140
-          }, {
-            name: '已合并',
-            number: 140
-          }, {
-            name: '已关闭',
-            number: 140
-          }]
         }
       ],
       tableData: [],
-      input: ''
+      input: '',
+      topTitle:'所有项目'
     };
   },
   computed: {
@@ -478,13 +529,20 @@ export default {
     },
   },
   watch:{
-    drawer(){
+    reviewDrawer(){
       this.branchValue='';
       this.databaseValue='';
       this.languageValue='';
       this.completeDate='';
       this.reviewRadio='';
       this.noteText='';
+    },
+    synchronousDrawer(){
+      this.branchValue='';
+      this.addressValue='';
+      this.userinput='';
+      this.tokeninput='';
+      this.userFlag=false
     },
     toWatch(){
       this.$nextTick(function(){
@@ -495,6 +553,19 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   },
   methods: {
+    changeFlag(){
+      if(this.addressValue=='https://github.com/retail-ai-inc/'){
+        this.userFlag=true
+        
+      }else{
+        this.userFlag=false
+        this.userinput=''
+      this.tokeninput=''
+      }
+    },
+    getTitle(val){
+      this.topTitle=val
+    },
     showj(val,val2){
       var showFlag=true
       for(let i=0;i<val2;i++){
@@ -512,10 +583,9 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
        let getUserid=aryCookie[i].split("=")
         if(getUserid[0].trim()=='LoginedUserName'){
           this.username=getUserid[1]
-          console.log(this.username);
         }
-        if(getUserid[0]==' LoginedUser'){
-          this.usercd=getUserid[1]
+        if(getUserid[0].trim()=='LoginedUser'){
+          this.usercd=getUserid[1].trim()
           console.log(this.usercd);
         }
      }
@@ -539,7 +609,8 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
    return res
     },
     closeDrawer(){
-      this.drawer=false;
+      this.reviewDrawer=false;
+      this.synchronousDrawer=false
     },
     reWarehouse(){
       console.log(this.branchValue);
@@ -548,7 +619,14 @@ console.log(this.languageValue);
 console.log(this.completeDate);
 console.log(this.reviewRadio);
 console.log(this.noteText);
-this.drawer=false;
+this.reviewDrawer=false;
+    },
+    addWarehouse(){
+      console.log(this.branchValue);
+console.log(this.addressValue);
+console.log(this.userinput);
+console.log(this.tokeninput);
+this.synchronousDrawer=false
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -640,7 +718,6 @@ this.drawer=false;
           
           this.tableData[i].last_activity_at=this.tableData[i].last_activity_at.split(" ")[0]
         }
-        console.log(this.tableData);
       })
     }
   },
@@ -794,5 +871,10 @@ this.drawer=false;
   /deep/.el-drawer .el-drawer__header{
     margin: 0;
 
+  }
+  /deep/.el-select-group__title{
+    font-size: 17px;
+    margin-bottom: 5px;
+    font-weight: bold;
   }
 </style>

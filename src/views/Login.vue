@@ -13,10 +13,14 @@ export default {
             Password: this.password
         }).then(e => {
            console.log(456, e);
-           this.$router.push('/gitlabmanager');
+           if(e.data.UserCD){
+               this.$router.push('/gitlabmanager');
+           }else{
+               this.$message.error('账号或密码错误');
+           }
+           
         }).catch((error) => {
            console.log(123, error);
-           this.$router.push('/gitlabmanager');
         });
     }
   }
@@ -28,11 +32,11 @@ export default {
         <div>
             <div class="login-head">Please Sign in</div>
             <el-input class="userInput" v-model="user" placeholder="User Code"></el-input>
-            <el-input show-password v-model="password" placeholder="LDAP Password"></el-input>
+            <el-input show-password v-model="password" placeholder="LDAP Password" @keyup.enter="login"></el-input>
             <p>
                 <a href="http://docs.trechina.cn/docs/ldap_20210622">Forgot Password?</a>
             </p>
-            <el-button @click="login" class="submit" type="primary">Sign in</el-button>
+            <el-button @click="login"  class="submit" type="primary">Sign in</el-button>
         </div>
     </div>
 </template>
@@ -91,6 +95,6 @@ export default {
 ::v-deep(input) {
     line-height: 45px;
     height: 45px;
-    border-radius: 0px;
+    border-radius: 5px;
 }
 </style>

@@ -31,7 +31,7 @@
               <el-dropdown-item>Docs</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">
-              <span style="display: block">Log Out</span>
+              <span style="display: block">退出</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -68,7 +68,12 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
+      var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+      if(keys){
+        for(var i = keys.length; i--;){
+          document.cookie=keys[i]+'=0;path=/;expires='+new Date(0).toUTCString();
+        }
+      }
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   },
