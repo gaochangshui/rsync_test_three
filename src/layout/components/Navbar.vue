@@ -2,8 +2,8 @@
   <div class="navbar">
     <div class="hamburger-container">
       <el-breadcrumb separator="/">
-    <el-breadcrumb-item v-for="(hamburger,i) in hamburgerList" :key="i"
-      ><a :href="hamburger.path">{{hamburger.name}}</a></el-breadcrumb-item
+    <el-breadcrumb-item v-for="(hamburger,i) in hamburgerList" :key="i" :to="hamburger.path"
+      >{{hamburger.name}}</el-breadcrumb-item
     >
   </el-breadcrumb>
     </div>

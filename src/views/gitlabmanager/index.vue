@@ -187,10 +187,10 @@
   </el-select>
     </div>
     <div style="margin-top:20px">
-      <span style="line-height:40px;">数据库操作</span>
-      <el-select v-model="databaseValue" placeholder="请选择" style="width:100%">
+      <span style="line-height:40px">主要语言</span>
+      <el-select v-model="languageValue" multiple placeholder="请选择主要语言（多选）" style="width:100%">
     <el-option
-      v-for="item in databaseoptions"
+      v-for="item in languageoptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
@@ -199,15 +199,10 @@
   </el-select>
     </div>
     <div style="margin-top:20px">
-      <span style="line-height:40px">期望完成日期</span>
-      <el-date-picker :disabled-date="disabledDate" v-model="completeDate" type="date" placeholder="选择日期" style="width:100%;"  value-format="YYYY-MM-DD" >
-    </el-date-picker>
-    </div>
-    <div style="margin-top:20px">
-      <span style="line-height:40px">主要语言</span>
-      <el-select v-model="languageValue" multiple placeholder="请选择主要语言（多选）" style="width:100%">
+      <span style="line-height:40px;">数据库操作</span>
+      <el-select v-model="databaseValue" placeholder="请选择" style="width:100%">
     <el-option
-      v-for="item in languageoptions"
+      v-for="item in databaseoptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
@@ -231,6 +226,11 @@
       />
     </el-option-group>
   </el-select>
+    </div>
+    <div style="margin-top:20px">
+      <span style="line-height:40px">期望完成日期</span>
+      <el-date-picker :disabled-date="disabledDate" v-model="completeDate" type="date" placeholder="选择日期" style="width:100%;"  value-format="YYYY-MM-DD" >
+    </el-date-picker>
     </div>
     <div style="margin-top:20px">
       <span style="line-height:40px">备注</span>
