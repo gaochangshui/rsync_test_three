@@ -527,7 +527,7 @@ export default {
       ],
       tableData: [],
       input: '',
-      topTitle:'所有项目'
+      topTitle:'所有仓库'
     };
   },
   computed: {
