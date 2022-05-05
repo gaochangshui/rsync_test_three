@@ -29,7 +29,7 @@
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData
       " style="width: 100%" max-height="75vh">
-          <el-table-column label="仓库名称" sortable :sort-method="sortDevName" width="400px">
+          <el-table-column label="仓库名称" sortable :sort-method="sortDevName" >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
               <el-tooltip
@@ -42,8 +42,8 @@
       </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="last_activity_at" label="最近更新" sortable width="200px"/>
-          <el-table-column label="仓库成员" width="100px">
+          <el-table-column prop="last_activity_at" label="最近更新" sortable  width="150px"/>
+          <el-table-column label="仓库成员" width="100px" >
             <template #default="scope">
               <div v-for="(item,index) in scope.row.project_member" :key="index">
                 <span v-show="item.avatar==''" style="margin-left:10px" >-</span>
@@ -64,12 +64,12 @@
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="分组名称">
+          <el-table-column label="分组名称" width="200px" >
             <template #default="scope">
               <el-tag style="font-weight: 500; font-size: 12px; line-height: 18px; ">{{scope.row.group_name}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column  label="分组成员" width="100px">
+          <el-table-column  label="分组成员" width="100px" >
           <template #default="scope">
               <div v-for="(item,index) in scope.row.group_member" :key="index">
                 <span v-show="item.avatar==''&&item.name!='jenkins-zgzn'" style="margin-left:10px" >-</span>
@@ -84,13 +84,13 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column width="100px">
+          <el-table-column width="100px" >
             <template #default="scope">
               <div v-show="scope.row.group_member[0].avatar==''">0</div>
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="评审" width="100px">
+          <el-table-column label="评审" width="100px" >
             <template #default="scope">
               <span v-show="showj(scope.row.project_member,scope.row.project_member.length)" style="margin-left:10px" >-</span>
               <div v-for="(item,index) in scope.row.project_member" :key="index">   
@@ -98,7 +98,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作">
+          <el-table-column fixed="right" label="操作" align="right" width="100px">
             <template #default="scope">
               
               <el-popover 
@@ -251,7 +251,7 @@
     class="synchronousDrawer"
   >
   <template #title>
-      <h2>技术委员会评审</h2>
+      <h2>仓库同步设置</h2>
     </template>
     <div>
       <span style="line-height:40px;">分支</span>
@@ -267,7 +267,13 @@
     </div>
     <div>
       <span style="line-height:40px;">远程地址</span>
-      <el-select v-model="addressValue" placeholder="请选择地址" style="width:100%;" @change="changeFlag">
+    <el-input
+      v-model="addressinput"
+      placeholder="请输入详细地址"
+      class="input-with-select"
+    >
+  <template #prepend>
+        <el-select v-model="addressValue" placeholder="请选择地址" style="width: 240px"  @change="changeFlag">
     <el-option
       v-for="item in addressoptions"
       :key="item.value"
@@ -276,6 +282,8 @@
     >
     </el-option>
   </el-select>
+      </template>
+      </el-input>
     </div>
     <div v-show="userFlag">
       <span style="line-height:40px;">用户名</span>
@@ -286,8 +294,8 @@
       <el-input v-model="tokeninput" placeholder="请输入Token" style="width:100%;"></el-input>
     </div>
     <template #footer>
-      <el-button type="primary" plain size="large" @click="closeDrawer">取消</el-button>
-      <el-button type="primary" size="large" @click="addWarehouse">确定</el-button>
+      <el-button type="primary" plain size="large" @click="closeDrawer">保存</el-button>
+      <el-button type="primary" size="large" @click="addWarehouse">提交申请</el-button>
     </template>
   </el-drawer>
   </div>
@@ -319,6 +327,7 @@ export default {
       reviewRadio:'',
       noteText:"",
       addressValue:'',
+      addressinput:'',
       userFlag:false,
       pageTotal:50,
       curPage:1,
@@ -401,7 +410,7 @@ export default {
       ],
       reviewOptions:[
        {
-    label: 'restful设计',
+    label: 'RESTful设计',
     options: [
       {
         value: '代码是否合理',
