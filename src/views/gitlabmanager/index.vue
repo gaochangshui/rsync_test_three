@@ -53,7 +53,11 @@
       :content="item.name"
       placement="top-start"
     >
-                <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FF4D4F;" v-if="index<=2&&item.avatar!=''&&item.access_level==='Owner'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FFC53D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='M'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #73D13D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='R'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #40A9FF;" v-if="index<=2&&item.avatar!=''&&item.access_level==='D'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #D9D9D9;" v-if="index<=2&&item.avatar!=''&&item.access_level==='G'">
                 </el-tooltip>
               </div>
             </template>
@@ -79,7 +83,11 @@
       :content="item.name"
       placement="top-start"
     >           
-                <img :src="item.avatar" :class="'membericon'+index" v-show="index<=2&&item.avatar!=''">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FF4D4F;" v-if="index<=2&&item.avatar!=''&&item.access_level==='Owner'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FFC53D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='M'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #73D13D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='R'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #40A9FF;" v-if="index<=2&&item.avatar!=''&&item.access_level==='D'">
+                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #D9D9D9;" v-if="index<=2&&item.avatar!=''&&item.access_level==='G'">
                 </el-tooltip>
               </div>
             </template>
@@ -94,7 +102,7 @@
             <template #default="scope">
               <span v-show="showj(scope.row.project_member,scope.row.project_member.length)" style="margin-left:10px" >-</span>
               <div v-for="(item,index) in scope.row.project_member" :key="index">   
-                <img :src="item.avatar" class="membericon0" v-show="item.name=='Code Reviewer'">
+                <img :src="item.avatar" class="membericon0" style="border: 1px solid #FFC53D;" v-show="item.name=='Code Reviewer'">
               </div>
             </template>
           </el-table-column>
@@ -793,14 +801,12 @@ this.synchronousDrawer=false
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 1px solid red;
   z-index: 3;
 }
 .membericon1{
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 1px solid blue;
   left: 25px;
   z-index: 2;
 }
@@ -808,7 +814,6 @@ this.synchronousDrawer=false
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 1px solid gray;
   left: 35px;
   z-index: 1;
 }
