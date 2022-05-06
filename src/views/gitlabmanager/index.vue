@@ -11,7 +11,7 @@
       >        
         <el-menu-item  v-for="(labchildren, p) in labs[0].children" :key="p" :index="String(p)" class="menu-item" @click="getTitle(labchildren.name)">
           <div class="gitlabmanager-left-children-left">{{labchildren.name}}</div>
-          <div class="gitlabmanager-left-children-right">{{labchildren.number}}</div>
+          <div class="gitlabmanager-left-children-right" >{{labchildren.number}}</div>
         </el-menu-item>
         </el-menu>
       </div>
@@ -38,7 +38,7 @@
         :content="scope.row.description"
         placement="top"
       >
-         <div style="color: #8E8E8E;width:50%">{{scope.row.description}}</div>
+         <div style="color: #8E8E8E;">{{scope.row.description}}</div>
       </el-tooltip>
             </template>
           </el-table-column>
@@ -131,11 +131,11 @@
                     <img src="../../assets/icons/fromicon/Frame-2.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     保护分支设置
                   </div>
-                  <div class="atooltip-div" @click="reviewDrawer=true">
+                  <div class="atooltip-div" @click="review(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-1.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     请求技术委员会评审
                   </div>
-                  <div class="atooltip-div" @click="synchronousDrawer=true">
+                  <div class="atooltip-div" @click="SyncWarehouse(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     仓库同步设置
                   </div>         
@@ -151,7 +151,7 @@
           layout="total, sizes,->, prev, pager, next, jumper,"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
-          :page-count="pageTotal"
+          :total="pageTotal"
         />
       </div>
     </div>
@@ -169,10 +169,10 @@
       <span style="line-height:40px;">分支</span>
       <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
+      v-for="(item,index) in branchoptions"
+      :key="index"
+      :label="item.name"
+      :value="item.name"
     >
     </el-option>
   </el-select>
@@ -257,10 +257,10 @@
       <span style="line-height:40px;">分支</span>
       <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
+      v-for="(item,index) in branchoptions"
+      :key="index"
+      :label="item.name"
+      :value="item.name"
     >
     </el-option>
   </el-select>
@@ -287,7 +287,7 @@
     </div>
     <div v-show="userFlag">
       <span style="line-height:40px;">用户名</span>
-      <el-input v-model="userinput" placeholder="请输入用户名" style="width:100%;"></el-input>
+      <el-input v-model="userinput" placeholder="请输入GitHub用户名" style="width:100%;"></el-input>
     </div>
     <div v-show="userFlag">
       <span style="line-height:40px;">Token</span>
@@ -295,7 +295,7 @@
     </div>
     <template #footer>
       <el-button type="primary" plain size="large" @click="closeDrawer">保存</el-button>
-      <el-button type="primary" size="large" @click="addWarehouse">提交申请</el-button>
+      <el-button type="primary" size="large" @click="addWarehouse">立即同期</el-button>
     </template>
   </el-drawer>
   </div>
@@ -333,6 +333,8 @@ export default {
       curPage:1,
       pageSize:10,
       pjUrl:'',
+      pjId:'',
+      branchoptions:[],
       addressoptions:[
         {
            value: 'http://10.2.1.117/',
@@ -345,11 +347,11 @@ export default {
       ],
       databaseoptions:[
         {
-           value: 'true',
+           value: '有',
             label: '有',
         },
         {
-           value: 'false',
+           value: '无',
             label: '无',
         }
       ],
@@ -511,16 +513,16 @@ export default {
           name: '代码仓库',
           children: [{
             name: '所有仓库',
-            number: 140
+            number: ''
           },  {
             name: '我参与的',
-            number: 140
+            number: ''
           },{
             name: '星标项目',
-            number: 140
+            number: ''
           },{
             name: '模板仓库',
-            number: 140
+            number: ''
           }
           ]
         }
@@ -572,6 +574,23 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       this.tokeninput=''
       }
     },
+    getBreach(val){
+        this.axios.get('/actionapi/WarehouseApi/ProjectBranches', {params:{
+          pj_id:val
+        }}).then(e=>{
+          this.branchoptions=e.data.branchs
+        })    
+    },
+    review(val){
+      this.reviewDrawer=true
+      this.getBreach(val.id)
+      this.pjId=val.id
+      console.log(this.pjId);
+    },
+    SyncWarehouse(val){
+      this.synchronousDrawer=true 
+      this.getBreach(val.id)
+    },
     getTitle(val){
       this.topTitle=val
     },
@@ -595,7 +614,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         }
         if(getUserid[0].trim()=='LoginedUser'){
           this.usercd=getUserid[1].trim()
-          console.log(this.usercd);
         }
      }
     },
@@ -622,15 +640,36 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       this.synchronousDrawer=false
     },
     reWarehouse(){
-      console.log(this.branchValue);
-      console.log(this.databaseValue);
-console.log(this.languageValue);
-console.log(this.completeDate);
-console.log(this.reviewRadio);
-console.log(this.noteText);
+      var mainlan=''
+      if(this.languageValue!=''){
+        mainlan=this.languageValue[0]
+      }
+      for(let i=1;i<this.languageValue.length;i++){
+         mainlan=mainlan+','+this.languageValue[i]
+      }
+      var reviewinfo=''
+       if(this.reviewRadio!=''){
+        reviewinfo=this.reviewRadio[0]
+      }
+      for(let i=1;i<this.reviewRadio.length;i++){
+         reviewinfo=reviewinfo+','+this.reviewRadio[i]
+      }
+      this.axios.get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {params:{
+          pj_id:this.pjId,
+          user_cd:this.usercd,
+          branchs:this.branchValue,
+          main_lan:mainlan,
+          data_base:this.databaseValue,
+          review_info:reviewinfo,
+          desire_date:this.completeDate,
+          comment:this.noteText
+        }}).then(()=>{
+        this.$message.success("申请评审邮件已发出")
+        })  
 this.reviewDrawer=false;
     },
-    addWarehouse(){
+    //TODO
+    addWarehouse(){ 
       console.log(this.branchValue);
 console.log(this.addressValue);
 console.log(this.userinput);
@@ -646,7 +685,6 @@ this.synchronousDrawer=false
       })
         })    
     },
-    //TODO
     scanResults(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
           pj_id:val.id
@@ -663,7 +701,6 @@ this.synchronousDrawer=false
           this.$message.success("申请成功，已经申请develop权限，仅1天！")
         })
     },
-    //TODO
     protectedBranch(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
           pj_id:val.id
@@ -690,9 +727,9 @@ this.synchronousDrawer=false
     emptyInput(){
       this.input=""
     },
-    getTableData(){
+    async getTableData(){
       this.tableData=[]
-      this.axios.get('/actionapi/WarehouseApi/Index',{
+      await this.axios.get('/actionapi/WarehouseApi/Index',{
         params:{
           pj_name:this.input,
           group_name:this.input,
@@ -700,14 +737,14 @@ this.synchronousDrawer=false
           pageNum:this.curPage
         }
       }).then(e=>{
-        this.pageTotal=e.data.pageNumAll-1
+        this.pageTotal=e.data.rowCount
         for(let i=0;i<e.data.Warehouses.length;i++){ 
         var groupSplit=e.data.Warehouses[i].group_member.split(",")
         var projectSplit=e.data.Warehouses[i].project_member.split(",")
         e.data.Warehouses[i].project_member=[]
         for(let j=0;j<projectSplit.length;j+=4){
           let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]+","+projectSplit[j+3]).replace(/\'/g,'"')
-          if(projectReplace.indexOf('"avatar":')==-1){
+          if(projectReplace.indexOf('"name":')==-1){
             projectReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
            let projectParse=JSON.parse(projectReplace)
@@ -716,7 +753,7 @@ this.synchronousDrawer=false
         e.data.Warehouses[i].group_member=[]
         for(let k=0;k<groupSplit.length;k+=4){
           let groupReplace=(groupSplit[k]+","+groupSplit[k+1]+","+groupSplit[k+2]+","+groupSplit[k+3]).replace(/\'/g,'"')
-          if(groupReplace.indexOf('"avatar":')==-1){
+          if(groupReplace.indexOf('"name":')==-1){
             groupReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
            let groupParse=JSON.parse(groupReplace)
@@ -728,13 +765,26 @@ this.synchronousDrawer=false
           this.tableData[i].last_activity_at=this.tableData[i].last_activity_at.split(" ")[0]
         }
       })
+    },
+    async getIndexNum(){
+      await this.axios.get('/actionapi/WarehouseApi/IndexNum', {
+        params:{
+          user_cd:this.usercd
+        }}).then(e=>{
+          this.labs[0].children[0].number=e.data.num.all
+          this.labs[0].children[1].number=e.data.num.my
+          this.labs[0].children[2].number=e.data.num.starrd
+          this.labs[0].children[3].number=e.data.num.temp
+          console.log(this.labs[0].children[3].number);
+        })
     }
   },
-  created(){
-    this.getTableData()
-    this.getCookie()
-    
-  }
+  async created(){
+    await this.getCookie()
+    await this.getIndexNum()
+    await this.getTableData()
+
+  },
 }
 </script>
 
@@ -801,7 +851,7 @@ this.synchronousDrawer=false
       &-right {
         color: #909AAA;
         position:absolute;
-        left: 80%;
+        left: 77%;
       }
     }
   }
