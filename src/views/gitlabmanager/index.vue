@@ -1,5 +1,5 @@
 <template>
-  <div class="gitlabmanager">
+  <div class="gitlabmanager" @click="onBlur">
     <div class="gitlabmanager-left">
         <div style="text-align: left">
            <svg-icon width="15" height="15" icon-class="four" />
@@ -38,7 +38,7 @@
         :content="scope.row.description"
         placement="top"
       >
-         <div style="color: #8E8E8E;">{{scope.row.description}}</div>
+         <div style="color: #8E8E8E;width:50%">{{scope.row.description}}</div>
       </el-tooltip>
             </template>
           </el-table-column>
@@ -117,33 +117,32 @@
               trigger="click" 
               effect="light" 
               :enterable="false" 
-              class="atooltip" 
               v-model:visible="scope.row.openFlag" >
                 <template #reference>
-                    <svg-icon style="cursor:pointer;margin-left:5px;padding:5px 5px;border-radius:5px" width="15" height="18" icon-class="point" @click="openPopover(scope.row)" @blur="onBlur" class="pointFrom" /> 
+                    <svg-icon style="cursor:pointer;margin-left:5px;padding:5px 5px;border-radius:5px" width="15" height="18" icon-class="point" @click.stop="openPopover(scope.row)"  class="pointFrom" /> 
       </template>
               
-                <div class="atooltip-div" @click="scanResults(scope.row)" >
+                <div class="atooltip-div" @click.stop="scanResults(scope.row)" >
                   <img src="../../assets/icons/fromicon/Frame-5.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     查看扫描结果
                   </div>
-                  <div class="atooltip-div" @click="copyUrl(scope.row)" >
+                  <div class="atooltip-div" @click.stop="copyUrl(scope.row)" >
                     <img src="../../assets/icons/fromicon/Frame-4.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     复制 Url 到剪切板
                   </div>
-                  <div class="atooltip-div" @click="applyForRight(scope.row)">
+                  <div class="atooltip-div" @click.stop="applyForRight(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-3.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     申请权限
                   </div>
-                  <div class="atooltip-div" @click="protectedBranch(scope.row)">
+                  <div class="atooltip-div" @click.stop="protectedBranch(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-2.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     保护分支设置
                   </div>
-                  <div class="atooltip-div" @click="review(scope.row)">
+                  <div class="atooltip-div" @click.stop="review(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-1.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     请求技术委员会评审
                   </div>
-                  <div class="atooltip-div" @click="SyncWarehouse(scope.row)">
+                  <div class="atooltip-div" @click.stop="SyncWarehouse(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     仓库同步设置
                   </div>         
@@ -173,8 +172,7 @@
   <template #title>
       <h2>技术委员会评审</h2>
     </template>
-    <div>
-      <span style="line-height:40px;">分支</span>
+      <span style="line-height:40px">分支<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
       v-for="(item,index) in branchoptions"
@@ -183,10 +181,9 @@
       :value="item.name"
     >
     </el-option>
-  </el-select>
-    </div>
+  </el-select>  
     <div style="margin-top:20px">
-      <span style="line-height:40px">主要语言</span>
+      <span style="line-height:40px">主要语言<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="languageValue" multiple placeholder="请选择主要语言（多选）" style="width:100%">
     <el-option-group
       v-for="group in languageoptions"
@@ -203,7 +200,7 @@
   </el-select>
     </div>
     <div style="margin-top:20px">
-      <span style="line-height:40px;">数据库操作</span>
+      <span style="line-height:40px;">数据库操作<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="databaseValue" placeholder="请选择" style="width:100%">
     <el-option
       v-for="item in databaseoptions"
@@ -215,7 +212,7 @@
   </el-select>
     </div>
     <div style="margin-top:20px">
-      <span style="line-height:40px;">评审信息</span>
+      <span style="line-height:40px;">评审信息<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="reviewRadio" placeholder="请选择评审信息（多选）" multiple style="width:100%">
     <el-option-group
       v-for="group in reviewOptions"
@@ -232,7 +229,7 @@
   </el-select>
     </div>
     <div style="margin-top:20px">
-      <span style="line-height:40px">期望完成日期</span>
+      <span style="line-height:40px">期望完成日期<span style="color:red;line-height:40px;">*</span></span>
       <el-date-picker :disabled-date="disabledDate" v-model="completeDate" type="date" placeholder="选择日期" style="width:100%;"  value-format="YYYY-MM-DD" >
     </el-date-picker>
     </div>
@@ -262,7 +259,7 @@
       <h2>仓库同步设置</h2>
     </template>
     <div>
-      <span style="line-height:40px;">分支</span>
+      <span style="line-height:40px;">分支<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
       v-for="(item,index) in branchoptions"
@@ -274,7 +271,7 @@
   </el-select>
     </div>
     <div>
-      <span style="line-height:40px;">远程地址</span>
+      <span style="line-height:40px;">远程地址<span style="color:red;line-height:40px;">*</span></span>
     <el-input
       v-model="addressinput"
       placeholder="请输入详细地址"
@@ -294,16 +291,16 @@
       </el-input>
     </div>
     <div v-show="userFlag">
-      <span style="line-height:40px;">用户名</span>
+      <span style="line-height:40px;">用户名<span style="color:red;line-height:40px;">*</span></span>
       <el-input v-model="userinput" placeholder="请输入GitHub用户名" style="width:100%;"></el-input>
     </div>
     <div v-show="userFlag">
-      <span style="line-height:40px;">Token</span>
+      <span style="line-height:40px;">Token<span style="color:red;line-height:40px;">*</span></span>
       <el-input v-model="tokeninput" placeholder="请输入Token" style="width:100%;"></el-input>
     </div>
     <template #footer>
       <el-button type="primary" plain size="large" @click="closeDrawer">保存</el-button>
-      <el-button type="primary" size="large" @click="addWarehouse">立即同期</el-button>
+      <el-button type="primary" size="large" @click="addWarehouse">保存并立即同期</el-button>
     </template>
   </el-drawer>
   </div>
@@ -321,6 +318,11 @@ export default {
           var before = timeNow - 24 * 60 * 60 * 1000;
           return time.getTime() < before;
         },
+      languageValue:'',
+      databaseValue:'',
+      completeDate:'',
+      reviewRadio:'',
+      noteText:"",
       props: { multiple: true },
       username:'',
       userinput:'',
@@ -329,11 +331,6 @@ export default {
       reviewDrawer:false,
       synchronousDrawer:false,
       branchValue:"",
-      databaseValue:"",
-      languageValue:"",
-      completeDate:'',
-      reviewRadio:'',
-      noteText:"",
       addressValue:'',
       addressinput:'',
       userFlag:false,
@@ -541,7 +538,6 @@ export default {
     };
   },
   computed: {
-    // 同时监听多个参数
     toWatch() {
       const { pageSize, curPage ,pageTotal} = this;
       return { pageSize, curPage,pageTotal };
@@ -561,6 +557,7 @@ export default {
       this.addressValue='';
       this.userinput='';
       this.tokeninput='';
+      this.addressinput='';
       this.userFlag=false
     },
     toWatch(){
@@ -593,11 +590,12 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       this.reviewDrawer=true
       this.getBreach(val.id)
       this.pjId=val.id
-      console.log(this.pjId);
+      val.openFlag=false 
     },
     SyncWarehouse(val){
       this.synchronousDrawer=true 
       this.getBreach(val.id)
+      val.openFlag=false 
     },
     getTitle(val){
       this.topTitle=val
@@ -662,7 +660,16 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       for(let i=1;i<this.reviewRadio.length;i++){
          reviewinfo=reviewinfo+','+this.reviewRadio[i]
       }
-      this.axios.get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {params:{
+      if(
+        this.branchValue===''||
+        mainlan===''||
+        this.databaseValue===''||
+        reviewinfo===''||
+        this.completeDate===''      
+      ){
+        this.$message.error('您还有必填信息未填写！！！');
+      }else{
+        this.axios.get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {params:{
           pj_id:this.pjId,
           user_cd:this.usercd,
           branchs:this.branchValue,
@@ -674,15 +681,47 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         }}).then(()=>{
         this.$message.success("申请评审邮件已发出")
         })  
-this.reviewDrawer=false;
+        this.reviewDrawer=false;
+      }
+      
+      
     },
     //TODO
     addWarehouse(){ 
-      console.log(this.branchValue);
-console.log(this.addressValue);
-console.log(this.userinput);
-console.log(this.tokeninput);
-this.synchronousDrawer=false
+      if(this.addressValue===''){
+        this.$message.error('您还有必填信息未填写！！！');
+      }else{
+        if(this.addressValue==='http://10.2.1.117/'){
+          if(
+            this.addressinput===''||
+            this.branchValue===''
+          ){
+            this.$message.error('您还有必填信息未填写！！！');
+          }else{
+            console.log(this.branchValue);
+            console.log(this.addressValue);
+            console.log(this.userinput);
+            console.log(this.tokeninput);
+            this.synchronousDrawer=false
+          }
+        }else{
+           if(
+            this.addressinput===''||
+            this.branchValue===''||
+            this.userinput===''||
+            this.tokeninput===''
+          ){
+            this.$message.error('您还有必填信息未填写！！！');
+          }else{
+            console.log(this.branchValue);
+            console.log(this.addressValue);
+            console.log(this.userinput);
+            console.log(this.tokeninput);
+            this.synchronousDrawer=false
+          }
+        }
+      }
+      
     },
     copyUrl(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -691,7 +730,8 @@ this.synchronousDrawer=false
           this.$copyText(e.data.url).then(()=>{
         this.$message.success("Url复制成功！")
       })
-        })    
+        }) 
+        val.openFlag=false   
     },
     scanResults(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -699,7 +739,7 @@ this.synchronousDrawer=false
         }}).then(e=>{
           window.open(e.data.url+"/activity");
         })
-      
+      val.openFlag=false 
     },
     applyForRight(val){
       this.axios.get('/actionapi/WarehouseApi/RequestForAccess', {params:{
@@ -708,6 +748,7 @@ this.synchronousDrawer=false
         }}).then(()=>{
           this.$message.success("申请成功，已经申请develop权限，仅1天！")
         })
+        val.openFlag=false 
     },
     protectedBranch(val){
       this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
@@ -715,6 +756,7 @@ this.synchronousDrawer=false
         }}).then(e=>{
           window.open(e.data.url+"/-/settings/repository");
         })
+        val.openFlag=false 
     },
     onBlur(){
       for(let i in this.tableData){
@@ -752,7 +794,7 @@ this.synchronousDrawer=false
         e.data.Warehouses[i].project_member=[]
         for(let j=0;j<projectSplit.length;j+=4){
           let projectReplace=(projectSplit[j]+","+projectSplit[j+1]+","+projectSplit[j+2]+","+projectSplit[j+3]).replace(/\'/g,'"')
-          if(projectReplace.indexOf('"name":')==-1){
+          if(projectReplace.indexOf('"name":')==-1||projectReplace.indexOf('"avatar":')==-1){
             projectReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
            let projectParse=JSON.parse(projectReplace)
@@ -761,7 +803,7 @@ this.synchronousDrawer=false
         e.data.Warehouses[i].group_member=[]
         for(let k=0;k<groupSplit.length;k+=4){
           let groupReplace=(groupSplit[k]+","+groupSplit[k+1]+","+groupSplit[k+2]+","+groupSplit[k+3]).replace(/\'/g,'"')
-          if(groupReplace.indexOf('"name":')==-1){
+          if(groupReplace.indexOf('"name":')==-1||groupReplace.indexOf('"avatar":')==-1){
             groupReplace='{"id":"","name":"","access_level":"","avatar":""}'
           }
            let groupParse=JSON.parse(groupReplace)
@@ -796,7 +838,7 @@ this.synchronousDrawer=false
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" >
 .membericon0{
   width: 20px;
   height: 20px;
@@ -884,41 +926,46 @@ this.synchronousDrawer=false
     }
   }
 }
-  /deep/ .atooltip {
+   .atooltip {
     background: #FFFFFF !important;
   }
-  /deep/ .atooltip.el-tooltip__popper[x-placement^="left"] .atooltip {
+   .atooltip.el-tooltip__popper[x-placement^="left"] .atooltip {
     background: #FFFFFF;
   }
-  /deep/ .atooltip.el-tooltip__popper[x-placement^="left"] .atooltip:after {
+   .atooltip.el-tooltip__popper[x-placement^="left"] .atooltip:after {
     background: #FFFFFF;
   }
-  /deep/.el-pagination .el-input--suffix .el-input__inner{
+  .el-pagination .el-input--suffix .el-input__inner{
     box-shadow:none
   }
-  /deep/.el-pagination .el-select .el-input.is-focus .el-input__inner{
+  .el-pagination .el-select .el-input.is-focus .el-input__inner{
    box-shadow:none !important
   }
-  /deep/.el-pagination .el-select .el-input__inner:focus{
+  .el-pagination .el-select .el-input__inner:focus{
    box-shadow:none !important
   }
-  /deep/.el-pagination{
+  .el-pagination .el-select .el-input__inner:hover{
+   box-shadow:none !important
+  }
+  .el-pagination{
     position: relative;
     top: 80%;
   }
-  /deep/.pointFrom:focus{
+  .pointFrom:focus{
     outline: none;
   }
   .pointFrom:hover{
     background-color:#f0eeee ;
   }
   .atooltip-div {
+    padding-left: 5px;
+    padding-right:5px ;
     font-weight: 400;
     font-size: 14px;
     line-height: 30px;
     color: #4B4B4B;
     height: 30px;
-
+    border-radius: 5px;
   }
   .atooltip-div:hover{
     background: #f3f2f2;
@@ -932,13 +979,18 @@ this.synchronousDrawer=false
   .input-icon1{
     margin-right: 10px;
   }
-  /deep/.el-drawer .el-drawer__header{
+  .el-drawer .el-drawer__header{
     margin: 0;
 
   }
-  /deep/.el-select-group__title{
+ .el-select-group__title{
     font-size: 17px;
     margin-bottom: 5px;
     font-weight: bold;
   }
+.atooltip{
+  padding: 2px !important;
+  padding-top:5px !important;
+  padding-bottom:5px !important;
+}
 </style>
