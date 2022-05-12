@@ -1,7 +1,12 @@
 <template>
   <router-view/>
 </template>
-
+<script setup>
+import { onMounted } from 'vue';
+onMounted(()=>{
+  document.body.style.setProperty('--el-color-primary','#3E79F6')
+})
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

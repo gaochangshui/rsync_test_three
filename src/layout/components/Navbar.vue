@@ -2,9 +2,7 @@
   <div class="navbar">
     <div class="hamburger-container">
       <el-breadcrumb separator="/">
-    <el-breadcrumb-item v-for="(hamburger,i) in hamburgerList" :key="i" :to="hamburger.path"
-      >{{hamburger.name}}</el-breadcrumb-item
-    >
+    <el-breadcrumb-item :to="hamburgerList[1].path">{{hamburgerList[1].name}}</el-breadcrumb-item>
   </el-breadcrumb>
     </div>
   </div>
@@ -37,14 +35,13 @@ hamburgerList(){
 
   .hamburger-container {
     color: #8E8E8E;
-    padding-left: 10px;
     line-height: 46px;
     height: 100%;
     float: left;
     display: flex;
     -webkit-tap-highlight-color:transparent;
     & > .el-breadcrumb {
-      padding-left: 10px;
+     font-size: 14px;
       padding-top: 10px;
     }
   }

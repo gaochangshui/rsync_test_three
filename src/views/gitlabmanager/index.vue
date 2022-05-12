@@ -18,7 +18,7 @@
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
         <div class="gitlabmanager-right-search-left">{{topTitle}}</div>
-        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索GitLab" size="large" style="width:300px;" maxlength="100" @keyup.enter="getTableData" >
+        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索仓库名称、分组名称" size="large" style="width:300px; margin-bottom:12px ;" maxlength="100" @keyup.enter="getTableData" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
           <svg @click="selectGitLab" class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
@@ -28,17 +28,25 @@
       </div>
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData
-      " style="width: 100%" max-height="75vh">
-          <el-table-column label="仓库名称" sortable :sort-method="sortDevName" >
+      " style="width: 100% " max-height="75vh" :header-cell-style="{background:'#FAFAFA'}">
+          <el-table-column label="仓库名称" sortable :sort-method="sortDevName"  >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
               <el-tooltip
         class="box-item"
         effect="dark"
         :content="scope.row.description"
-        placement="top"
+        placement="top-start"
       >
-         <div style="color: #8E8E8E;width:50%">{{scope.row.description}}</div>
+         <div style="color: #8E8E8E;
+                /* width:100%; */
+                overflow:hidden;
+                overflow:hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                -o-text-overflow:ellipsis;">
+                {{scope.row.description}}
+                </div>
       </el-tooltip>
             </template>
           </el-table-column>
@@ -64,7 +72,6 @@
           </el-table-column>
           <el-table-column width="100px" >
             <template #default="scope">
-              <div v-show="scope.row.project_member[0].avatar==''">0</div>
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
           </el-table-column>
@@ -94,7 +101,6 @@
           </el-table-column>
           <el-table-column width="100px" >
             <template #default="scope">
-              <div v-show="scope.row.group_member[0].avatar==''">0</div>
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
             </template>
           </el-table-column>
@@ -244,7 +250,7 @@
   />
     </div>
     <template #footer>
-      <el-button type="primary" plain size="large" @click="closeDrawer">取消</el-button>
+      <el-button  size="large" @click="closeDrawer">取消</el-button>
       <el-button type="primary" size="large" @click="reWarehouse">确定</el-button>
     </template>
   </el-drawer>
@@ -299,7 +305,7 @@
       <el-input v-model="tokeninput" placeholder="请输入Token" style="width:100%;"></el-input>
     </div>
     <template #footer>
-      <el-button type="primary" plain size="large" @click="closeDrawer">保存</el-button>
+      <el-button  size="large" @click="closeDrawer">保存</el-button>
       <el-button type="primary" size="large" @click="addWarehouse">保存并立即同期</el-button>
     </template>
   </el-drawer>
@@ -307,6 +313,8 @@
 </template>
 
 <script>
+import { exportDefaultSpecifier } from '@babel/types';
+
 
 export default {
   name: 'GitlabManager',
@@ -534,7 +542,8 @@ export default {
       ],
       tableData: [],
       input: '',
-      topTitle:'所有仓库'
+      topTitle:'所有仓库',
+      warehouseType:'Index'
     };
   },
   computed: {
@@ -598,6 +607,20 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       val.openFlag=false 
     },
     getTitle(val){
+      if(val==='所有仓库'){
+        this.warehouseType='Index'
+        this.getTableData()
+      } else if(val==='我参与的'){
+        this.warehouseType='ProjectsIInvolved'
+        this.getTableData()
+      } else if(val==='星标项目'){
+        this.warehouseType='ProjectsIStarrd'
+        this.getTableData()
+      } else if(val==='模板仓库'){
+        this.warehouseType='ProjectsTemplate'
+        this.getTableData()
+      }
+      console.log(val);
       this.topTitle=val
     },
     showj(val,val2){
@@ -779,12 +802,13 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     },
     async getTableData(){
       this.tableData=[]
-      await this.axios.get('/actionapi/WarehouseApi/Index',{
+      await this.axios.get('/actionapi/WarehouseApi/'+this.warehouseType,{
         params:{
           pj_name:this.input,
           group_name:this.input,
           pageSize:this.pageSize,
-          pageNum:this.curPage
+          pageNum:this.curPage,
+          user_cd:this.usercd
         }
       }).then(e=>{
         this.pageTotal=e.data.rowCount
@@ -917,6 +941,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       }
     }
     &-table {
+      height: 77vh;
       text-align: left;
       font-style: normal;
       font-weight: 400;
@@ -925,6 +950,15 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       color: #4B4B4B;
     }
   }
+}
+.el-table__header{
+  height: 48px;
+}
+.el-table{
+  tbody tr:hover>td{
+    background: #FAFAFA !important;
+  }
+  
 }
    .atooltip {
     background: #FFFFFF !important;
@@ -983,11 +1017,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     margin: 0;
 
   }
- .el-select-group__title{
-    font-size: 17px;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
+
 .atooltip{
   padding: 2px !important;
   padding-top:5px !important;
