@@ -31,8 +31,8 @@ export default {
     <div class="login">
         <div>
             <div class="login-head">Please Sign in</div>
-            <el-input class="userInput" v-model="user" placeholder="User Code"></el-input>
-            <el-input show-password v-model="password" placeholder="LDAP Password" @keyup.enter="login"></el-input>
+            <el-input class="userInput" v-model="user" placeholder="User Code" style="border-radius: 5px 5px 0 0;"></el-input>
+            <el-input class="passeordInput" show-password v-model="password" placeholder="LDAP Password" @keyup.enter="login"></el-input>
             <p>
                 <a href="http://docs.trechina.cn/docs/ldap_20210622">Forgot Password?</a>
             </p>
@@ -92,9 +92,16 @@ export default {
         line-height: 1.3333333;
     }
 }
-::v-deep(input) {
+::v-deep(.userInput input) {
     line-height: 45px;
     height: 45px;
-    border-radius: 5px;
+    border-radius: 5px 5px 0 0;
+    
 }
+::v-deep(.passeordInput input) {
+    line-height: 45px;
+    height: 45px;
+    border-radius: 0px 0px 5px 5px;
+}
+
 </style>

@@ -18,7 +18,7 @@
     <div class="gitlabmanager-right">
       <div class="gitlabmanager-right-search">
         <div class="gitlabmanager-right-search-left">{{topTitle}}</div>
-        <div class="gitlabmanager-right-search-right"><el-input v-model="input" placeholder="搜索仓库名称、分组名称" size="large" style="width:300px; margin-bottom:12px ;" maxlength="100" @keyup.enter="getTableData" >
+        <div class="gitlabmanager-right-search-right" v-show="topTitle==='所有仓库'"><el-input v-model="input" placeholder="搜索仓库名称、分组名称" size="large" style="width:300px; margin-bottom:12px ;" maxlength="100" @keyup.enter="getTableData" >
         <template #suffix>
           <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
           <svg @click="selectGitLab" class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
@@ -61,11 +61,25 @@
       :content="item.name"
       placement="top-start"
     >
-                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FF4D4F;" v-if="index<=2&&item.avatar!=''&&item.access_level==='Owner'">
-                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #FFC53D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='M'">
-                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #73D13D;" v-if="index<=2&&item.avatar!=''&&item.access_level==='R'">
-                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #40A9FF;" v-if="index<=2&&item.avatar!=''&&item.access_level==='D'">
-                <img :src="item.avatar" :class="'membericon'+index" style="border: 1px solid #D9D9D9;" v-if="index<=2&&item.avatar!=''&&item.access_level==='G'">
+                <img :src="item.avatar"
+                 :class="'membericon'+index" style="border: 1px solid #FF4D4F;" 
+                 v-if="index<=2&&item.avatar!=''&&item.access_level==='Owner'">
+                <img :src="item.avatar"
+                 :class="'membericon'+index"
+                  style="border: 1px solid #FFC53D;"
+                   v-if="index<=2&&item.avatar!=''&&item.access_level==='M'">
+                <img :src="item.avatar"
+                 :class="'membericon'+index"
+                  style="border: 1px solid #73D13D;"
+                   v-if="index<=2&&item.avatar!=''&&item.access_level==='R'">
+                <img :src="item.avatar"
+                 :class="'membericon'+index"
+                  style="border: 1px solid #40A9FF;"
+                   v-if="index<=2&&item.avatar!=''&&item.access_level==='D'">
+                <img :src="item.avatar"
+                 :class="'membericon'+index"
+                  style="border: 1px solid #D9D9D9;"
+                   v-if="index<=2&&item.avatar!=''&&item.access_level==='G'">
                 </el-tooltip>
               </div>
             </template>
@@ -75,7 +89,7 @@
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="分组名称" width="200px" >
+          <el-table-column label="分组名称" width="210px" >
             <template #default="scope">
               <el-tag style="font-weight: 500; font-size: 12px; line-height: 18px; ">{{scope.row.group_name}}</el-tag>
             </template>
@@ -127,28 +141,31 @@
                 <template #reference>
                     <svg-icon style="cursor:pointer;margin-left:5px;padding:5px 5px;border-radius:5px" width="15" height="18" icon-class="point" @click.stop="openPopover(scope.row)"  class="pointFrom" /> 
       </template>
-              
-                <div class="atooltip-div" @click.stop="scanResults(scope.row)" >
-                  <img src="../../assets/icons/fromicon/Frame-5.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
-                    查看扫描结果
-                  </div>
-                  <div class="atooltip-div" @click.stop="copyUrl(scope.row)" >
+                <div class="atooltip-div" @click.stop="copyUrl(scope.row)" >
                     <img src="../../assets/icons/fromicon/Frame-4.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     复制 Url 到剪切板
                   </div>
-                  <div class="atooltip-div" @click.stop="applyForRight(scope.row)">
+                  <el-popconfirm title="是否确定申请developer权限（有效期1天）？" @confirm="applyForRight(scope.row)">
+                  <template #reference>
+                    <div class="atooltip-div" v-show="topTitle!=='我参与的'" >
                     <img src="../../assets/icons/fromicon/Frame-3.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     申请权限
                   </div>
-                  <div class="atooltip-div" @click.stop="protectedBranch(scope.row)">
+                  </template>
+                  </el-popconfirm>
+                <div :class="[operationFlg?'atooltip-div':'atooltip-div2']"  @click.stop="scanResults(scope.row)" >
+                  <img src="../../assets/icons/fromicon/Frame-5.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
+                    查看扫描结果
+                  </div>
+                  <div :class="[operationFlg?'atooltip-div':'atooltip-div2']"  @click.stop="protectedBranch(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-2.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     保护分支设置
                   </div>
-                  <div class="atooltip-div" @click.stop="review(scope.row)">
+                  <div :class="[operationFlg?'atooltip-div':'atooltip-div2']"  @click.stop="review(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame-1.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     请求技术委员会评审
                   </div>
-                  <div class="atooltip-div" @click.stop="SyncWarehouse(scope.row)">
+                  <div :class="[operationFlg?'atooltip-div':'atooltip-div2']"  @click.stop="SyncWarehouse(scope.row)">
                     <img src="../../assets/icons/fromicon/Frame.png" style="width:18px; height:18px;position: relative;top:4px;margin-right:5px">
                     仓库同步设置
                   </div>         
@@ -159,8 +176,7 @@
       </div>
       <div class="gitlabmanager-right-page">
         <el-pagination
-          page-size="100"
-          :page-sizes="[10, 50, 100]"
+          :page-sizes="[20, 50, 100]"
           layout="total, sizes,->, prev, pager, next, jumper,"
           v-model:current-page="curPage"
           v-model:page-size="pageSize"
@@ -313,8 +329,6 @@
 </template>
 
 <script>
-import { exportDefaultSpecifier } from '@babel/types';
-
 
 export default {
   name: 'GitlabManager',
@@ -344,7 +358,7 @@ export default {
       userFlag:false,
       pageTotal:50,
       curPage:1,
-      pageSize:10,
+      pageSize:20,
       pjUrl:'',
       pjId:'',
       branchoptions:[],
@@ -543,13 +557,14 @@ export default {
       tableData: [],
       input: '',
       topTitle:'所有仓库',
-      warehouseType:'Index'
+      warehouseType:'Index',
+      operationFlg:false
     };
   },
   computed: {
     toWatch() {
-      const { pageSize, curPage ,pageTotal} = this;
-      return { pageSize, curPage,pageTotal };
+      const { pageSize, curPage } = this;
+      return { pageSize, curPage};
     },
   },
   watch:{
@@ -596,15 +611,21 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         })    
     },
     review(val){
-      this.reviewDrawer=true
+      if(this.operationFlg){
+        this.reviewDrawer=true
       this.getBreach(val.id)
       this.pjId=val.id
       val.openFlag=false 
+      }
+      
     },
     SyncWarehouse(val){
-      this.synchronousDrawer=true 
+      if(this.operationFlg){
+        this.synchronousDrawer=true 
       this.getBreach(val.id)
       val.openFlag=false 
+      }
+      
     },
     getTitle(val){
       if(val==='所有仓库'){
@@ -757,29 +778,34 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         val.openFlag=false   
     },
     scanResults(val){
-      this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
+      if(this.operationFlg){
+        this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
           pj_id:val.id
         }}).then(e=>{
           window.open(e.data.url+"/activity");
         })
       val.openFlag=false 
+      } 
     },
     applyForRight(val){
       this.axios.get('/actionapi/WarehouseApi/RequestForAccess', {params:{
           pj_id:val.id,
           user_cd:this.usercd
         }}).then(()=>{
-          this.$message.success("申请成功，已经申请develop权限，仅1天！")
+          this.$message.success("申请成功，已追加developer权限，有效期1天。")
         })
         val.openFlag=false 
     },
     protectedBranch(val){
-      this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
+      if(this.operationFlg){
+        this.axios.get('/actionapi/WarehouseApi/ProjectURL', {params:{
           pj_id:val.id
         }}).then(e=>{
           window.open(e.data.url+"/-/settings/repository");
         })
         val.openFlag=false 
+      }
+      
     },
     onBlur(){
       for(let i in this.tableData){
@@ -787,6 +813,24 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       }
     },
     openPopover(val2){
+      for(let k=0;k<val2.project_member.length;k++){
+        if(val2.project_member[k].name===this.username){
+          this.operationFlg=true
+          break
+        }else{
+          this.operationFlg=false
+        }
+      }
+      if(!this.operationFlg){
+        for(let g=0;g<val2.group_member.length;g++){
+          if(val2.group_member[g].name===this.username){
+            this.operationFlg=true
+          }else{
+            this.operationFlg=false
+          }
+      }
+      }
+      
       for(let i in this.tableData){
         this.tableData[i].openFlag=false
       }
@@ -811,6 +855,11 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           user_cd:this.usercd
         }
       }).then(e=>{
+        if(!e.data.Warehouses){
+          console.log(11);
+          this.tableData=[]
+          return this.tableData
+        }
         this.pageTotal=e.data.rowCount
         for(let i=0;i<e.data.Warehouses.length;i++){ 
         var groupSplit=e.data.Warehouses[i].group_member.split(",")
@@ -839,6 +888,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           this.tableData[i].last_activity_at=this.tableData[i].last_activity_at.split(" ")[0]
         }
       })
+      document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' 条/共 '+this.pageTotal+' 条'
     },
     async getIndexNum(){
       await this.axios.get('/actionapi/WarehouseApi/IndexNum', {
@@ -938,6 +988,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         font-size: 20px;
         line-height: 28px;
         color: #4B4B4B;
+        margin-bottom: 12px;
       }
     }
     &-table {
@@ -1001,8 +1052,21 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     height: 30px;
     border-radius: 5px;
   }
+  .atooltip-div2 {
+    padding-left: 5px;
+    padding-right:5px ;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 30px;
+    color: #a3a2a2;
+    height: 30px;
+    border-radius: 5px;
+  }
   .atooltip-div:hover{
     background: #f3f2f2;
+    cursor: pointer;
+  }
+  .atooltip-div2:hover{
     cursor: pointer;
   }
   .input-icon1,.input-icon2{
