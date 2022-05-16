@@ -14,9 +14,9 @@ const routes = [
     redirect: 'gitlabmanager',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '项目',
       component: () => import('@/views/dashboard/index.vue'),
-      meta: { title: 'Dashboard', icon: 'home' }
+      meta: { title: '项目', icon: 'home' }
     }, {
       path: 'gitlabmanager',
       name: '代码仓库',

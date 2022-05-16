@@ -284,7 +284,7 @@
       <h2>仓库同步设置</h2>
     </template>
     <div>
-      <span style="line-height:40px;">分支<span style="color:red;line-height:40px;">*</span></span>
+      <span style="line-height:40px;">分支（会同步至远程仓库同名分支）<span style="color:red;line-height:40px;">*</span></span>
       <el-select v-model="branchValue" placeholder="请选择" style="width:100%;">
     <el-option
       v-for="(item,index) in branchoptions"
@@ -296,7 +296,7 @@
   </el-select>
     </div>
     <div>
-      <span style="line-height:40px;">远程地址<span style="color:red;line-height:40px;">*</span></span>
+      <span style="line-height:40px;">远程地址（请提前创建远程仓库保证其存在）<span style="color:red;line-height:40px;">*</span></span>
     <el-input
       v-model="addressinput"
       placeholder="请输入详细地址"
@@ -976,7 +976,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       &-right {
         color: #909AAA;
         position:absolute;
-        left: 77%;
+        right: 13%;
       }
     }
   }
@@ -993,7 +993,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         font-size: 20px;
         line-height: 28px;
         color: #4B4B4B;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
         padding-left: 15px;
       }
     }
