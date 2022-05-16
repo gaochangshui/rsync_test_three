@@ -104,7 +104,7 @@ export default {
     .logo-name{
         float: left;
         font-weight: bold;
-
+        font-size: 15px;
          span{
             margin-left: 15px;
             margin-right: 15px;
@@ -113,6 +113,7 @@ export default {
     .page-name{
         font-weight: bold;
         float: left;
+        font-size: 15px;
     }
 }
 .right-menu {

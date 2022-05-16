@@ -28,7 +28,7 @@
       </div>
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData
-      " style="width: 100% " max-height="75vh" :header-cell-style="{background:'#FAFAFA'}">
+      " style="width: 100% " max-height="46rem" :header-cell-style="{background:'#FAFAFA'}">
  <el-table-column label="仓库名称" sortable :sort-method="sortDevName"  >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
@@ -174,7 +174,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="gitlabmanager-right-page">
+      <div class="gitlabmanager-right-page" v-show="pageTotal/pageSize>1">
         <el-pagination
           :page-sizes="[20, 50, 100]"
           layout="total, sizes,->, prev, pager, next, jumper,"
@@ -825,6 +825,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         for(let g=0;g<val2.group_member.length;g++){
           if(val2.group_member[g].name===this.username){
             this.operationFlg=true
+            break
           }else{
             this.operationFlg=false
           }
@@ -992,7 +993,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
       }
     }
     &-table {
-      height: 77vh;
+      height: 47rem;
       text-align: left;
       font-style: normal;
       font-weight: 400;
