@@ -29,7 +29,7 @@
       <div class="gitlabmanager-right-table">
         <el-table :data="tableData
       " style="width: 100% " max-height="75vh" :header-cell-style="{background:'#FAFAFA'}">
-          <el-table-column label="仓库名称" sortable :sort-method="sortDevName"  >
+ <el-table-column label="仓库名称" sortable :sort-method="sortDevName"  >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
               <el-tooltip
@@ -51,7 +51,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="last_activity_at" label="最近更新" sortable  width="150px"/>
-          <el-table-column label="仓库成员" width="100px" >
+          <el-table-column label="仓库成员" width="80px" >
             <template #default="scope">
               <div v-for="(item,index) in scope.row.project_member" :key="index">
                 <span v-show="item.avatar==''" style="margin-left:10px" >-</span>
@@ -84,7 +84,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column width="100px" >
+          <el-table-column width="70px" >
             <template #default="scope">
               <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
             </template>
@@ -94,7 +94,7 @@
               <el-tag style="font-weight: 500; font-size: 12px; line-height: 18px; ">{{scope.row.group_name}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column  label="分组成员" width="100px" >
+          <el-table-column  label="分组成员" width="80px" >
           <template #default="scope">
               <div v-for="(item,index) in scope.row.group_member" :key="index">
                 <span v-show="item.avatar==''&&item.name!='jenkins-zgzn'" style="margin-left:10px" >-</span>
@@ -113,12 +113,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column width="100px" >
+          <el-table-column width="70px" >
             <template #default="scope">
               <div v-show="scope.row.group_member[0].avatar!=''">{{scope.row.group_member.length}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="评审" width="100px" >
+          <el-table-column label="评审" width="60px" >
             <template #default="scope">
               <span v-show="showj(scope.row.project_member,scope.row.project_member.length)" style="margin-left:10px" >-</span>
               <div v-for="(item,index) in scope.row.project_member" :key="index">   
@@ -126,7 +126,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" align="right" width="100px">
+          <el-table-column fixed="right" label="操作" align="right" width="60px">
             <template #default="scope">
               
               <el-popover 
@@ -947,7 +947,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
   &-left {
     width: 240px;
     box-shadow: inset -1px 0px 0px #ECECEC;
-    min-height: calc(100vh - 86px);
+    min-height: calc(100vh - 100px);
     & > div {
       padding-top: 20px;
     }
