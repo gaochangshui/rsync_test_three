@@ -26,9 +26,10 @@
       </el-input>
         </div>
       </div>
-      <div class="gitlabmanager-right-table">
+      <div style="overflow: auto;height: calc(100vh - 180px);">
+          <div class="gitlabmanager-right-table">
         <el-table :data="tableData
-      " style="width: 100% " max-height="46rem" :header-cell-style="{background:'#FAFAFA'}">
+      " style="width: 100% "  :header-cell-style="{background:'#FAFAFA'}">
  <el-table-column label="仓库名称" sortable :sort-method="sortDevName"  >
             <template #default="scope">
               <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
@@ -173,8 +174,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="gitlabmanager-right-page" v-show="pageTotal/pageSize>1">
+        <div class="gitlabmanager-right-page" v-show="pageTotal/pageSize>1">
         <el-pagination
           :page-sizes="[20, 50, 100]"
           layout="total, sizes,->, prev, pager, next, jumper,"
@@ -183,6 +183,9 @@
           :total="pageTotal"
         />
       </div>
+      </div>
+      </div>
+      
     </div>
     <el-drawer
     v-model="reviewDrawer"
@@ -943,7 +946,7 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
 }
 .gitlabmanager {
   display: flex;
-  padding: 0 20px;
+  padding: 0 0 0 20px;
   height: calc(100vh - 100px);
   &-left {
     width: 240px;
@@ -978,11 +981,12 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     }
   }
   &-right {
-    padding: 20px;
+    padding:  20px 0;
     width: calc(100vw - 300px);
     &-search {
       display: flex;
       justify-content: space-between;
+      padding-right: 20px;
       &-left {
         font-style: normal;
         font-weight: 500;
@@ -990,16 +994,17 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         line-height: 28px;
         color: #4B4B4B;
         margin-bottom: 12px;
+        padding-left: 15px;
       }
     }
     &-table {
-      height: 47rem;
       text-align: left;
       font-style: normal;
       font-weight: 400;
       font-size: 14px;
       line-height: 22px;
       color: #4B4B4B;
+      padding-left: 15px;
     }
   }
 }
