@@ -190,7 +190,7 @@
     <el-drawer
     v-model="reviewDrawer"
     direction="rtl"
-    size="25%"
+    size="30%"
     :show-close="false"
     class="reviewDrawer"
   >
@@ -276,7 +276,7 @@
     <el-drawer
     v-model="synchronousDrawer"
     direction="rtl"
-    size="25%"
+    size="30%"
     :show-close="false"
     class="synchronousDrawer"
   >
@@ -303,7 +303,7 @@
       class="input-with-select"
     >
   <template #prepend>
-        <el-select v-model="addressValue" placeholder="请选择地址" style="width: 240px"  @change="changeFlag">
+        <el-select v-model="addressValue" placeholder="请选择地址" style="width: 230px"  @change="changeFlag">
     <el-option
       v-for="item in addressoptions"
       :key="item.value"
