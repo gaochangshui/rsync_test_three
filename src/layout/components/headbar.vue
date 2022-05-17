@@ -164,6 +164,7 @@ margin-right: 10px;
 padding-top: 6px;
     .avatar-wrapper {
       margin-top: 5px;
+      border-radius: 5px;
       position: relative;
 
       .user-avatar {

@@ -12,16 +12,13 @@ export default {
             UserCD: this.user,
             Password: this.password
         }).then(e => {
-           console.log(456, e);
            if(e.data.UserCD){
                this.$router.push('/gitlabmanager');
            }else{
                this.$message.error('账号或密码错误');
            }
            
-        }).catch((error) => {
-           console.log(123, error);
-        });
+        })
     }
   }
 };

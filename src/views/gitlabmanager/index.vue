@@ -264,7 +264,7 @@
     v-model="noteText"
     :rows="5"
     type="textarea"
-    placeholder="请输入"
+    placeholder="请输入项目CD、项目名及其他评审需求"
     style="width:100%;float: right;"
   />
     </div>
@@ -644,7 +644,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         this.warehouseType='ProjectsTemplate'
         this.getTableData()
       }
-      console.log(val);
       this.topTitle=val
     },
     showj(val,val2){
@@ -860,7 +859,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
         }
       }).then(e=>{
         if(!e.data.Warehouses){
-          console.log(11);
           this.tableData=[]
           return this.tableData
         }
@@ -903,7 +901,6 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
           this.labs[0].children[1].number=e.data.num.my
           this.labs[0].children[2].number=e.data.num.starrd
           this.labs[0].children[3].number=e.data.num.temp
-          console.log(this.labs[0].children[3].number);
         })
     }
   },
