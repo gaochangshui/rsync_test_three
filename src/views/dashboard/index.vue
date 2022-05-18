@@ -29,14 +29,17 @@
       <div style="overflow: auto;height: calc(100vh - 180px);">
           <div class="dashboard-right-table">
         <el-table :data="tableData
-      " style="width: 100% "  :header-cell-style="{background:'#FAFAFA'}">
- <el-table-column label="项目" sortable :sort-method="sortDevName" width="700px" >
+      " style="width: 100% " 
+       :header-cell-style="{background:'#FAFAFA'}"
+       @cell-mouse-enter="tableHover"
+       @cell-mouse-leave="tablaLeave">
+ <el-table-column label="项目" sortable :sort-method="sortDevName" >
             <template #default="scope">
-              <div style="color: #0B2646;">{{scope.row.pj_name}}</div>
+              <div style="color: #0B2646;">{{scope.row.name}}</div>
               <el-tooltip
         class="box-item"
         effect="dark"
-        :content="scope.row.description"
+        :content="11111111111111"
         placement="top-start"
       >
          <div style="color: #8E8E8E;
@@ -46,15 +49,31 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 -o-text-overflow:ellipsis;">
-                {{scope.row.description}}
+                11111111111111
                 </div>
       </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="last_activity_at" label="预订工数" sortable  />
-          <el-table-column width="400px" >
+          <el-table-column prop="num" label="预订工数" sortable  />
+          <el-table-column width="300px" align="right" >
             <template #default="scope">
-              <div v-show="scope.row.project_member[0].avatar!=''">{{scope.row.project_member.length}}</div>
+               <el-button
+              @click="showSelect()"
+              type="text"
+              size="small"
+              v-show="scope.row.showbnt"
+            >
+              仓库设定
+            </el-button>
+            <el-button
+              @click="showwarehouse(scope.row)"
+              type="text"
+              size="small"
+              v-show="scope.row.showbnt"
+              style="margin-right:10px"
+            >
+              查看仓库
+            </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -74,12 +93,11 @@
   title="仓库设定"
   v-model="dialogVisible"
   width="900px"
-  :before-close="handleClose"
 >
   <div>
-    <el-input v-model="input" placeholder="搜索仓库" size="large" style="width:418px; margin-bottom:12px ;" maxlength="100" @keyup.enter="getTableData" >
+    <el-input v-model="input2" placeholder="搜索仓库" size="large" style="width:418px; margin-bottom:12px ;" maxlength="100" @keyup.enter="getTableData" >
     <template #suffix>
-          <svg v-show="input==''?false:true" @click="emptyInput" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
+          <svg v-show="input2==''?false:true" @click="emptyInput2" t="1649831312816" class="input-icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2782" width="15" height="15"><path d="M512 32C251.4285715625 32 32 251.4285715625 32 512s219.4285715625 480 480 480 480-219.4285715625 480-480-219.4285715625-480-480-480z m205.7142853125 617.142856875c20.5714284375 20.5714284375 20.5714284375 48 0 61.714286249999994-20.5714284375 20.5714284375-48 20.5714284375-61.714285312499996 0l-137.142856875-137.1428578125L374.857143125 717.7142853125c-20.5714284375 20.5714284375-48 20.5714284375-68.5714284375 0s-20.5714284375-54.857143125 0-68.5714284375l144-144-137.1428578125-137.142856875c-20.5714284375-13.714285312500001-20.5714284375-41.142856875 0-61.714285312499996 20.5714284375-20.5714284375 48-20.5714284375 61.714286249999994 0l137.142856875 137.142856875 144-144c20.5714284375-20.5714284375 48-20.5714284375 68.5714284375 0 20.5714284375 20.5714284375 20.5714284375 48 0 68.5714284375L580.5714284375 512l137.142856875 137.142856875z" fill="#bfbfbf" p-id="2783"></path></svg>
           <svg @click="selectGitLab" class="input-icon2" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8="" width="15" height="15"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg>
         </template></el-input>
     <div class="allwarehouse">
@@ -92,10 +110,12 @@
       </div>
     </div>
     <div class="selectedwarehouse">
-      <span class="dialogTittle">已选择</span>
+      <span class="dialogTittle">已选择
+        <div class="emptybtn" @click="empty">清空</div>
+      </span>
       <div class="warehousebox2">
         <div v-for="(item,index) in selected" :key="index" style="margin-left: 8px;margin-right: 8px;">
-          <el-tag  closable type="info" style="width:100%; margin-bottom: 8px;height: 36px;font-size: 14px;" @close="handleClose(item)">
+          <el-tag  closable type="info" style="width:100%; margin-bottom: 8px;height: 36px;font-size: 14px;" @close.stop="handleClose(item)">
     {{item}}
   </el-tag>
         </div>
@@ -109,6 +129,7 @@
     </span>
   </template>
 </el-dialog>
+<router-view></router-view>
   </div>
 </template>
 
@@ -122,7 +143,7 @@ export default {
       username:'',
       usercd:'',
       checked1:[],
-      dialogVisible:true,
+      dialogVisible:false,
       pageTotal:50,
       curPage:1,
       pageSize:20,
@@ -145,8 +166,19 @@ export default {
           ]
         }
       ],
-      tableData: [],
+      tableData: [
+        {
+          name:'name1',
+          num:10,
+          showbnt:false,
+        },{
+          name:'name2',
+          num:14,
+          showbnt:false,
+        }
+      ],
       input: '',
+      input2: '',
       topTitle:'所有项目',
       warehouseType:'Index',
       operationFlg:false
@@ -165,12 +197,45 @@ export default {
 document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeValue=(this.curPage-1)*this.pageSize+1+' - '+(this.curPage*this.pageSize>=this.pageTotal?this.pageTotal:this.curPage*this.pageSize)+' 条/共 '+this.pageTotal+' 条'
       })
 
+    },
+    dialogVisible(){
+      this.selected=[]
+      this.checked1=[]
     }
   },
   methods: {
+    empty(){
+      this.selected=[]
+      this.checked1=[]
+    },
+    showwarehouse(val){
+      console.log(val.name);
+      this.$router.push({
+        name: '查看仓库',
+        query: {
+          title:val.name,
+        },
+      })
+    },
+    tablaLeave(row){
+      for(let i=0;i<this.tableData.length;i++){
+        if(this.tableData[i].name===row.name){
+          this.tableData[i].showbnt=false
+        }
+      }
+    },
+    tableHover(row){
+      for(let i=0;i<this.tableData.length;i++){
+        if(this.tableData[i].name===row.name){
+          this.tableData[i].showbnt=true
+        }
+      }
+    },
+    showSelect(){
+      this.dialogVisible=true
+    },
     handleClose(val){
       this.selected.splice(this.selected.indexOf(val), 1)
-      console.log(this.selected);
     },
     checkSelect(){
       this.selected=this.checked1
@@ -211,6 +276,9 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
     },
     emptyInput(){
       this.input=""
+    },
+    emptyInput2(){
+      this.input2=""
     },
   },
  created(){
@@ -361,5 +429,17 @@ document.getElementsByClassName("el-pagination__total")[0].childNodes[0].nodeVal
   }
   .el-tag .el-tag__close{
     margin-left: 320px;
+  }
+  .emptybtn{
+    font-size: 12px;
+    position:absolute;
+    top: 0px;
+    left: 370px;
+    color: #8E8E8E;
+    cursor: pointer;
+
+  }
+  .emptybtn:hover{
+    color: #3E79F6;
   }
 </style>

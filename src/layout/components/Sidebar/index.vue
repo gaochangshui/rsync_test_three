@@ -36,6 +36,9 @@ export default {
       if (meta.activeMenu) {
         return meta.activeMenu
       }
+      if(route.name==='查看仓库'){
+        return '/dashboard'
+      }
       return path
     },
     isCollapse() {

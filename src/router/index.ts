@@ -12,11 +12,16 @@ const routes = [
     name: 'page',
     component: Layout,
     redirect: 'gitlabmanager',
-    children: [{
+    children: [
+      {
+        path:'dashboard/warehousepage',
+        name:'查看仓库',
+        component: () => import('@/views/dashboard/warehousepage.vue'),
+      },{
       path: 'dashboard',
       name: '项目',
       component: () => import('@/views/dashboard/index.vue'),
-      meta: { title: '项目', icon: 'home' }
+      meta: { title: '项目', icon: 'home' },
     }, {
       path: 'gitlabmanager',
       name: '代码仓库',
