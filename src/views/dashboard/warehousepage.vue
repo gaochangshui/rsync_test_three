@@ -76,7 +76,6 @@
                       color: #8e8e8e;
                       /* width:100%; */
                       overflow: hidden;
-                      overflow: hidden;
                       white-space: nowrap;
                       text-overflow: ellipsis;
                       -o-text-overflow: ellipsis;
@@ -765,7 +764,7 @@ export default {
               value: 'PHP',
               label: 'PHP',
             }
-          ],
+          ]
         },
       ],
       reviewOptions: [
@@ -868,7 +867,7 @@ export default {
       ],
       tableData: [],
       input: '',
-      operationFlg: false,
+      operationFlg: false
     };
   },
   computed: {
@@ -894,9 +893,14 @@ export default {
       this.addressinput = '';
       this.userFlag = false;
     },
-    toWatch() {
-      this.$nextTick(function () {
-        this.getTableData();
+    toWatch:{
+      handler(){
+        if(this.timer){
+          clearTimeout(this.timer);
+        }
+        this.timer= setTimeout(()=>{
+          this.$nextTick(function () {
+          this.getTableData();
         document.getElementsByClassName(
           'el-pagination__total'
         )[0].childNodes[0].nodeValue =
@@ -909,7 +913,11 @@ export default {
           ' 条/共 ' +
           this.pageTotal +
           ' 条';
-      });
+          })
+      },500);
+        
+      },
+      
     },
   },
   methods: {
@@ -929,8 +937,8 @@ export default {
       this.axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
           params: {
-            pj_id: val,
-          },
+            pj_id: val
+          }
         })
         .then((e) => {
           this.branchoptions = e.data.branchs;
@@ -1029,8 +1037,8 @@ export default {
               data_base: this.databaseValue,
               review_info: reviewinfo,
               desire_date: this.completeDate,
-              comment: this.noteText,
-            },
+              comment: this.noteText
+            }
           })
           .then(() => {
             this.$message.success('申请评审邮件已发出');
@@ -1075,8 +1083,8 @@ export default {
       this.axios
         .get('/actionapi/WarehouseApi/ProjectURL', {
           params: {
-            pj_id: val.id,
-          },
+            pj_id: val.id
+          }
         })
         .then((e) => {
           this.$copyText(e.data.url).then(() => {
@@ -1090,8 +1098,8 @@ export default {
         this.axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
-              pj_id: val.id,
-            },
+              pj_id: val.id
+            }
           })
           .then((e) => {
             window.open(e.data.url + '/activity');
@@ -1104,8 +1112,8 @@ export default {
         .get('/actionapi/WarehouseApi/RequestForAccess', {
           params: {
             pj_id: val.id,
-            user_cd: this.usercd,
-          },
+            user_cd: this.usercd
+          }
         })
         .then(() => {
           this.$message.success('申请成功，已追加developer权限，有效期1天。');
@@ -1117,8 +1125,8 @@ export default {
         this.axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
-              pj_id: val.id,
-            },
+              pj_id: val.id
+            }
           })
           .then((e) => {
             window.open(e.data.url + '/-/settings/repository');
@@ -1172,8 +1180,8 @@ export default {
             group_name: this.input,
             pageSize: this.pageSize,
             pageNum: this.curPage,
-            user_cd: this.usercd,
-          },
+            user_cd: this.usercd
+          }
         })
         .then((e) => {
           if (!e.data.Warehouses) {
@@ -1196,8 +1204,8 @@ export default {
                 projectSplit[j + 3]
               ).replace(/\'/g, '"');
               if (
-                projectReplace.indexOf('"name":') == -1 ||
-                projectReplace.indexOf('"avatar":') == -1
+                projectReplace.indexOf('"name":') === -1 ||
+                projectReplace.indexOf('"avatar":') === -1
               ) {
                 projectReplace =
                   '{"id":"","name":"","access_level":"","avatar":""}';
@@ -1217,8 +1225,8 @@ export default {
                 groupSplit[k + 3]
               ).replace(/\'/g, '"');
               if (
-                groupReplace.indexOf('"name":') == -1 ||
-                groupReplace.indexOf('"avatar":') == -1
+                groupReplace.indexOf('"name":') === -1 ||
+                groupReplace.indexOf('"avatar":') === -1
               ) {
                 groupReplace =
                   '{"id":"","name":"","access_level":"","avatar":""}';
@@ -1253,7 +1261,7 @@ export default {
   },
   mounted() {
     this.headtitle = this.$route.query.title;
-  },
+  }
 };
 </script>
 

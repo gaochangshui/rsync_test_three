@@ -92,7 +92,6 @@
                       color: #8e8e8e;
                       /* width:100%; */
                       overflow: hidden;
-                      overflow: hidden;
                       white-space: nowrap;
                       text-overflow: ellipsis;
                       -o-text-overflow: ellipsis;
@@ -259,15 +258,15 @@ export default {
           children: [
             {
               name: '所有项目',
-              number: '140',
+              number: '140'
             },
             {
               name: '进行中的',
-              number: '75',
+              number: '75'
             },
             {
               name: '已完成的',
-              number: '15',
+              number: '15'
             }
           ],
         },
@@ -288,7 +287,7 @@ export default {
       input2: '',
       topTitle: '所有项目',
       warehouseType: 'Index',
-      operationFlg: false,
+      operationFlg: false
     };
   },
   computed: {
@@ -298,9 +297,14 @@ export default {
     },
   },
   watch: {
-    toWatch() {
-      this.$nextTick(function () {
-        this.getTableData();
+    toWatch:{
+      handler(){
+        if(this.timer){
+          clearTimeout(this.timer);
+        }
+        this.timer= setTimeout(()=>{
+          this.$nextTick(function () {
+          this.getTableData();
         document.getElementsByClassName(
           'el-pagination__total'
         )[0].childNodes[0].nodeValue =
@@ -312,8 +316,12 @@ export default {
             : this.curPage * this.pageSize) +
           ' 条/共 ' +
           this.pageTotal +
-          ' 条 ';
-      });
+          ' 条';
+          })
+      },500);
+        
+      },
+      
     },
     dialogVisible() {
       this.selected = [];
