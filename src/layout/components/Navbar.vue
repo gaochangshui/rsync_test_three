@@ -2,7 +2,10 @@
   <div class="navbar">
     <div class="hamburger-container">
       <el-breadcrumb separator="/">
-    <el-breadcrumb-item to="/dashboard" v-show="hamburgerList[1].path==='/dashboard/warehousepage'">项目</el-breadcrumb-item>
+    <el-breadcrumb-item 
+    to="/dashboard" 
+    v-show="hamburgerList[1].path==='/dashboard/warehousepage'"
+    >项目</el-breadcrumb-item>
     <el-breadcrumb-item :to="hamburgerList[1].path">{{hamburgerList[1].name}}</el-breadcrumb-item>
   </el-breadcrumb>
     </div>
@@ -17,7 +20,7 @@ export default {
   },
   computed:{
 hamburgerList(){
-  return this.$route.matched
+  return this.$route.matched;
 }
   },
   methods: {

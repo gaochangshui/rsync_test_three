@@ -28,8 +28,14 @@ export default {
     <div class="login">
         <div>
             <div class="login-head">Please Sign in</div>
-            <el-input class="userInput" v-model="user" placeholder="User Code" style="border-radius: 5px 5px 0 0;"></el-input>
-            <el-input class="passeordInput" show-password v-model="password" placeholder="LDAP Password" @keyup.enter="login"></el-input>
+            <el-input class="userInput" 
+            v-model="user" 
+            placeholder="User Code" 
+            style="border-radius: 5px 5px 0 0;"></el-input>
+            <el-input class="passeordInput"
+             show-password v-model="password" 
+             placeholder="LDAP Password" 
+             @keyup.enter="login"></el-input>
             <p>
                 <a href="http://docs.trechina.cn/docs/ldap_20210622">Forgot Password?</a>
             </p>

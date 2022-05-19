@@ -19,27 +19,27 @@
 </template>
 
 <script>
-import SidebarItem from './SidebarItem.vue'
+import SidebarItem from './SidebarItem.vue';
 
 export default {
   components: { SidebarItem },
   computed: {
     routes() {
-      return this.$router.options.routes[1].children
+      return this.$router.options.routes[1].children;
     },
     activeMenu() {
-      const route = this.$route
+      const route = this.$route;
       console.log('route', route, this.$router.options);
-      const { meta, path } = route
+      const { meta, path } = route;
       console.log('meta', meta, path);
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
       if(route.name==='查看仓库'){
-        return '/dashboard'
+        return '/dashboard';
       }
-      return path
+      return path;
     },
     isCollapse() {
       return true;
@@ -47,5 +47,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-</style>

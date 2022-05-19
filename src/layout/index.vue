@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import { Navbar, AppMain, Sidebar } from "./components/index";
-import Headbar from "./components/headbar.vue";
+import { Navbar, AppMain, Sidebar } from './components/index';
+import Headbar from './components/headbar.vue';
 
 export default {
-  name: "Layout",
+  name: 'Layout',
   components: {
     Navbar,
     AppMain,
     Sidebar,
     Headbar
-},
+}
 };
 </script>
 <style lang="less">
