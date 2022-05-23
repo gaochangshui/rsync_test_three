@@ -426,7 +426,7 @@
                     请求技术委员会评审
                   </div>
                   <div
-                    :class="[operationFlg ? 'atooltip-div' : 'atooltip-div2']"
+                    :class="[Syncflg ? 'atooltip-div' : 'atooltip-div2']"
                     @click.stop="SyncWarehouse(scope.row)"
                   >
                     <img
@@ -654,16 +654,18 @@
       </div>
       <div v-show="userFlag">
         <span style="line-height: 40px"
-          >Token<span style="color: red; line-height: 40px">*</span></span
+          >Token（未更改则用上次的Token值）<span style="color: red; line-height: 40px">*</span></span
         >
         <el-input
           v-model="tokeninput"
+          type="password"
           placeholder="请输入Token"
           style="width: 100%"
+          show-password
         ></el-input>
       </div>
       <template #footer>
-        <el-button size="large" @click="closeDrawer">保存</el-button>
+        <el-button size="large" @click="saveWarehouse">保存</el-button>
         <el-button type="primary" size="large" @click="addWarehouse"
           >保存并立即同期</el-button
         >
@@ -691,7 +693,7 @@ export default {
       props: { multiple: true },
       username: '',
       userinput: '',
-      tokeninput: '',
+      tokeninput:'000000',
       usercd: '',
       reviewDrawer: false,
       synchronousDrawer: false,
@@ -915,7 +917,9 @@ export default {
       topTitle: '所有仓库',
       warehouseType: 'Index',
       operationFlg: false,
-      timer:null
+      timer:null,
+      Syncflg:false,
+      tokenFlg:false
     };
   },
   computed: {
@@ -937,7 +941,7 @@ export default {
       this.branchValue = '';
       this.addressValue = '';
       this.userinput = '';
-      this.tokeninput = '';
+      this.tokeninput = '000000';
       this.addressinput = '';
       this.userFlag = false;
     },
@@ -998,7 +1002,7 @@ export default {
       }
     },
     SyncWarehouse(val) {
-      if (this.operationFlg) {
+      if (this.Syncflg) {
         this.synchronousDrawer = true;
         this.getBreach(val.id);
         val.openFlag = false;
@@ -1062,7 +1066,7 @@ export default {
     },
     closeDrawer() {
       this.reviewDrawer = false;
-      this.synchronousDrawer = false;
+      
     },
     reWarehouse() {
       var mainlan = '';
@@ -1108,7 +1112,7 @@ export default {
       }
     },
     //TODO
-    addWarehouse() {
+    saveWarehouse(){
       if (this.addressValue === '') {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
@@ -1116,6 +1120,12 @@ export default {
           if (this.addressinput === '' || this.branchValue === '') {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
+            if(this.tokeninput==='000000'){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+            console.log(this.tokenFlg);
             console.log(this.branchValue);
             console.log(this.addressValue);
             console.log(this.userinput);
@@ -1131,6 +1141,57 @@ export default {
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
+            if(this.tokeninput==='000000'){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+            console.log(this.tokenFlg);
+            console.log(this.branchValue);
+            console.log(this.addressValue);
+            console.log(this.userinput);
+            console.log(this.tokeninput);
+            this.synchronousDrawer = false;
+          }
+        }
+      }
+    },
+    //TODO
+    addWarehouse() {
+      if (this.addressValue === '') {
+        this.$message.error('您还有必填信息未填写！！！');
+      } else {
+        if (this.addressValue === 'http://10.2.1.117/') {
+          if (this.addressinput === '' || this.branchValue === '') {
+            this.$message.error('您还有必填信息未填写！！！');
+          } else {
+            if(this.tokeninput==='000000'){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+            console.log(this.tokenFlg);
+            console.log(this.branchValue);
+            console.log(this.addressValue);
+            console.log(this.userinput);
+            console.log(this.tokeninput);
+            this.synchronousDrawer = false;
+          }
+        } else {
+          if (
+            this.addressinput === '' ||
+            this.branchValue === '' ||
+            this.userinput === '' ||
+            this.tokeninput === ''
+          ) {
+            this.$message.error('您还有必填信息未填写！！！');
+          } else {
+            if(this.tokeninput==='000000'){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+            console.log(this.tokenFlg);
             console.log(this.branchValue);
             console.log(this.addressValue);
             console.log(this.userinput);
@@ -1203,18 +1264,26 @@ export default {
     openPopover(val2) {
       for (let k = 0; k < val2.project_member.length; k++) {
         if (val2.project_member[k].name === this.username) {
+          if(val2.project_member[k].access_level==='Owner'||val2.project_member[k].access_level==='M'){
+            this.Syncflg=true
+          }
           this.operationFlg = true;
           break;
         } else {
+          this.Syncflg=false;
           this.operationFlg = false;
         }
       }
       if (!this.operationFlg) {
         for (let g = 0; g < val2.group_member.length; g++) {
           if (val2.group_member[g].name === this.username) {
+            if(val2.group_member[g].access_level==='Owner'||val2.group_member[g].access_level==='M'){
+            this.Syncflg=true
+          }
             this.operationFlg = true;
             break;
           } else {
+            this.Syncflg=false;
             this.operationFlg = false;
           }
         }

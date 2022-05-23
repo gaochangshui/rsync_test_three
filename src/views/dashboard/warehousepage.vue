@@ -686,21 +686,21 @@ export default {
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
-          label: 'http://10.2.1.117/',
+          label: 'http://10.2.1.117/'
         },
         {
           value: 'https://github.com/retail-ai-inc/',
-          label: 'https://github.com/retail-ai-inc/',
+          label: 'https://github.com/retail-ai-inc/'
         }
       ],
       databaseoptions: [
         {
           value: '有',
-          label: '有',
+          label: '有'
         },
         {
           value: '无',
-          label: '无',
+          label: '无'
         }
       ],
       languageoptions: [
