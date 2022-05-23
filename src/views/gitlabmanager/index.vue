@@ -654,7 +654,7 @@
       </div>
       <div v-show="userFlag">
         <span style="line-height: 40px"
-          >Token（未更改则用上次的Token值）<span style="color: red; line-height: 40px">*</span></span
+          >Token（未更改默认使用已保存的Token）<span style="color: red; line-height: 40px">*</span></span
         >
         <el-input
           v-model="tokeninput"
@@ -693,7 +693,7 @@ export default {
       props: { multiple: true },
       username: '',
       userinput: '',
-      tokeninput:'000000',
+      tokeninput:'unchanged',
       usercd: '',
       reviewDrawer: false,
       synchronousDrawer: false,
@@ -941,7 +941,7 @@ export default {
       this.branchValue = '';
       this.addressValue = '';
       this.userinput = '';
-      this.tokeninput = '000000';
+      this.tokeninput = 'unchanged';
       this.addressinput = '';
       this.userFlag = false;
     },
@@ -1120,7 +1120,7 @@ export default {
           if (this.addressinput === '' || this.branchValue === '') {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='000000'){
+            if(this.tokeninput==='unchanged'){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
@@ -1141,7 +1141,7 @@ export default {
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='000000'){
+            if(this.tokeninput==='unchanged'){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
@@ -1165,7 +1165,7 @@ export default {
           if (this.addressinput === '' || this.branchValue === '') {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='000000'){
+            if(this.tokeninput==='unchanged'){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
@@ -1186,7 +1186,7 @@ export default {
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='000000'){
+            if(this.tokeninput==='unchanged'){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
