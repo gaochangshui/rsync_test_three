@@ -13,7 +13,7 @@
             class="user-avatar"
           />      
           <span class="user-name">{{username}}</span>
-<span class='user-icon' >
+<span class="user-icon" >
   <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" data-v-78e17ca8="">
     <path fill="currentColor" d="m192 384 320 384 320-384z"></path>
     </svg>

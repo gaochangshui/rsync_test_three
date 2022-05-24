@@ -675,6 +675,7 @@
 </template>
 
 <script>
+import {Encrypt} from "../crypto"
 export default {
   name: 'GitlabManager',
   data() {
@@ -979,7 +980,7 @@ export default {
       } else {
         this.userFlag = false;
         this.userinput = '';
-        this.tokeninput = '';
+        this.tokeninput = 'unchanged';
       }
     },
     getBreach(val) {
@@ -1005,6 +1006,7 @@ export default {
       if (this.Syncflg) {
         this.synchronousDrawer = true;
         this.getBreach(val.id);
+        this.pjId=val.id
         val.openFlag = false;
       }
     },
@@ -1125,11 +1127,17 @@ export default {
             }else{
               this.tokenFlg=true
             }
-            console.log(this.tokenFlg);
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+             this.axios
+          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+            params: {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: this.branchValue,
+              remote_url:this.addressValue+this.addressinput
+            },
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         } else {
@@ -1146,11 +1154,21 @@ export default {
             }else{
               this.tokenFlg=true
             }
-            console.log(this.tokenFlg);
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+            let newToken = Encrypt(this.tokeninput);
+             this.axios
+          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+            params: {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: this.branchValue,
+              remote_url:this.addressValue+this.addressinput,
+              remote_token:newToken,
+              remote_user:this.userinput,
+              is_modified:this.tokenFlg
+            },
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         }
