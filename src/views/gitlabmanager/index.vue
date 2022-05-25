@@ -920,7 +920,8 @@ export default {
       operationFlg: false,
       timer:null,
       Syncflg:false,
-      tokenFlg:false
+      tokenFlg:false,
+      tokencontrast:''
     };
   },
   computed: {
@@ -930,6 +931,14 @@ export default {
     },
   },
   watch: {
+    addressValue() {
+      if (this.addressValue == 'https://github.com/retail-ai-inc/') {
+        this.userFlag = true;
+      } else {
+        this.userFlag = false;
+        this.userinput = '';
+      }
+    },
     reviewDrawer() {
       this.branchValue = '';
       this.databaseValue = '';
@@ -974,17 +983,8 @@ export default {
     },
   },
   methods: {
-    changeFlag() {
-      if (this.addressValue == 'https://github.com/retail-ai-inc/') {
-        this.userFlag = true;
-      } else {
-        this.userFlag = false;
-        this.userinput = '';
-        this.tokeninput = 'unchanged';
-      }
-    },
-    getBreach(val) {
-      this.axios
+    async getBreach(val) {
+     await this.axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
           params: {
             pj_id: val
@@ -1002,13 +1002,36 @@ export default {
         val.openFlag = false;
       }
     },
-    SyncWarehouse(val) {
+   async SyncWarehouse(val) {
       if (this.Syncflg) {
         this.synchronousDrawer = true;
-        this.getBreach(val.id);
-        this.pjId=val.id
+      await  this.getBreach(val.id);
+        this.pjId=val.id;
+      await  this.getSyncWarehouse();
         val.openFlag = false;
       }
+    },
+    async getSyncWarehouse(){
+     await this.axios
+        .get('/actionapi/WarehouseApi/WarehouseSetting', {
+          params: {
+            pj_id: this.pjId
+          },
+        })
+        .then((e) => {
+          console.log(e.data);
+          this.branchValue=e.data.setting.sync_branches
+          if(e.data.setting.remote_url.indexOf('github.com')!==-1){
+            this.addressValue=e.data.setting.remote_url.slice(0,33);
+            this.addressinput=e.data.setting.remote_url.slice(33);
+            this.userinput=e.data.setting.remote_user;
+            this.tokeninput=e.data.setting.remote_token;
+            this.tokencontrast=e.data.setting.remote_token;
+          }else{
+            this.addressValue=e.data.setting.remote_url.slice(0,18);
+            this.addressinput=e.data.setting.remote_url.slice(18);
+          }
+        });
     },
     getTitle(val) {
       if (val === '所有仓库') {
@@ -1122,7 +1145,7 @@ export default {
           if (this.addressinput === '' || this.branchValue === '') {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='unchanged'){
+            if(this.tokeninput===this.tokencontrast){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
@@ -1149,7 +1172,7 @@ export default {
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='unchanged'){
+            if(this.tokeninput===this.tokencontrast){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
