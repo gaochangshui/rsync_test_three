@@ -1019,8 +1019,8 @@ export default {
           },
         })
         .then((e) => {
-          console.log(e.data);
-          this.branchValue=e.data.setting.sync_branches
+          if(e.data.setting){
+            this.branchValue=e.data.setting.sync_branches
           if(e.data.setting.remote_url.indexOf('github.com')!==-1){
             this.addressValue=e.data.setting.remote_url.slice(0,33);
             this.addressinput=e.data.setting.remote_url.slice(33);
@@ -1030,7 +1030,14 @@ export default {
           }else{
             this.addressValue=e.data.setting.remote_url.slice(0,18);
             this.addressinput=e.data.setting.remote_url.slice(18);
+            this.userinput=e.data.setting.remote_user;
+            this.tokeninput=e.data.setting.remote_token;
+            this.tokencontrast=e.data.setting.remote_token;
           }
+          }else{
+            this.tokencontrast='unchanged'
+          }
+          
         });
     },
     getTitle(val) {
