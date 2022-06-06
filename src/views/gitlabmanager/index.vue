@@ -601,6 +601,7 @@
         <el-select
           v-model="branchValue"
           placeholder="请选择"
+          multiple
           style="width: 100%"
         >
           <el-option
@@ -698,7 +699,7 @@ export default {
       usercd: '',
       reviewDrawer: false,
       synchronousDrawer: false,
-      branchValue: '',
+      branchValue: [],
       addressValue: '',
       addressinput: '',
       userFlag: false,
@@ -1020,7 +1021,7 @@ export default {
         })
         .then((e) => {
           if(e.data.setting){
-            this.branchValue=e.data.setting.sync_branches
+            this.branchValue=e.data.setting.sync_branches.split(',')
           if(e.data.setting.remote_url.indexOf('github.com')!==-1){
             this.addressValue=e.data.setting.remote_url.slice(0,33);
             this.addressinput=e.data.setting.remote_url.slice(33);
@@ -1143,13 +1144,25 @@ export default {
         this.reviewDrawer = false;
       }
     },
+    branchString(){
+      var branchstring='';
+      for(let i=0;i<this.branchValue.length;i++){
+        if(i===0){
+          branchstring=branchstring+this.branchValue[i]
+        }else{
+          branchstring=branchstring+','+this.branchValue[i]
+        }      
+      }
+      return branchstring
+    },
     //TODO
     saveWarehouse(){
+      var branchstring=this.branchString()
       if (this.addressValue === '') {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
         if (this.addressValue === 'http://10.2.1.117/') {
-          if (this.addressinput === '' || this.branchValue === '') {
+          if (this.addressinput === '' || this.branchValue.length === 0) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
             if(this.tokeninput===this.tokencontrast){
@@ -1162,7 +1175,7 @@ export default {
             params: {
               pj_id: this.pjId,
               user_cd: this.usercd,
-              branch: this.branchValue,
+              branch: branchstring,
               remote_url:this.addressValue+this.addressinput
             },
           }).then(() => {
@@ -1173,7 +1186,7 @@ export default {
         } else {
           if (
             this.addressinput === '' ||
-            this.branchValue === '' ||
+            this.branchValue.length === 0 ||
             this.userinput === '' ||
             this.tokeninput === ''
           ) {
@@ -1190,7 +1203,7 @@ export default {
             params: {
               pj_id: this.pjId,
               user_cd: this.usercd,
-              branch: this.branchValue,
+              branch: branchstring,
               remote_url:this.addressValue+this.addressinput,
               remote_token:newToken,
               remote_user:this.userinput,
@@ -1205,45 +1218,63 @@ export default {
       }
     },
     //TODO
+    
     addWarehouse() {
+      var branchstring=this.branchString()
       if (this.addressValue === '') {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
         if (this.addressValue === 'http://10.2.1.117/') {
-          if (this.addressinput === '' || this.branchValue === '') {
+          if (this.addressinput === '' || this.branchValue.length === 0) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='unchanged'){
+            if(this.tokeninput===this.tokencontrast){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
             }
-            console.log(this.tokenFlg);
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+             this.axios
+          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+            params: {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput
+            },
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         } else {
           if (
             this.addressinput === '' ||
-            this.branchValue === '' ||
+            this.branchValue.length === 0 ||
             this.userinput === '' ||
             this.tokeninput === ''
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            if(this.tokeninput==='unchanged'){
+            if(this.tokeninput===this.tokencontrast){
               this.tokenFlg=false
             }else{
               this.tokenFlg=true
             }
-            console.log(this.tokenFlg);
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+            let newToken = Encrypt(this.tokeninput);
+             this.axios
+          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+            params: {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput,
+              remote_token:newToken,
+              remote_user:this.userinput,
+              is_modified:this.tokenFlg
+            },
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         }
