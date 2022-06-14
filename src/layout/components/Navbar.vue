@@ -20,7 +20,7 @@ export default {
   },
   computed:{
 hamburgerList(){
-  return this.$route.matched;
+  return this.$route.matched
 }
   },
   methods: {

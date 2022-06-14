@@ -268,19 +268,19 @@ export default {
               name: '已完成的',
               number: '15'
             }
-          ],
-        },
+          ]
+        }
       ],
       tableData: [
         {
           name: 'name1',
           num: 10,
-          showbnt: false,
+          showbnt: false
         },
         {
           name: 'name2',
           num: 14,
-          showbnt: false,
+          showbnt: false
         }
       ],
       input: '',
@@ -294,7 +294,7 @@ export default {
     toWatch() {
       const { pageSize, curPage } = this;
       return { pageSize, curPage };
-    },
+    }
   },
   watch: {
     toWatch:{
@@ -320,13 +320,13 @@ export default {
           })
       },500);
         
-      },
+      }
       
     },
     dialogVisible() {
       this.selected = [];
       this.checked1 = [];
-    },
+    }
   },
   methods: {
     empty() {
@@ -338,8 +338,8 @@ export default {
       this.$router.push({
         name: '查看仓库',
         query: {
-          title: val.name,
-        },
+          title: val.name
+        }
       });
     },
     tablaLeave(row) {
@@ -491,13 +491,13 @@ export default {
 .el-pagination .el-input--suffix .el-input__inner {
   box-shadow: none;
 }
-.el-pagination .el-select .el-input.is-focus .el-input__inner {
-  box-shadow: none !important;
-}
 .el-pagination .el-select .el-input__inner:focus {
   box-shadow: none !important;
 }
 .el-pagination .el-select .el-input__inner:hover {
+  box-shadow: none !important;
+}
+.el-pagination .el-select .el-input.is-focus .el-input__inner {
   box-shadow: none !important;
 }
 .el-pagination {

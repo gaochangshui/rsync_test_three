@@ -676,7 +676,6 @@
 </template>
 
 <script>
-import {Encrypt} from "../crypto"
 export default {
   name: 'GitlabManager',
   data() {
@@ -1171,13 +1170,11 @@ export default {
               this.tokenFlg=true
             }
              this.axios
-          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
-            params: {
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
               remote_url:this.addressValue+this.addressinput
-            },
           }).then(() => {
             this.$message.success('保存成功');
           });
@@ -1197,18 +1194,15 @@ export default {
             }else{
               this.tokenFlg=true
             }
-            let newToken = Encrypt(this.tokeninput);
              this.axios
-          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
-            params: {
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {   
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
               remote_url:this.addressValue+this.addressinput,
-              remote_token:newToken,
+              remote_token:this.tokeninput,
               remote_user:this.userinput,
               is_modified:this.tokenFlg
-            },
           }).then(() => {
             this.$message.success('保存成功');
           });
@@ -1234,13 +1228,11 @@ export default {
               this.tokenFlg=true
             }
              this.axios
-          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
-            params: {
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
               remote_url:this.addressValue+this.addressinput
-            },
           }).then(() => {
             this.$message.success('保存成功');
           });
@@ -1260,18 +1252,15 @@ export default {
             }else{
               this.tokenFlg=true
             }
-            let newToken = Encrypt(this.tokeninput);
              this.axios
-          .get('/actionapi/WarehouseApi/SaveWarehouseSetting', {
-            params: {
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
               remote_url:this.addressValue+this.addressinput,
-              remote_token:newToken,
+              remote_token:this.tokeninput,
               remote_user:this.userinput,
               is_modified:this.tokenFlg
-            },
           }).then(() => {
             this.$message.success('保存成功');
           });
@@ -1380,6 +1369,30 @@ export default {
     emptyInput() {
       this.input = '';
     },
+    dataTreating(val){
+    var arr=[]
+      for (let j = 0; j < val.length; j += 4) {
+              let Replace = (
+                val[j] +
+                ',' +
+                val[j + 1] +
+                ',' +
+                val[j + 2] +
+                ',' +
+                val[j + 3]
+              ).replace(/\'/g, '"');
+              if (
+                Replace.indexOf('"name":') === -1 
+              ) {
+                Replace =
+                  '{"id":"","name":"","access_level":"","avatar":""}';
+              }
+              let Parse = JSON.parse(Replace);
+              
+              arr.push(Parse)              
+            }
+            return arr
+    },
     async getTableData() {
       this.tableData = [];
       await this.axios
@@ -1393,56 +1406,14 @@ export default {
           }
         })
         .then((e) => {
-          if (!e.data.Warehouses) {
-            this.tableData = [];
-            return this.tableData;
-          }
           this.pageTotal = e.data.rowCount;
           for (let i = 0; i < e.data.Warehouses.length; i++) {
             var groupSplit = e.data.Warehouses[i].group_member.split(',');
             var projectSplit = e.data.Warehouses[i].project_member.split(',');
-            e.data.Warehouses[i].project_member = [];
-            for (let j = 0; j < projectSplit.length; j += 4) {
-              let projectReplace = (
-                projectSplit[j] +
-                ',' +
-                projectSplit[j + 1] +
-                ',' +
-                projectSplit[j + 2] +
-                ',' +
-                projectSplit[j + 3]
-              ).replace(/\'/g, '"');
-              if (
-                projectReplace.indexOf('"name":') === -1 ||
-                projectReplace.indexOf('"avatar":') === -1
-              ) {
-                projectReplace =
-                  '{"id":"","name":"","access_level":"","avatar":""}';
-              }
-              let projectParse = JSON.parse(projectReplace);
-              e.data.Warehouses[i].project_member.push(projectParse);
-            }
+            e.data.Warehouses[i].project_member = [];            
+            e.data.Warehouses[i].project_member=this.dataTreating(projectSplit)
             e.data.Warehouses[i].group_member = [];
-            for (let k = 0; k < groupSplit.length; k += 4) {
-              let groupReplace = (
-                groupSplit[k] +
-                ',' +
-                groupSplit[k + 1] +
-                ',' +
-                groupSplit[k + 2] +
-                ',' +
-                groupSplit[k + 3]
-              ).replace(/\'/g, '"');
-              if (
-                groupReplace.indexOf('"name":') === -1 ||
-                groupReplace.indexOf('"avatar":') === -1
-              ) {
-                groupReplace =
-                  '{"id":"","name":"","access_level":"","avatar":""}';
-              }
-              let groupParse = JSON.parse(groupReplace);
-              e.data.Warehouses[i].group_member.push(groupParse);
-            }
+            e.data.Warehouses[i].group_member=this.dataTreating(groupSplit);
             e.data.Warehouses[i]['openFlag'] = false;
             this.tableData.push(e.data.Warehouses[i]);
             this.tableData[i].last_activity_at =
