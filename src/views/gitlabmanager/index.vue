@@ -1234,7 +1234,7 @@ export default {
               branch: branchstring,
               remote_url:this.addressValue+this.addressinput
           }).then(() => {
-            this.$message.success('保存成功');
+            this.saveSyncWarehouse();
           });
             this.synchronousDrawer = false;
           }
@@ -1262,12 +1262,23 @@ export default {
               remote_user:this.userinput,
               is_modified:this.tokenFlg
           }).then(() => {
-            this.$message.success('保存成功');
+            this.saveSyncWarehouse();
           });
             this.synchronousDrawer = false;
           }
         }
       }
+    },
+    saveSyncWarehouse(){
+        this.axios
+        .get('/actionapi/WarehouseApi/SyncWarehouse',{
+          params:{
+            pj_id:this.pjId,
+            user_cd:this.usercd
+          }
+        }).then(()=>{
+          this.$message.success('保存并同期成功')
+        })
     },
     copyUrl(val) {
       this.axios
