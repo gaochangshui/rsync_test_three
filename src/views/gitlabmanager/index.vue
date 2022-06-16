@@ -676,6 +676,7 @@
 </template>
 
 <script>
+import { log } from 'console';
 export default {
   name: 'GitlabManager',
   data() {
@@ -952,7 +953,7 @@ export default {
       this.addressValue = '';
       this.userinput = '';
       this.tokeninput = 'unchanged';
-      this.addressinput = '';
+      //this.addressinput = '';
       this.userFlag = false;
     },
     toWatch:{
@@ -1263,22 +1264,36 @@ export default {
               is_modified:this.tokenFlg
           }).then(() => {
             this.saveSyncWarehouse();
+            
           });
-            this.synchronousDrawer = false;
+            
           }
         }
       }
     },
     saveSyncWarehouse(){
+      var addressArr=this.addressinput.split('.')
+      var addressSuffix=addressArr[addressArr.length-1]
+      if(addressSuffix==='git'){
         this.axios
         .get('/actionapi/WarehouseApi/SyncWarehouse',{
           params:{
             pj_id:this.pjId,
             user_cd:this.usercd
           }
-        }).then(()=>{
-          this.$message.success('保存并同期成功')
+        }).then((e)=>{
+          if(e.data.Success){
+            this.$message.success('保存并同期成功');
+            this.synchronousDrawer = false;
+          }else{
+             this.$message.error('同期失败');
+          }  
         })
+      }else{
+        this.$message.error('远程地址请以.git结尾');
+      }
+        
+        
     },
     copyUrl(val) {
       this.axios

@@ -14,7 +14,8 @@ module.exports = defineConfig({
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': resolve('src'),
+        console: false
       }
     }
   },
