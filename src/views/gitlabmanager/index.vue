@@ -1424,8 +1424,8 @@ export default {
       await this.axios
         .get('/actionapi/WarehouseApi/' + this.warehouseType, {
           params: {
-            pj_name: this.input,
-            group_name: this.input,
+            pj_name: this.input.trim(),
+            group_name: this.input.trim(),
             pageSize: this.pageSize,
             pageNum: this.curPage,
             user_cd: this.usercd
