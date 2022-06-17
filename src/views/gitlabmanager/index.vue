@@ -712,21 +712,21 @@ export default {
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
-          label: 'http://10.2.1.117/',
+          label: 'http://10.2.1.117/'
         },
         {
           value: 'https://github.com/retail-ai-inc/',
-          label: 'https://github.com/retail-ai-inc/',
+          label: 'https://github.com/retail-ai-inc/'
         }
       ],
       databaseoptions: [
         {
           value: '有',
-          label: '有',
+          label: '有'
         },
         {
           value: '无',
-          label: '无',
+          label: '无'
         }
       ],
       languageoptions: [
@@ -735,63 +735,63 @@ export default {
           options: [
             {
               value: 'HTML',
-              label: 'HTML',
+              label: 'HTML'
             },
             {
               value: 'JavaScript',
-              label: 'JavaScript',
+              label: 'JavaScript'
             },
             {
               value: 'CSS',
-              label: 'CSS',
+              label: 'CSS'
             },
             {
               value: 'TypeScript',
-              label: 'TypeScript',
+              label: 'TypeScript'
             }
-          ],
+          ]
         },
         {
           label: '后端语言',
           options: [
             {
               value: 'XML',
-              label: 'XML',
+              label: 'XML'
             },
             {
               value: 'Java',
-              label: 'Java',
+              label: 'Java'
             },
             {
               value: 'SMART Scripts',
-              label: 'SMART Scripts',
+              label: 'SMART Scripts'
             },
             {
               value: 'Python',
-              label: 'Python',
+              label: 'Python'
             },
             {
               value: 'Go',
-              label: 'Go',
+              label: 'Go'
             },
             {
               value: 'Kotlin',
-              label: 'Kotlin',
+              label: 'Kotlin'
             },
             {
               value: 'JSP',
-              label: 'JSP',
+              label: 'JSP'
             },
             {
               value: 'Ruby',
-              label: 'Ruby',
+              label: 'Ruby'
             },
             {
               value: 'PHP',
-              label: 'PHP',
+              label: 'PHP'
             }
           ]
-        },
+        }
       ],
       reviewOptions: [
         {
@@ -799,97 +799,97 @@ export default {
           options: [
             {
               value: '代码是否合理',
-              label: '代码是否合理',
+              label: '代码是否合理'
             },
             {
               value: '面向对象',
-              label: '面向对象',
+              label: '面向对象'
             },
             {
               value: '简洁架构',
-              label: '简洁架构',
+              label: '简洁架构'
             },
             {
               value: '代码原则',
-              label: '代码原则',
+              label: '代码原则'
             },
             {
               value: '设计模式',
-              label: '设计模式',
+              label: '设计模式'
             }
-          ],
+          ]
         },
         {
           label: '代码安全',
           options: [
             {
               value: '代码注入',
-              label: '代码注入',
+              label: '代码注入'
             },
             {
               value: '敏感数据',
-              label: '敏感数据',
+              label: '敏感数据'
             },
             {
               value: 'CSRF攻击',
-              label: 'CSRF攻击',
+              label: 'CSRF攻击'
             },
             {
               value: '代码性能',
-              label: '代码性能',
+              label: '代码性能'
             },
             {
               value: '异常处理',
-              label: '异常处理',
+              label: '异常处理'
             }
-          ],
+          ]
         },
         {
           label: '代码重复',
           options: [
             {
               value: '可重用性',
-              label: '可重用性',
+              label: '可重用性'
             },
             {
               value: '核心代码的注释量',
-              label: '核心代码的注释量',
+              label: '核心代码的注释量'
             },
             {
               value: '复杂表达式',
-              label: '复杂表达式',
+              label: '复杂表达式'
             },
             {
               value: '资源释放',
-              label: '资源释放',
+              label: '资源释放'
             },
             {
               value: '内存泄漏',
-              label: '内存泄漏',
+              label: '内存泄漏'
             }
-          ],
+          ]
         },
         {
           label: '代码',
           options: [
             {
               value: '可扩展性',
-              label: '可扩展性',
+              label: '可扩展性'
             },
             {
               value: '配置',
-              label: '配置',
+              label: '配置'
             },
             {
               value: '日志处理',
-              label: '日志处理',
+              label: '日志处理'
             },
             {
               value: '第三方组件使用合理性',
-              label: '第三方组件使用合理性',
+              label: '第三方组件使用合理性'
             }
-          ],
-        },
+          ]
+        }
       ],
       labs: [
         {
@@ -912,7 +912,7 @@ export default {
               number: ''
             }
           ]
-        },
+        }
       ],
       tableData: [],
       input: '',
@@ -929,11 +929,11 @@ export default {
     toWatch() {
       const { pageSize, curPage } = this;
       return { pageSize, curPage };
-    },
+    }
   },
   watch: {
     addressValue() {
-      if (this.addressValue == 'https://github.com/retail-ai-inc/') {
+      if (this.addressValue === 'https://github.com/retail-ai-inc/') {
         this.userFlag = true;
       } else {
         this.userFlag = false;
