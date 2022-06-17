@@ -23,20 +23,20 @@
           <el-dropdown-menu class="user-dropdown">
             <!-- <router-link to="/" style="text-decoration: none;">
               <el-dropdown-item> Home </el-dropdown-item>
-            </router-link>
-            <a
-            style="text-decoration: none;"
-              target="_blank"
-              href="https://github.com/PanJiaChen/vue-admin-template/"
-            >
-              <el-dropdown-item>Github</el-dropdown-item>
-            </a> -->
+            </router-link> -->
             <a
             style="text-decoration: none;"
               target="_blank"
               href="http://docs.trechina.cn/docs/code_management/faq"
             >
               <el-dropdown-item>运用规则</el-dropdown-item>
+            </a>
+            <a
+            style="text-decoration: none;"
+              target="_blank"
+              href="https://code.trechina.cn/gitlab/public-lib/source-management-support/-/issues"
+            >
+              <el-dropdown-item>我要提问</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">
               <span style="display: block; color: #3E79F6;"  >退出登录</span>
