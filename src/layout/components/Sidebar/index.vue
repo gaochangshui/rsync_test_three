@@ -12,21 +12,19 @@
         mode="vertical"
         router="true"
       >
-        <el-menu-item title="项目" index="0">
+        <el-menu-item title="项目">
           <svg-icon icon-class="home" />
           <template #title>项目功能稍后上线</template>
         </el-menu-item>
-        <li @click.stop="goUrl('https://code.trechina.cn/package')" class="el-menu-item" role="menuitem" tabindex="-1" title="资源包管理" style="padding-left: 20px;">
-          <div class="el-menu-tooltip__trigger el-tooltip__trigger el-tooltip__trigger">
-            <svg-icon icon-class="package" />
-          </div>
-        </li>
-        <li @click.stop="goUrl('https://forms.gle/RZB17dBePZ4GQ37t7')" class="el-menu-item" role="menuitem" tabindex="-1" title="虚拟机" style="padding-left: 20px;">
-          <div class="el-menu-tooltip__trigger el-tooltip__trigger el-tooltip__trigger">
-            <svg-icon icon-class="xuniji" />
-          </div>
-        </li>
+        <el-menu-item title="虚拟机">
+          <svg-icon icon-class="xuniji" @click.stop="goUrl('https://forms.gle/RZB17dBePZ4GQ37t7', 1)" />
+          <template #title>虚拟机</template>
+        </el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <el-menu-item title="资源包管理">
+          <svg-icon icon-class="package" @click.stop="goUrl('https://code.trechina.cn/package', 2)" />
+          <template #title>资源包管理</template>
+        </el-menu-item>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -38,9 +36,8 @@ import SidebarItem from './SidebarItem.vue';
 export default {
   components: { SidebarItem },
   methods: {
-    goUrl(url) {
-      console.log(123, 456);
-      window.location.href=url; 
+    goUrl(url, type) {
+      type === 1 ? window.open(url, "_blank","scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes") : window.open(url, "_blank");
     }
   },
   computed: {
