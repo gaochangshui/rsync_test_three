@@ -18,16 +18,17 @@ const routes = [
         name:'查看仓库',
         component: () => import('@/views/dashboard/warehousepage.vue'),
       },{
-      path: 'dashboard',
-      name: '项目',
-      component: () => import('@/views/dashboard/index.vue'),
-      meta: { title: '项目', icon: 'home' },
-    }, {
-      path: 'gitlabmanager',
-      name: '代码仓库',
-      component: () => import('@/views/gitlabmanager/index.vue'),
-      meta: { title: '代码仓库、评审、配置', icon: 'code',name:'代码' }
-    }],
+      // path: 'dashboard',
+      // name: '项目',
+      // component: () => import('@/views/dashboard/index.vue'),
+      // meta: { title: '项目', icon: 'home' },
+      // },{
+        path: 'gitlabmanager',
+        name: '代码仓库',
+        component: () => import('@/views/gitlabmanager/index.vue'),
+        meta: { title: '代码仓库、评审、配置', icon: 'code',name:'代码' }
+      }
+    ],
   },
   {
     path: '/about',
