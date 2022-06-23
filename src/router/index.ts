@@ -11,22 +11,27 @@ const routes = [
     path: '/',
     name: 'page',
     component: Layout,
-    redirect: 'gitlabmanager',
+    redirect: 'code',
     children: [
       {
         path:'dashboard/warehousepage',
         name:'查看仓库',
         component: () => import('@/views/dashboard/warehousepage.vue'),
       },{
-      // path: 'dashboard',
-      // name: '项目',
-      // component: () => import('@/views/dashboard/index.vue'),
-      // meta: { title: '项目', icon: 'home' },
-      // },{
-        path: 'gitlabmanager',
+        path: 'virtualmachine',
+        name: '虚拟机',
+        component: () => import('@/views/virtualmachine/index.vue'),
+        meta: { title: '虚拟机', icon: 'xuniji' },
+      },{
+        path: 'code',
         name: '代码仓库',
         component: () => import('@/views/gitlabmanager/index.vue'),
         meta: { title: '代码仓库、评审、配置', icon: 'code',name:'代码' }
+      // },{
+      //   path: 'package',
+      //   name: '资源包管理',
+      //   component: () => import('@/views/package/index.vue'),
+      //   meta: { title: '资源包管理', icon: 'package' },
       }
     ],
   },

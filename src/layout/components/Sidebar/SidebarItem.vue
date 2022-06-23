@@ -1,11 +1,9 @@
 <template>
   <div v-if="!item.hidden">
-    
     <el-menu-item :title="item.meta?.title" :index="'/'+basePath" v-show="item.name!=='查看仓库'">
       <svg-icon :icon-class="item.meta?.icon" />
       <template #title>{{item.meta?.title}}</template>
     </el-menu-item>
-    
   </div>
 </template>
 

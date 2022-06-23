@@ -13,7 +13,7 @@ export default {
             Password: this.password
         }).then(e => {
            if(e.data.UserCD){
-               this.$router.push('/gitlabmanager');
+               this.$router.push('/code');
            }else{
                this.$message.error('账号或密码错误');
            }
