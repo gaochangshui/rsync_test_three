@@ -12,7 +12,7 @@
         mode="vertical"
         router="true"
       >
-        <el-menu-item title="项目" disabled>
+        <el-menu-item title="项目">
           <svg-icon icon-class="home" />
           <template #title>项目功能稍后上线</template>
         </el-menu-item>
