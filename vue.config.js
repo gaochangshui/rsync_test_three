@@ -6,6 +6,7 @@ function resolve(dir) {
 }
 const name = defaultSettings.title || 'vue Admin Template'
 module.exports = defineConfig({
+  publicPath: '/agora/',
   transpileDependencies: true,
   lintOnSave: false,
   configureWebpack: {

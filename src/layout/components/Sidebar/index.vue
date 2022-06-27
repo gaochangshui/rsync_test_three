@@ -60,3 +60,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/.el-menu-item:hover{
+  background-color: transparent;
+}
+</style>
