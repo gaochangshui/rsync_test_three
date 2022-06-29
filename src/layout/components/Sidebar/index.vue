@@ -17,10 +17,12 @@
           <template #title>项目功能稍后上线</template>
         </el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
-        <el-menu-item title="资源包管理">
-          <svg-icon icon-class="package" @click.stop="goUrl('https://code.trechina.cn/package')"/>
-          <template #title>资源包管理</template>
-        </el-menu-item>
+        <div @click.stop="goUrl('https://code.trechina.cn/package')">
+          <el-menu-item title="资源包管理">
+            <svg-icon icon-class="package" />
+            <template #title>资源包管理</template>
+          </el-menu-item>
+        </div>
       </el-menu>
     </el-scrollbar>
   </div>
