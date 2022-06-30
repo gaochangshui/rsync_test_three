@@ -103,7 +103,7 @@ export default {
 <style lang="less" scoped>
 .headbar {
   width: 100%;
-  height: 47px;
+  height: 55px;
   background: #f2f3f5;
   display: flex;
   justify-content: space-between;
