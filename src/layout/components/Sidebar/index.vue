@@ -63,8 +63,14 @@ export default {
 }
 </script>
 
-<style scoped>
-/deep/.el-menu-item:hover{
-  background-color: transparent;
+<style >
+.el-menu-item:hover{
+  background-color: #E1E2E5 !important;
+}
+.el-menu-item.is-active{
+  color: #3E79F6 !important;
+}
+.el-menu-item{
+  color: #18263C !important;
 }
 </style>
