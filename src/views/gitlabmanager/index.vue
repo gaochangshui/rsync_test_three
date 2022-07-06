@@ -565,6 +565,24 @@
         </el-date-picker>
       </div>
       <div style="margin-top: 20px">
+        <span style="line-height: 40px">项目</span>
+        <el-select v-model="projectvalue"
+        style="width: 100%;"
+         filterable placeholder="请选择"
+         :filter-method="(value)=>projectquery(value)">
+    <el-option
+    class="projectStyle"
+      v-for="item in projectOptions"
+      :key="item.ProjectCode"
+      :label="item.ProjectCode"
+      :value="[item.ProjectCode+item.ProjectName]"
+    >
+    <div style="line-height: 15px;color: black;font-weight:normal;">{{item.ProjectCode}}</div>
+    <span style="color: black;font-weight:normal;">{{item.ProjectName}}</span>
+    </el-option>
+  </el-select>
+      </div>
+      <div style="margin-top: 20px">
         <span style="line-height: 40px">备注</span>
         <el-input
           v-model="noteText"
@@ -677,6 +695,7 @@
 
 <script>
 import { log } from 'console';
+import { ElLoading } from 'element-plus'
 export default {
   name: 'GitlabManager',
   data() {
@@ -695,7 +714,7 @@ export default {
       props: { multiple: true },
       username: '',
       userinput: '',
-      tokeninput:'unchanged',
+      tokeninput:'',
       usercd: '',
       reviewDrawer: false,
       synchronousDrawer: false,
@@ -709,6 +728,8 @@ export default {
       pjUrl: '',
       pjId: '',
       branchoptions: [],
+      projectOptions:[],
+      projectvalue:'',
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -947,12 +968,13 @@ export default {
       this.completeDate = '';
       this.reviewRadio = '';
       this.noteText = '';
+      this.projectvalue=''
     },
     synchronousDrawer() {
       this.branchValue = '';
       this.addressValue = '';
       this.userinput = '';
-      this.tokeninput = 'unchanged';
+      this.tokeninput = '';
       //this.addressinput = '';
       this.userFlag = false;
     },
@@ -977,13 +999,28 @@ export default {
           this.pageTotal +
           ' 条';
           })
-      },500);
-        
+      },500);       
       },
       
     },
   },
   methods: {
+    projectquery(val){
+      if(this.timer){
+          clearTimeout(this.timer);
+        }
+        this.timer= setTimeout(()=>{
+          this.axios
+        .get('/api/projects', {
+          params: {
+            filter:val.trim()
+          },
+        })
+        .then((e) => {
+          this.projectOptions=e.data
+        });
+      },500);
+    },
     async getBreach(val) {
      await this.axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
@@ -1001,6 +1038,7 @@ export default {
         this.getBreach(val.id);
         this.pjId = val.id;
         val.openFlag = false;
+       this.projectquery('')
       }
     },
    async SyncWarehouse(val) {
@@ -1122,10 +1160,16 @@ export default {
         mainlan === '' ||
         this.databaseValue === '' ||
         reviewinfo === '' ||
-        this.completeDate === ''
+        this.completeDate === ''||
+        this.projectvalue === ''
       ) {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
+        for(let i=0;i<this.branchoptions.length;i++){
+          if(this.branchoptions[i].name===this.branchValue){
+            var branchurl=this.branchoptions[i].web_url
+          }
+        }
         this.axios
           .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
             params: {
@@ -1156,7 +1200,6 @@ export default {
       }
       return branchstring
     },
-    //TODO
     saveWarehouse(){
       var branchstring=this.branchString()
       if (this.addressValue === '') {
@@ -1176,7 +1219,7 @@ export default {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
-              remote_url:this.addressValue+this.addressinput
+              remote_url:this.addressValue+this.addressinput.trim()
           }).then(() => {
             this.$message.success('保存成功');
           });
@@ -1201,9 +1244,9 @@ export default {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
-              remote_url:this.addressValue+this.addressinput,
-              remote_token:this.tokeninput,
-              remote_user:this.userinput,
+              remote_url:this.addressValue+this.addressinput.trim(),
+              remote_token:this.tokeninput.trim(),
+              remote_user:this.userinput.trim(),
               is_modified:this.tokenFlg
           }).then(() => {
             this.$message.success('保存成功');
@@ -1212,9 +1255,7 @@ export default {
           }
         }
       }
-    },
-    //TODO
-    
+    },   
     addWarehouse() {
       var branchstring=this.branchString()
       if (this.addressValue === '') {
@@ -1229,15 +1270,21 @@ export default {
             }else{
               this.tokenFlg=true
             }
+            const loading=ElLoading.service({
+              lock: true,
+              text: '正在同期，请稍后',
+              background: 'rgba(0, 0, 0, 0.7)',})
              this.axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
-              remote_url:this.addressValue+this.addressinput
+              remote_url:this.addressValue+this.addressinput.trim()
           }).then(() => {
-            this.saveSyncWarehouse();
+            
+            this.saveSyncWarehouse(loading);
           });
+          
             this.synchronousDrawer = false;
           }
         } else {
@@ -1254,17 +1301,22 @@ export default {
             }else{
               this.tokenFlg=true
             }
+             const loading=ElLoading.service({
+              lock: true,
+              text: '正在同期，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
              this.axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
               branch: branchstring,
-              remote_url:this.addressValue+this.addressinput,
-              remote_token:this.tokeninput,
-              remote_user:this.userinput,
+              remote_url:this.addressValue+this.addressinput.trim(),
+              remote_token:this.tokeninput.trim(),
+              remote_user:this.userinput.trim(),
               is_modified:this.tokenFlg
           }).then(() => {
-            this.saveSyncWarehouse();
+           
+              this.saveSyncWarehouse(loading);
             
           });
             
@@ -1272,7 +1324,7 @@ export default {
         }
       }
     },
-    saveSyncWarehouse(){
+    saveSyncWarehouse(loading){
       var addressArr=this.addressinput.split('.')
       var addressSuffix=addressArr[addressArr.length-1]
       if(addressSuffix==='git'){
@@ -1283,14 +1335,16 @@ export default {
             user_cd:this.usercd
           }
         }).then((e)=>{
+        loading.close();
           if(e.data.Success){
             this.$message.success('保存并同期成功');
             this.synchronousDrawer = false;
           }else{
-             this.$message.error('同期失败');
+             this.$message.error('同期失败：'+e.data.Message);
           }  
         })
       }else{
+        loading.close();
         this.$message.error('远程地址请以.git结尾');
       }
         
@@ -1433,6 +1487,9 @@ export default {
           }
         })
         .then((e) => {
+          if(!e.data.Warehouses){
+            return
+          }
           this.pageTotal = e.data.rowCount;
           for (let i = 0; i < e.data.Warehouses.length; i++) {
             var groupSplit = e.data.Warehouses[i].group_member.split(',');
@@ -1661,4 +1718,34 @@ export default {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
 }
+.projectStyle{
+height: 60px;
+}
+// .el-loading-spinner .circular{
+//   display: none;
+// }
+// .el-loading-spinner{
+//   text-align: start;
+//   background: url(../../assets/logo.png) no-repeat;
+//   background-size: 48px 48px;
+//   width: 100%;
+//   height: 100%;
+//   position: relative;
+//   top: 45%;
+//   left: 50%;
+//   animation: show 5s;
+// }
+// @keyframes show{
+//   0%{
+//     width: 0%;
+//   }
+//   100%{
+//     width: 100%;
+//   }
+// }
+// .el-loading-text{
+//   position: relative;
+//   left: -2%;
+//   top: 6%;
+// }
 </style>

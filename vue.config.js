@@ -26,12 +26,21 @@ module.exports = defineConfig({
     proxy: {
       //配置自动启动浏览器
       "/actionapi": {
-        target: "https://code.trechina.cn/gitlabmanager",
+        target: "http://172.17.1.36:5800",
         changeOrigin: true,
-        // ws: true,//websocket支持
+        ws: true,//websocket支持
         secure: false,
         pathRewrite: {
           '^/actionapi': '/actionapi'
+        }
+      },
+      "c": {
+        target: "http://172.17.1.22",
+        changeOrigin: true,
+        ws: true,//websocket支持
+        secure: false,
+        pathRewrite: {
+          '^/api': '/api'
         }
       }
     }
