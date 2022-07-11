@@ -14,6 +14,11 @@ const routes = [
     redirect: 'code',
     children: [
       {
+        path:'dashboard',
+        name:'项目',
+        component: () => import('@/views/dashboard/index.vue'),
+        meta: { title: '项目', icon: 'home' },
+      },{
         path:'dashboard/warehousepage',
         name:'查看仓库',
         component: () => import('@/views/dashboard/warehousepage.vue'),

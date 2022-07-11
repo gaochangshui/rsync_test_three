@@ -12,10 +12,10 @@
         mode="vertical"
         router="true"
       >
-        <el-menu-item title="项目">
+        <!-- <el-menu-item title="项目">
           <svg-icon icon-class="home" />
           <template #title>项目功能稍后上线</template>
-        </el-menu-item>
+        </el-menu-item> -->
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         <div @click.stop="goUrl('https://code.trechina.cn/package')">
           <el-menu-item title="资源包管理">

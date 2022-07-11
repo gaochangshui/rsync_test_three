@@ -106,6 +106,8 @@
             <el-table-column width="300px" align="right">
               <template #default="scope">
                 <el-button
+                class="tableBtn"
+                style="width:56px;height:22px"
                   @click="showSelect()"
                   type="text"
                   size="small"
@@ -114,11 +116,22 @@
                   仓库设定
                 </el-button>
                 <el-button
+                class="tableBtn"
+                style="width:56px;height:22px"
+                  @click="showReview(scope.row)"
+                  type="text"
+                  size="small"
+                  v-show="scope.row.showbnt"
+                >
+                  项目评审
+                </el-button>
+                <el-button
+                class="tableBtn"
+                style="width:56px;height:22px;margin-right: 10px"
                   @click="showwarehouse(scope.row)"
                   type="text"
                   size="small"
                   v-show="scope.row.showbnt"
-                  style="margin-right: 10px"
                 >
                   查看仓库
                 </el-button>
@@ -137,6 +150,112 @@
         </div>
       </div>
     </div>
+    <el-dialog
+    v-model="dialogReview"
+    :title="reTitle"
+    width="50%"
+  >
+    <el-table
+    ref="multipleTableRef"
+    :data="tableData"
+    :header-cell-style="{ background: '#FAFAFA' }"
+    style="width: 100%"
+    @selection-change="handleSelectionChange"
+  >
+    <el-table-column  label="本次评审" width="80" >
+      <input type="checkbox" style="margin-left: 20px;">
+    </el-table-column>
+    <el-table-column label="仓库名称" >
+      <template #default="scope">{{ scope.row.name }}</template>
+    </el-table-column>
+    <el-table-column property="name" label="主要语言"  >
+      <template #default="scope">
+        <el-select
+          v-model="scope.row.languageoptions"
+          multiple
+          placeholder="请选择主要语言（多选）"
+          style="width: 100%"
+        >
+          <el-option-group
+            v-for="group in languageoptions"
+            :key="group.label"
+            :label="group.label"
+          >
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-option-group>
+        </el-select>
+      </template>
+    </el-table-column>
+    <el-table-column property="address" label="分支" show-overflow-tooltip >
+    <el-select v-model="value" class="m-2" placeholder="Select">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
+    </el-table-column>
+  </el-table>
+  <div style="margin-top:16px">
+    <span style="line-height: 40px;margin-right: 16px;">完成时间</span>
+      <el-date-picker
+          :disabled-date="disabledDate"
+          v-model="completeDate"
+          type="date"
+          placeholder="选择日期"
+          style="width: 37%;margin-right: 85px;"
+          value-format="YYYY-MM-DD"
+        >
+        </el-date-picker>
+        <span style="line-height: 40px;margin-right: 16px;"
+          >评审信息</span
+        >
+        <el-select
+          v-model="reviewRadio"
+          placeholder="请选择评审信息（多选）"
+          multiple
+          collapse-tags
+          collapse-tags-tooltip
+          class="reSelect"
+          style="width: 37%;"
+        >
+          <el-option-group
+            v-for="group in reviewOptions"
+            :key="group.label"
+            :label="group.label"
+          >
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-option-group>
+        </el-select>
+  </div>
+  <div style="margin-top:16px">
+    <span style="line-height: 40px;margin-right: 44px;">备注</span>
+        <el-input
+          v-model="noteText"
+          placeholder="请输入内容"
+          style="width: 91%"
+        />
+  </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogReview = false">取消</el-button>
+        <el-button type="primary" @click="reWarehouse"
+          >确定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
     <el-dialog title="仓库设定" v-model="dialogVisible" width="900px">
       <div>
         <el-input
@@ -242,16 +361,212 @@ export default {
   data() {
     return {
       name: 'dashboard',
+      disabledDate(time) {
+        var timeNow = Date.now();
+        var before = timeNow - 24 * 60 * 60 * 1000;
+        return time.getTime() < before;
+      },
+      reTitle:'',
       username: '',
       usercd: '',
       checked1: [],
+      completeDate:'',
       dialogVisible: false,
+      dialogReview:false,
       pageTotal: 50,
       curPage: 1,
       pageSize: 20,
       branchoptions: [],
       allselect: ['select1', 'select2', 'select3', 'select4', 'select5'],
       selected: [],
+      languageValue:[],
+      reviewRadio:[],
+      noteText:'',
+      languageoptions: [
+        {
+          label: '前端语言',
+          options: [
+            {
+              value: 'HTML',
+              label: 'HTML'
+            },
+            {
+              value: 'JavaScript',
+              label: 'JavaScript'
+            },
+            {
+              value: 'CSS',
+              label: 'CSS'
+            },
+            {
+              value: 'TypeScript',
+              label: 'TypeScript'
+            }
+          ]
+        },
+        {
+          label: '后端语言',
+          options: [
+            {
+              value: 'XML',
+              label: 'XML'
+            },
+            {
+              value: 'Java',
+              label: 'Java'
+            },
+            {
+              value: 'SMART Scripts',
+              label: 'SMART Scripts'
+            },
+            {
+              value: 'Python',
+              label: 'Python'
+            },
+            {
+              value: 'Go',
+              label: 'Go'
+            },
+            {
+              value: 'Kotlin',
+              label: 'Kotlin'
+            },
+            {
+              value: 'JSP',
+              label: 'JSP'
+            },
+            {
+              value: 'Ruby',
+              label: 'Ruby'
+            },
+            {
+              value: 'PHP',
+              label: 'PHP'
+            }
+          ]
+        }
+      ],
+      reviewOptions: [
+        {
+          label: 'RESTful设计',
+          options: [
+            {
+              value: '代码是否合理',
+              label: '代码是否合理'
+            },
+            {
+              value: '面向对象',
+              label: '面向对象'
+            },
+            {
+              value: '简洁架构',
+              label: '简洁架构'
+            },
+            {
+              value: '代码原则',
+              label: '代码原则'
+            },
+            {
+              value: '设计模式',
+              label: '设计模式'
+            }
+          ]
+        },
+        {
+          label: '代码安全',
+          options: [
+            {
+              value: '代码注入',
+              label: '代码注入'
+            },
+            {
+              value: '敏感数据',
+              label: '敏感数据'
+            },
+            {
+              value: 'CSRF攻击',
+              label: 'CSRF攻击'
+            },
+            {
+              value: '代码性能',
+              label: '代码性能'
+            },
+            {
+              value: '异常处理',
+              label: '异常处理'
+            }
+          ]
+        },
+        {
+          label: '代码重复',
+          options: [
+            {
+              value: '可重用性',
+              label: '可重用性'
+            },
+            {
+              value: '核心代码的注释量',
+              label: '核心代码的注释量'
+            },
+            {
+              value: '复杂表达式',
+              label: '复杂表达式'
+            },
+            {
+              value: '资源释放',
+              label: '资源释放'
+            },
+            {
+              value: '内存泄漏',
+              label: '内存泄漏'
+            }
+          ]
+        },
+        {
+          label: '代码',
+          options: [
+            {
+              value: '可扩展性',
+              label: '可扩展性'
+            },
+            {
+              value: '配置',
+              label: '配置'
+            },
+            {
+              value: '日志处理',
+              label: '日志处理'
+            },
+            {
+              value: '第三方组件使用合理性',
+              label: '第三方组件使用合理性'
+            }
+          ]
+        }
+      ],
+      labs: [
+        {
+          name: '代码仓库',
+          children: [
+            {
+              name: '所有仓库',
+              number: ''
+            },
+            {
+              name: '我参与的',
+              number: ''
+            },
+            {
+              name: '星标项目',
+              number: ''
+            },
+            {
+              name: '模板仓库',
+              number: ''
+            }
+          ]
+        }
+      ],
       labs: [
         {
           name: '项目',
@@ -329,6 +644,14 @@ export default {
     }
   },
   methods: {
+    reWarehouse(){
+      this.noteText='';
+      this.reviewRadio=[];
+      for(let i=0;i<this.tableData.length;i++){
+        this.tableData[i].languageoptions=[]
+      }
+      this.dialogReview = false
+    },
     empty() {
       this.selected = [];
       this.checked1 = [];
@@ -358,6 +681,10 @@ export default {
     },
     showSelect() {
       this.dialogVisible = true;
+    },
+    showReview(val){
+      this.reTitle=val.name+": 111111111111111"
+        this.dialogReview = true;
     },
     handleClose(val) {
       this.selected.splice(this.selected.indexOf(val), 1);
@@ -565,5 +892,12 @@ export default {
 }
 .emptybtn:hover {
   color: #3e79f6;
+}
+.reSelect .el-input__inner{
+height: 32px !important;
+}
+.tableBtn:hover{
+  color: #3E79F6;
+background-color: #ECF4FF;
 }
 </style>

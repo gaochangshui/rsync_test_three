@@ -565,7 +565,10 @@
         </el-date-picker>
       </div>
       <div style="margin-top: 20px">
-        <span style="line-height: 40px">项目</span>
+        <span style="line-height: 40px">
+        项目<span style="color: red; line-height: 40px"
+            >*</span
+          ></span>
         <el-select v-model="projectvalue"
         style="width: 100%;"
          filterable placeholder="请选择"
@@ -575,7 +578,7 @@
       v-for="item in projectOptions"
       :key="item.ProjectCode"
       :label="item.ProjectCode"
-      :value="[item.ProjectCode+item.ProjectName]"
+      :value="[item.ProjectCode+' '+item.ProjectName]"
     >
     <div style="line-height: 15px;color: black;font-weight:normal;">{{item.ProjectCode}}</div>
     <span style="color: black;font-weight:normal;">{{item.ProjectName}}</span>
@@ -588,7 +591,7 @@
           v-model="noteText"
           :rows="5"
           type="textarea"
-          placeholder="请输入项目CD、项目名及其他评审需求"
+          placeholder="请输入其他评审需求"
           style="width: 100%; float: right"
         />
       </div>
@@ -1167,6 +1170,7 @@ export default {
       } else {
         for(let i=0;i<this.branchoptions.length;i++){
           if(this.branchoptions[i].name===this.branchValue){
+            //TODO
             var branchurl=this.branchoptions[i].web_url
           }
         }
@@ -1180,7 +1184,8 @@ export default {
               data_base: this.databaseValue,
               review_info: reviewinfo,
               desire_date: this.completeDate,
-              comment: this.noteText
+              comment: this.noteText,
+              qcd_project:this.projectvalue[0]
             },
           })
           .then(() => {

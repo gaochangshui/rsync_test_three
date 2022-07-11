@@ -34,7 +34,7 @@ module.exports = defineConfig({
           '^/actionapi': '/actionapi'
         }
       },
-      "c": {
+      "/api": {
         target: "http://172.17.1.22",
         changeOrigin: true,
         ws: true,//websocket支持
