@@ -1260,7 +1260,7 @@ export default {
     await this.getTableData();
   },
   mounted() {
-    this.headtitle = this.$route.query.title;
+    this.headtitle = this.$route.query.id+':   '+ this.$route.query.title;
   }
 };
 </script>

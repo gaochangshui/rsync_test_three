@@ -30,7 +30,7 @@
             size="large"
             style="width: 300px; margin-bottom: 12px"
             maxlength="100"
-            @keyup.enter="getTableData"
+            @keyup.enter="getTableData()"
           >
             <template #suffix>
               <svg
@@ -80,11 +80,11 @@
           >
             <el-table-column label="项目" sortable :sort-method="sortDevName">
               <template #default="scope">
-                <div style="color: #0b2646">{{ scope.row.name }}</div>
+                <div style="color: #0b2646">{{ scope.row.agreement_cd }}</div>
                 <el-tooltip
                   class="box-item"
                   effect="dark"
-                  :content="11111111111111"
+                  :content="scope.row.agreement_name"
                   placement="top-start"
                 >
                   <div
@@ -97,12 +97,12 @@
                       -o-text-overflow: ellipsis;
                     "
                   >
-                    11111111111111
+                    {{scope.row.agreement_name}}
                   </div>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="num" label="预订工数" sortable />
+            <el-table-column prop="plan_mandays" label="预订工数" sortable />
             <el-table-column width="300px" align="right">
               <template #default="scope">
                 <el-button
@@ -264,7 +264,7 @@
           size="large"
           style="width: 418px; margin-bottom: 12px"
           maxlength="100"
-          @keyup.enter="getTableData"
+          @keyup.enter="getsubject"
         >
           <template #suffix>
             <svg
@@ -286,7 +286,7 @@
               ></path>
             </svg>
             <svg
-              @click="selectGitLab"
+              @click="getsubject"
               class="input-icon2"
               viewBox="0 0 1024 1024"
               xmlns="http://www.w3.org/2000/svg"
@@ -303,13 +303,15 @@
         <div class="allwarehouse">
           <span class="dialogTittle">全部仓库</span>
           <div class="warehousebox1">
-            <div v-for="item in allselect" :key="item">
+            <div style="overflow-y: auto;overflow-x: hidden;height: 400px;">
+              <div v-for="item in allselect" :key="item">
               <el-checkbox
                 v-model="checked1"
                 :label="item"
                 @change="checkSelect"
-                style="margin-left: 16px"
-              ></el-checkbox>
+                style="margin-left: 16px; margin-top: 5px;"
+              >{{item.name}}</el-checkbox>
+            </div>
             </div>
           </div>
         </div>
@@ -319,7 +321,8 @@
             <div class="emptybtn" @click="empty">清空</div>
           </span>
           <div class="warehousebox2">
-            <div
+            <div style="overflow-y: auto;overflow-x: hidden;height: 400px;">
+              <div
               v-for="(item, index) in selected"
               :key="index"
               style="margin-left: 8px; margin-right: 8px"
@@ -336,8 +339,9 @@
                 "
                 @close.stop="handleClose(item)"
               >
-                {{ item }}
+                {{ item.name }}
               </el-tag>
+            </div>
             </div>
           </div>
         </div>
@@ -345,7 +349,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false"
+          <el-button type="primary" @click="setWarehouse"
             >确 定</el-button
           >
         </span>
@@ -377,7 +381,7 @@ export default {
       curPage: 1,
       pageSize: 20,
       branchoptions: [],
-      allselect: ['select1', 'select2', 'select3', 'select4', 'select5'],
+      allselect: [],
       selected: [],
       languageValue:[],
       reviewRadio:[],
@@ -586,20 +590,10 @@ export default {
           ]
         }
       ],
-      tableData: [
-        {
-          name: 'name1',
-          num: 10,
-          showbnt: false
-        },
-        {
-          name: 'name2',
-          num: 14,
-          showbnt: false
-        }
-      ],
+      tableData: [],
       input: '',
       input2: '',
+      leftType:0,
       topTitle: '所有项目',
       warehouseType: 'Index',
       operationFlg: false
@@ -636,7 +630,6 @@ export default {
       },500);
         
       }
-      
     },
     dialogVisible() {
       this.selected = [];
@@ -644,6 +637,9 @@ export default {
     }
   },
   methods: {
+    setWarehouse(){
+      this.dialogVisible = false
+    },
     reWarehouse(){
       this.noteText='';
       this.reviewRadio=[];
@@ -657,33 +653,34 @@ export default {
       this.checked1 = [];
     },
     showwarehouse(val) {
-      console.log(val.name);
       this.$router.push({
         name: '查看仓库',
         query: {
-          title: val.name
+          title: val.agreement_name,
+          id:val.agreement_cd
         }
       });
     },
     tablaLeave(row) {
       for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].name === row.name) {
+        if (this.tableData[i].agreement_name === row.agreement_name) {
           this.tableData[i].showbnt = false;
         }
       }
     },
     tableHover(row) {
       for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].name === row.name) {
+        if (this.tableData[i].agreement_name === row.agreement_name) {
           this.tableData[i].showbnt = true;
         }
       }
     },
     showSelect() {
+      this.getsubject()
       this.dialogVisible = true;
     },
     showReview(val){
-      this.reTitle=val.name+": 111111111111111"
+      this.reTitle=val.agreement_cd+': '+val.agreement_name
         this.dialogReview = true;
     },
     handleClose(val) {
@@ -692,8 +689,28 @@ export default {
     checkSelect() {
       this.selected = this.checked1;
     },
+    getsubject(){
+      this.axios
+        .get('/actionapi/WarehouseApi/GitlabProjectInfo',{
+          params:{
+            userid:this.usercd,
+            name:this.input2
+          }
+        }).then((e)=>{
+          this.allselect=e.data
+        })
+    },
     getTitle(val) {
       this.topTitle = val;
+      
+      if(this.topTitle==='所有项目'){
+        this.leftType=0
+      }else if(this.topTitle==='进行中的'){
+        this.leftType=1
+      }else{
+        this.leftType=2
+      }
+      this.getTableData()
     },
     getCookie() {
       var allCookie = document.cookie;
@@ -731,10 +748,56 @@ export default {
     },
     emptyInput2() {
       this.input2 = '';
-    }
+    },
+   async getIndexNum(){
+     await this.axios
+        .get('/actionapi/WarehouseApi/QCDProjectCount',{
+          params:{
+            userId:this.usercd
+          }
+        }).then((e)=>{
+          this.labs[0].children[0].number=e.data.allCount
+          this.labs[0].children[1].number=e.data.doingCount
+          this.labs[0].children[2].number=e.data.endCount
+        })
+    },
+    async getTableData(){
+      await this.axios
+        .get('/actionapi/WarehouseApi/QCDProjectShow', {
+          params: {
+            type: this.leftType,
+            pageSize: this.pageSize,
+            pageNum: this.curPage,
+            userId: this.usercd,
+            projectCD:this.input
+          }
+        })
+        .then((e) => {
+          this.pageTotal=e.data.pageNumAll
+          this.tableData=e.data.qcdProject
+          for(let i=0; i<this.tableData.length;i++){
+            this.tableData[i]['showbnt']=false
+          }
+        });
+        document.getElementsByClassName(
+        'el-pagination__total'
+      )[0].childNodes[0].nodeValue =
+        (this.curPage - 1) * this.pageSize +
+        1 +
+        ' - ' +
+        (this.curPage * this.pageSize >= this.pageTotal
+          ? this.pageTotal
+          : this.curPage * this.pageSize) +
+        ' 条/共 ' +
+        this.pageTotal +
+        ' 条';
+        
+     }
   },
-  created() {
-    this.getCookie();
+ async created() {
+   await this.getCookie();
+   await this.getTableData()
+   await this.getIndexNum()
   }
 };
 </script>
@@ -866,22 +929,18 @@ export default {
   margin-left: 20px;
   width: 100%;
 }
-.warehousebox1 {
+.warehousebox1,.warehousebox2 {
   width: 100%;
   border-top: 1px solid #eeeeee;
   padding-top: 6px;
 }
-.warehousebox2 {
-  width: 100%;
-  border-top: 1px solid #eeeeee;
-  padding-top: 16px;
-}
 .selectTag {
-  justify-content: left !important;
+  justify-content: space-between !important;
 }
-.selectTag .el-tag__close {
-  margin-left: 320px;
-}
+.selectTag .el-tag__content {
+width: 360px;
+overflow: hidden;
+} 
 .emptybtn {
   font-size: 12px;
   position: absolute;

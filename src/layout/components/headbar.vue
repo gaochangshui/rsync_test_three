@@ -200,7 +200,7 @@ padding-top: 6px;
   }
 }
 .el-dropdown-menu{
-  width: 140px;
+  width: 130px;
   border-radius:5px ;
   padding-left: 4px;
   padding-right: 4px;

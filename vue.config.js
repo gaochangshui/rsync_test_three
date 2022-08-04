@@ -26,7 +26,7 @@ module.exports = defineConfig({
     proxy: {
       //配置自动启动浏览器
       "/actionapi": {
-        target: "http://172.17.1.36:5800",
+        target: "http://172.17.1.9:8898/",
         changeOrigin: true,
         ws: true,//websocket支持
         secure: false,
