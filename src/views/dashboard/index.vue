@@ -26,7 +26,7 @@
         <div class="dashboard-right-search-right">
           <el-input
             v-model="input"
-            placeholder="搜索项目号"
+            placeholder="搜索项目号、项目名"
             size="large"
             style="width: 300px; margin-bottom: 12px"
             maxlength="100"
@@ -108,7 +108,7 @@
                 <el-button
                 class="tableBtn"
                 style="width:56px;height:22px"
-                  @click="showSelect()"
+                  @click="showSelect(scope.row)"
                   type="text"
                   size="small"
                   v-show="scope.row.showbnt"
@@ -157,7 +157,7 @@
   >
     <el-table
     ref="multipleTableRef"
-    :data="tableData"
+    :data="retableData"
     :header-cell-style="{ background: '#FAFAFA' }"
     style="width: 100%"
     @selection-change="handleSelectionChange"
@@ -304,14 +304,14 @@
           <span class="dialogTittle">全部仓库</span>
           <div class="warehousebox1">
             <div style="overflow-y: auto;overflow-x: hidden;height: 400px;">
-              <div v-for="item in allselect" :key="item">
+              <el-checkbox-group v-model="checked1" @change="checkSelect" style="display: flex ;flex-direction: column;">
               <el-checkbox
-                v-model="checked1"
-                :label="item"
-                @change="checkSelect"
+              v-for="item in allselect" :key="item"
+                :label="item.name"
+                @change="check(item)"
                 style="margin-left: 16px; margin-top: 5px;"
-              >{{item.name}}</el-checkbox>
-            </div>
+              ></el-checkbox>
+            </el-checkbox-group>
             </div>
           </div>
         </div>
@@ -339,7 +339,7 @@
                 "
                 @close.stop="handleClose(item)"
               >
-                {{ item.name }}
+                {{ item }}
               </el-tag>
             </div>
             </div>
@@ -386,6 +386,7 @@ export default {
       languageValue:[],
       reviewRadio:[],
       noteText:'',
+      retableData:[{}],
       languageoptions: [
         {
           label: '前端语言',
@@ -596,6 +597,8 @@ export default {
       leftType:0,
       topTitle: '所有项目',
       warehouseType: 'Index',
+      checkedData:[],
+      selectData:[],
       operationFlg: false
     };
   },
@@ -634,10 +637,30 @@ export default {
     dialogVisible() {
       this.selected = [];
       this.checked1 = [];
+      this.checkedData=[];
+      this.input2=''
     }
   },
   methods: {
+    check(val){
+      if(JSON.stringify(this.checkedData).indexOf(JSON.stringify(val))===-1){
+        this.checkedData.push(val);
+      }else{
+        this.checkedData.splice(this.checkedData.indexOf(val),1);
+      }  
+      console.log(this.checkedData);
+    },
     setWarehouse(){
+      this.axios
+        .post('/actionapi/QcdApi/QCDProjectSetting',{
+            id:this.selectid,
+            userId:this.usercd,
+            gitlabProject:this.checkedData
+        }).then((e)=>{
+          if(e.data.Success){
+            this.$message.success('设定仓库成功');
+          }
+        })
       this.dialogVisible = false
     },
     reWarehouse(){
@@ -651,6 +674,7 @@ export default {
     empty() {
       this.selected = [];
       this.checked1 = [];
+      this.checkedData=[];
     },
     showwarehouse(val) {
       this.$router.push({
@@ -675,8 +699,13 @@ export default {
         }
       }
     },
-    showSelect() {
-      this.getsubject()
+    async showSelect(val) {
+     await this.getsubject()
+     this.$nextTick(function(){
+      this.getsubjected(val.agreement_cd)
+     })
+     console.log(1,this.checked1);
+      this.selectid=val.agreement_cd
       this.dialogVisible = true;
     },
     showReview(val){
@@ -685,16 +714,41 @@ export default {
     },
     handleClose(val) {
       this.selected.splice(this.selected.indexOf(val), 1);
+      this.checkedData.splice(this.checkedData.indexOf(val),1);
     },
     checkSelect() {
       this.selected = this.checked1;
     },
-    getsubject(){
-      this.axios
-        .get('/actionapi/WarehouseApi/GitlabProjectInfo',{
+    async getsubjected(val){
+     await this.axios
+        .get('/actionapi/QcdApi/QCDProjectDetail',{
+          params:{
+            id:val,
+            userId:this.usercd
+          }
+        }).then((e)=>{
+          console.log(e.data);
+          if(e.data.Warehouses){
+            for(let i=0;i<e.data.Warehouses.length;i++){
+            let subjectarr={}
+            subjectarr.id=Number(e.data.Warehouses[i].id)
+            subjectarr.name=e.data.Warehouses[i].pj_name
+            this.checkedData.push(subjectarr)
+            this.selected.push(e.data.Warehouses[i].pj_name)
+            console.log(this.checkedData);
+          }
+          }else{
+            this.selected=[]
+          }
+          this.checked1=this.selected
+        })
+    },
+    async getsubject(){
+      await this.axios
+        .get('/actionapi/QcdApi/GitlabProjectInfo',{
           params:{
             userid:this.usercd,
-            name:this.input2
+            name:this.input2.trim()
           }
         }).then((e)=>{
           this.allselect=e.data
@@ -751,7 +805,7 @@ export default {
     },
    async getIndexNum(){
      await this.axios
-        .get('/actionapi/WarehouseApi/QCDProjectCount',{
+        .get('/actionapi/QcdApi/QCDProjectCount',{
           params:{
             userId:this.usercd
           }
@@ -763,13 +817,13 @@ export default {
     },
     async getTableData(){
       await this.axios
-        .get('/actionapi/WarehouseApi/QCDProjectShow', {
+        .get('/actionapi/QcdApi/QCDProjectShow', {
           params: {
             type: this.leftType,
             pageSize: this.pageSize,
             pageNum: this.curPage,
             userId: this.usercd,
-            projectCD:this.input
+            projectInfo:this.input.trim()
           }
         })
         .then((e) => {

@@ -1174,13 +1174,14 @@ export default {
     async getTableData() {
       this.tableData = [];
       await this.axios
-        .get('/actionapi/WarehouseApi/Index', {
+        .get('/actionapi/QcdApi/QCDProjectDetail', {
           params: {
             pj_name: this.input,
             group_name: this.input,
             pageSize: this.pageSize,
             pageNum: this.curPage,
-            user_cd: this.usercd
+            userId:this.usercd,
+            id:this.$route.query.id
           }
         })
         .then((e) => {
