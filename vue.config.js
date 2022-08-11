@@ -6,7 +6,7 @@ function resolve(dir) {
 }
 const name = defaultSettings.title || 'vue Admin Template'
 module.exports = defineConfig({
-  publicPath: '/agora/',
+  publicPath: '/',
   transpileDependencies: true,
   lintOnSave: false,
   configureWebpack: {
@@ -20,11 +20,57 @@ module.exports = defineConfig({
       }
     }
   },
+  // devServer: {
+  //   // host: 'localhost',
+  //   // port: 8000, // 端口号
+  //   proxy: {
+  //     //配置自动启动浏览器
+  //     "/actionapi": {
+  //       target: "http://172.17.1.36:5800",
+  //       changeOrigin: true,
+  //       ws: true,//websocket支持
+  //       secure: false,
+  //       pathRewrite: {
+  //         '^/actionapi': '/actionapi'
+  //       }
+  //     },
+  //     "/api": {
+  //       target: "http://172.17.1.22",
+  //       changeOrigin: true,
+  //       ws: true,//websocket支持
+  //       secure: false,
+  //       pathRewrite: {
+  //         '^/api': '/api'
+  //       }
+  //     },
+  //     '/qcdapi': {
+  //       target: 'http://172.17.1.22',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/qcdapi': '/api'
+  //        }
+  //     },
+  //     '/apiv1': {
+  //       target: ' http://172.17.1.9',
+  //       changeOrigin: true,
+  //       pathRewrite: { }
+  //     }
+  //   }
+  // },
   devServer: {
-    // host: 'localhost',
-    port: 8000, // 端口号
     proxy: {
-      //配置自动启动浏览器
+      '/qcdapi': {
+        target: 'http://172.17.1.22',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/qcdapi': '/api'
+         }
+      },
+      '/apiv1': {
+        target: ' http://172.17.1.9',
+        changeOrigin: true,
+        pathRewrite: { }
+      },
       "/actionapi": {
         target: "http://172.17.1.36:5800",
         changeOrigin: true,

@@ -37,8 +37,30 @@ const routes = [
       //   name: '资源包管理',
       //   component: () => import('@/views/package/index.vue'),
       //   meta: { title: '资源包管理', icon: 'package' },
+      },
+      {
+        path: 'Scheduled',
+        component: () => import('@/views/mandaysreport/Scheduled.vue'),
+        name: '人员预定',
+        meta: { title: '人员预定', icon: 'table' }
+      },
+      {
+        path: 'TakenTime',
+        component: () => import('@/views/mandaysreport/TakenTime.vue'),
+        name: '实际工数',
+        meta: { title: '实际工数', icon: 'link' }
       }
     ],
+  },
+  {
+    path: '/employeeMandays',
+    name: 'EmployeeMandays',
+    component: () => import('../views/mandaysreport/children/EmployeeMandays.vue')
+  },
+  {
+    path: '/projectMandays',
+    name: 'ProjectMandays',
+    component: () => import('../views/mandaysreport/children/ProjectMandays.vue')
   },
   {
     path: '/about',
@@ -55,11 +77,11 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next)=>{
-  var allCookie = document.cookie
-  var userCD=''
-     var aryCookie =allCookie.split(';')
-     for(let i in aryCookie){
-       let getUserid=aryCookie[i].split("=")
+  const allCookie = document.cookie
+  let userCD=''
+     const aryCookie =allCookie.split(';')
+     for(const i in aryCookie){
+       const getUserid=aryCookie[i].split("=")
         if(getUserid[0].trim()=='LoginedUser'){
            userCD=getUserid[1]                       
         }
