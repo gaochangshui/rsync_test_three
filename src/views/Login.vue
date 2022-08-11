@@ -3,11 +3,13 @@ export default {
   data() {
     return {
       user: '',
-      password: ''
+      password: '',
+      btntitle:'Sign in'
     };
   },
   methods: {
     login() {
+        this.btntitle='Signing'
         this.axios.post('/actionapi/AccountApi/Login', {
             UserCD: this.user,
             Password: this.password
@@ -17,7 +19,7 @@ export default {
            }else{
                this.$message.error('账号或密码错误');
            }
-           
+           this.btntitle='Sign in'
         })
     }
   }
@@ -39,7 +41,7 @@ export default {
             <p>
                 <a href="http://docs.trechina.cn/docs/ldap_20210622">Forgot Password?</a>
             </p>
-            <el-button @click="login"  class="submit" type="primary">Sign in</el-button>
+            <el-button @click="login"  class="submit" type="primary">{{btntitle}}</el-button>
         </div>
     </div>
 </template>

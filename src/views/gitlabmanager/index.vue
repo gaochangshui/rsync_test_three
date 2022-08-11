@@ -5,6 +5,7 @@
         <svg-icon width="15" height="15" icon-class="four" />
         <span class="gitlabmanager-left-headlab">{{ labs[0].name }}</span>
       </div>
+      
       <el-menu default-active="0" class="el-menu-vertical-demo">
         <el-menu-item
           v-for="(labchildren, p) in labs[0].children"
@@ -16,9 +17,23 @@
           <div class="gitlabmanager-left-children-left">
             {{ labchildren.name }}
           </div>
-          <div class="gitlabmanager-left-children-right">
+          <el-skeleton :loading="loading" animated  >
+      <template #template>
+      <div :class="image_class">
+        <el-skeleton-item
+          variant="image"
+          class="gitlabmanager-left-children-right"
+          style="width:60px"
+        />
+      </div>
+    </template>
+    <template #default>
+      <div class="gitlabmanager-left-children-right">
             {{ labchildren.number }}
           </div>
+    </template>
+    </el-skeleton>
+          
         </el-menu-item>
       </el-menu>
     </div>
@@ -80,6 +95,8 @@
             :data="tableData"
             style="width: 100%"
             :header-cell-style="{ background: '#FAFAFA' }"
+            v-loading="loadingtable"
+            element-loading-text="加载中..."
           >
             <el-table-column
               label="仓库名称"
@@ -710,6 +727,8 @@ export default {
         return time.getTime() < before;
       },
       languageValue: '',
+      loading:true,
+      loadingtable:true,
       databaseValue: '',
       completeDate: '',
       reviewRadio: '',
@@ -1014,7 +1033,7 @@ export default {
         }
         this.timer= setTimeout(()=>{
           this.axios
-        .get('/api/projects', {
+        .get('/agora/api/projects', {
           params: {
             filter:val.trim()
           },
@@ -1170,16 +1189,16 @@ export default {
       } else {
         for(let i=0;i<this.branchoptions.length;i++){
           if(this.branchoptions[i].name===this.branchValue){
-            //TODO
             var branchurl=this.branchoptions[i].web_url
           }
         }
+        this.branchValue+branchurl
         this.axios
           .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
             params: {
               pj_id: this.pjId,
               user_cd: this.usercd,
-              branchs: this.branchValue,
+              branchs: this.branchValue+'('+branchurl+')',
               main_lan: mainlan,
               data_base: this.databaseValue,
               review_info: reviewinfo,
@@ -1333,11 +1352,13 @@ export default {
       var addressArr=this.addressinput.split('.')
       var addressSuffix=addressArr[addressArr.length-1]
       if(addressSuffix==='git'){
-        this.axios
-        .get('/actionapi/WarehouseApi/SyncWarehouse',{
+        this.axios({
+          method:'get',
+          url:'/actionapi/WarehouseApi/SyncWarehouse',
+          timeout:600000,
           params:{
             pj_id:this.pjId,
-            user_cd:this.usercd
+            user_cd:this.usercd,         
           }
         }).then((e)=>{
         loading.close();
@@ -1347,6 +1368,8 @@ export default {
           }else{
              this.$message.error('同期失败：'+e.data.Message);
           }  
+        }).catch(()=>{
+          loading.close();
         })
       }else{
         loading.close();
@@ -1480,6 +1503,7 @@ export default {
             return arr
     },
     async getTableData() {
+      this.loadingtable=true
       this.tableData = [];
       await this.axios
         .get('/actionapi/WarehouseApi/' + this.warehouseType, {
@@ -1493,6 +1517,7 @@ export default {
         })
         .then((e) => {
           if(!e.data.Warehouses){
+            this.loadingtable=false
             return
           }
           this.pageTotal = e.data.rowCount;
@@ -1508,6 +1533,7 @@ export default {
             this.tableData[i].last_activity_at =
               this.tableData[i].last_activity_at.split(' ')[0];
           }
+          this.loadingtable=false
         });
       document.getElementsByClassName(
         'el-pagination__total'
@@ -1534,6 +1560,7 @@ export default {
           this.labs[0].children[1].number = e.data.num.my;
           this.labs[0].children[2].number = e.data.num.starrd;
           this.labs[0].children[3].number = e.data.num.temp;
+          this.loading = false;
         });
     }
   },
