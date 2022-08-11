@@ -5,14 +5,16 @@
         <div class="gitlabmanager-right-search-left">
           <el-page-header :content="headtitle" title=" " @back="goBack" />
         </div>
-        <div class="gitlabmanager-right-search-right">
+        <div
+          class="gitlabmanager-right-search-right"
+        >
           <el-input
             v-model="input"
             placeholder="搜索仓库名称、分组名称"
             size="large"
             style="width: 300px; margin-bottom: 12px"
             maxlength="100"
-            @keyup.enter="getTableData"
+            @keyup.enter="selectGitLab"
           >
             <template #suffix>
               <svg
@@ -57,6 +59,8 @@
             :data="tableData"
             style="width: 100%"
             :header-cell-style="{ background: '#FAFAFA' }"
+            v-loading="loadingtable"
+            element-loading-text="加载中..."
           >
             <el-table-column
               label="仓库名称"
@@ -270,19 +274,19 @@
                   v-for="(item, index) in scope.row.project_member"
                   :key="index"
                 >
-                <el-tooltip
+                  <el-tooltip
                     class="item"
                     effect="dark"
                     :content="item.name"
                     placement="top-start"
                   >
-                  <img
-                    :src="item.avatar"
-                    class="membericon0"
-                    style="border: 1px solid #ffc53d"
-                    v-show="item.name == 'Code Reviewer'"
-                  />
-                </el-tooltip>
+                    <img
+                      :src="item.avatar"
+                      class="membericon0"
+                      style="border: 1px solid #ffc53d"
+                      v-show="item.name == 'Code Reviewer'"
+                    />
+                  </el-tooltip>
                 </div>
               </template>
             </el-table-column>
@@ -403,7 +407,7 @@
                     请求技术委员会评审
                   </div>
                   <div
-                    :class="[operationFlg ? 'atooltip-div' : 'atooltip-div2']"
+                    :class="[Syncflg ? 'atooltip-div' : 'atooltip-div2']"
                     @click.stop="SyncWarehouse(scope.row)"
                   >
                     <img
@@ -542,12 +546,33 @@
         </el-date-picker>
       </div>
       <div style="margin-top: 20px">
+        <span style="line-height: 40px">
+        项目<span style="color: red; line-height: 40px"
+            >*</span
+          ></span>
+        <el-select v-model="projectvalue"
+        style="width: 100%;"
+         filterable placeholder="请选择"
+         :filter-method="(value)=>projectquery(value)">
+    <el-option
+    class="projectStyle"
+      v-for="item in projectOptions"
+      :key="item.ProjectCode"
+      :label="item.ProjectCode"
+      :value="[item.ProjectCode+' '+item.ProjectName]"
+    >
+    <div style="line-height: 15px;color: black;font-weight:normal;">{{item.ProjectCode}}</div>
+    <span style="color: black;font-weight:normal;">{{item.ProjectName}}</span>
+    </el-option>
+  </el-select>
+      </div>
+      <div style="margin-top: 20px">
         <span style="line-height: 40px">备注</span>
         <el-input
           v-model="noteText"
           :rows="5"
           type="textarea"
-          placeholder="请输入项目CD、项目名及其他评审需求"
+          placeholder="请输入其他评审需求"
           style="width: 100%; float: right"
         />
       </div>
@@ -578,6 +603,7 @@
         <el-select
           v-model="branchValue"
           placeholder="请选择"
+          multiple
           style="width: 100%"
         >
           <el-option
@@ -631,16 +657,18 @@
       </div>
       <div v-show="userFlag">
         <span style="line-height: 40px"
-          >Token<span style="color: red; line-height: 40px">*</span></span
+          >Token（未更改默认使用已保存的Token）<span style="color: red; line-height: 40px">*</span></span
         >
         <el-input
           v-model="tokeninput"
+          type="password"
           placeholder="请输入Token"
           style="width: 100%"
+          show-password
         ></el-input>
       </div>
       <template #footer>
-        <el-button size="large" @click="closeDrawer">保存</el-button>
+        <el-button size="large" @click="saveWarehouse">保存</el-button>
         <el-button type="primary" size="large" @click="addWarehouse"
           >保存并立即同期</el-button
         >
@@ -650,6 +678,8 @@
 </template>
 
 <script>
+import { log } from 'console';
+import { ElLoading } from 'element-plus'
 export default {
   name: 'GitlabManager',
   data() {
@@ -662,6 +692,8 @@ export default {
       },
       headtitle: '',
       languageValue: '',
+      loading:true,
+      loadingtable:true,
       databaseValue: '',
       completeDate: '',
       reviewRadio: '',
@@ -669,11 +701,11 @@ export default {
       props: { multiple: true },
       username: '',
       userinput: '',
-      tokeninput: '',
+      tokeninput:'',
       usercd: '',
       reviewDrawer: false,
       synchronousDrawer: false,
-      branchValue: '',
+      branchValue: [],
       addressValue: '',
       addressinput: '',
       userFlag: false,
@@ -683,6 +715,8 @@ export default {
       pjUrl: '',
       pjId: '',
       branchoptions: [],
+      projectOptions:[],
+      projectvalue:'',
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -867,7 +901,13 @@ export default {
       ],
       tableData: [],
       input: '',
-      operationFlg: false
+      topTitle: '所有仓库',
+      warehouseType: 'Index',
+      operationFlg: false,
+      timer:null,
+      Syncflg:false,
+      tokenFlg:false,
+      tokencontrast:''
     };
   },
   computed: {
@@ -877,6 +917,14 @@ export default {
     }
   },
   watch: {
+    addressValue() {
+      if (this.addressValue === 'https://github.com/retail-ai-inc/') {
+        this.userFlag = true;
+      } else {
+        this.userFlag = false;
+        this.userinput = '';
+      }
+    },
     reviewDrawer() {
       this.branchValue = '';
       this.databaseValue = '';
@@ -884,13 +932,14 @@ export default {
       this.completeDate = '';
       this.reviewRadio = '';
       this.noteText = '';
+      this.projectvalue=''
     },
     synchronousDrawer() {
       this.branchValue = '';
       this.addressValue = '';
       this.userinput = '';
       this.tokeninput = '';
-      this.addressinput = '';
+      //this.addressinput = '';
       this.userFlag = false;
     },
     toWatch:{
@@ -914,31 +963,37 @@ export default {
           this.pageTotal +
           ' 条';
           })
-      },500);
-        
-      }
+      },500);       
+      },
       
-    }
+    },
   },
   methods: {
     goBack() {
       this.$router.go(-1);
     },
-    changeFlag() {
-      if (this.addressValue === 'https://github.com/retail-ai-inc/') {
-        this.userFlag = true;
-      } else {
-        this.userFlag = false;
-        this.userinput = '';
-        this.tokeninput = '';
-      }
+    projectquery(val){
+      if(this.timer){
+          clearTimeout(this.timer);
+        }
+        this.timer= setTimeout(()=>{
+          this.axios
+        .get('/api/projects', {
+          params: {
+            filter:val.trim()
+          },
+        })
+        .then((e) => {
+          this.projectOptions=e.data
+        });
+      },500);
     },
-    getBreach(val) {
-      this.axios
+    async getBreach(val) {
+     await this.axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
           params: {
             pj_id: val
-          }
+          },
         })
         .then((e) => {
           this.branchoptions = e.data.branchs;
@@ -950,14 +1005,47 @@ export default {
         this.getBreach(val.id);
         this.pjId = val.id;
         val.openFlag = false;
+       this.projectquery('')
       }
     },
-    SyncWarehouse(val) {
-      if (this.operationFlg) {
+   async SyncWarehouse(val) {
+      this.addressinput = '';
+      if (this.Syncflg) {
         this.synchronousDrawer = true;
-        this.getBreach(val.id);
+      await  this.getBreach(val.id);
+        this.pjId=val.id;
+      await  this.getSyncWarehouse();
         val.openFlag = false;
       }
+    },
+    async getSyncWarehouse(){
+     await this.axios
+        .get('/actionapi/WarehouseApi/WarehouseSetting', {
+          params: {
+            pj_id: this.pjId
+          },
+        })
+        .then((e) => {
+          if(e.data.setting){
+            this.branchValue=e.data.setting.sync_branches.split(',')
+          if(e.data.setting.remote_url.indexOf('github.com')!==-1){
+            this.addressValue=e.data.setting.remote_url.slice(0,33);
+            this.addressinput=e.data.setting.remote_url.slice(33);
+            this.userinput=e.data.setting.remote_user;
+            this.tokeninput=e.data.setting.remote_token;
+            this.tokencontrast=e.data.setting.remote_token;
+          }else{
+            this.addressValue=e.data.setting.remote_url.slice(0,18);
+            this.addressinput=e.data.setting.remote_url.slice(18);
+            this.userinput=e.data.setting.remote_user;
+            this.tokeninput=e.data.setting.remote_token;
+            this.tokencontrast=e.data.setting.remote_token;
+          }
+          }else{
+            this.tokencontrast='unchanged'
+          }
+          
+        });
     },
     showj(val, val2) {
       var showFlag = true;
@@ -1001,18 +1089,18 @@ export default {
     },
     closeDrawer() {
       this.reviewDrawer = false;
-      this.synchronousDrawer = false;
+      
     },
     reWarehouse() {
       var mainlan = '';
-      if (this.languageValue !== '') {
+      if (this.languageValue != '') {
         mainlan = this.languageValue[0];
       }
       for (let i = 1; i < this.languageValue.length; i++) {
         mainlan = mainlan + ',' + this.languageValue[i];
       }
       var reviewinfo = '';
-      if (this.reviewRadio !== '') {
+      if (this.reviewRadio != '') {
         reviewinfo = this.reviewRadio[0];
       }
       for (let i = 1; i < this.reviewRadio.length; i++) {
@@ -1023,22 +1111,30 @@ export default {
         mainlan === '' ||
         this.databaseValue === '' ||
         reviewinfo === '' ||
-        this.completeDate === ''
+        this.completeDate === ''||
+        this.projectvalue === ''
       ) {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
+        for(let i=0;i<this.branchoptions.length;i++){
+          if(this.branchoptions[i].name===this.branchValue){
+            var branchurl=this.branchoptions[i].web_url
+          }
+        }
+        this.branchValue+branchurl
         this.axios
           .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
             params: {
               pj_id: this.pjId,
               user_cd: this.usercd,
-              branchs: this.branchValue,
+              branchs: this.branchValue+'('+branchurl+')',
               main_lan: mainlan,
               data_base: this.databaseValue,
               review_info: reviewinfo,
               desire_date: this.completeDate,
-              comment: this.noteText
-            }
+              comment: this.noteText,
+              qcd_project:this.projectvalue[0]
+            },
           })
           .then(() => {
             this.$message.success('申请评审邮件已发出');
@@ -1046,45 +1142,177 @@ export default {
         this.reviewDrawer = false;
       }
     },
-    //TODO
-    addWarehouse() {
+    branchString(){
+      var branchstring='';
+      for(let i=0;i<this.branchValue.length;i++){
+        if(i===0){
+          branchstring=branchstring+this.branchValue[i]
+        }else{
+          branchstring=branchstring+','+this.branchValue[i]
+        }      
+      }
+      return branchstring
+    },
+    saveWarehouse(){
+      var branchstring=this.branchString()
       if (this.addressValue === '') {
         this.$message.error('您还有必填信息未填写！！！');
       } else {
         if (this.addressValue === 'http://10.2.1.117/') {
-          if (this.addressinput === '' || this.branchValue === '') {
+          if (this.addressinput === '' || this.branchValue.length === 0) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+            if(this.tokeninput===this.tokencontrast){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+             this.axios
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput.trim()
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         } else {
           if (
             this.addressinput === '' ||
-            this.branchValue === '' ||
+            this.branchValue.length === 0 ||
             this.userinput === '' ||
             this.tokeninput === ''
           ) {
             this.$message.error('您还有必填信息未填写！！！');
           } else {
-            console.log(this.branchValue);
-            console.log(this.addressValue);
-            console.log(this.userinput);
-            console.log(this.tokeninput);
+            if(this.tokeninput===this.tokencontrast){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+             this.axios
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {   
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput.trim(),
+              remote_token:this.tokeninput.trim(),
+              remote_user:this.userinput.trim(),
+              is_modified:this.tokenFlg
+          }).then(() => {
+            this.$message.success('保存成功');
+          });
             this.synchronousDrawer = false;
           }
         }
       }
+    },   
+    addWarehouse() {
+      var branchstring=this.branchString()
+      if (this.addressValue === '') {
+        this.$message.error('您还有必填信息未填写！！！');
+      } else {
+        if (this.addressValue === 'http://10.2.1.117/') {
+          if (this.addressinput === '' || this.branchValue.length === 0) {
+            this.$message.error('您还有必填信息未填写！！！');
+          } else {
+            if(this.tokeninput===this.tokencontrast){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+            const loading=ElLoading.service({
+              lock: true,
+              text: '正在同期，请稍后',
+              background: 'rgba(0, 0, 0, 0.7)',})
+             this.axios
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput.trim()
+          }).then(() => {
+            
+            this.saveSyncWarehouse(loading);
+          });
+          
+            this.synchronousDrawer = false;
+          }
+        } else {
+          if (
+            this.addressinput === '' ||
+            this.branchValue.length === 0 ||
+            this.userinput === '' ||
+            this.tokeninput === ''
+          ) {
+            this.$message.error('您还有必填信息未填写！！！');
+          } else {
+            if(this.tokeninput===this.tokencontrast){
+              this.tokenFlg=false
+            }else{
+              this.tokenFlg=true
+            }
+             const loading=ElLoading.service({
+              lock: true,
+              text: '正在同期，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
+             this.axios
+          .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
+              pj_id: this.pjId,
+              user_cd: this.usercd,
+              branch: branchstring,
+              remote_url:this.addressValue+this.addressinput.trim(),
+              remote_token:this.tokeninput.trim(),
+              remote_user:this.userinput.trim(),
+              is_modified:this.tokenFlg
+          }).then(() => {
+           
+              this.saveSyncWarehouse(loading);
+            
+          });
+            
+          }
+        }
+      }
+    },
+    saveSyncWarehouse(loading){
+      var addressArr=this.addressinput.split('.')
+      var addressSuffix=addressArr[addressArr.length-1]
+      if(addressSuffix==='git'){
+        this.axios({
+          method:'get',
+          url:'/actionapi/WarehouseApi/SyncWarehouse',
+          timeout:600000,
+          params:{
+            pj_id:this.pjId,
+            user_cd:this.usercd,         
+          }
+        }).then((e)=>{
+        loading.close();
+          if(e.data.Success){
+            this.$message.success('保存并同期成功');
+            this.synchronousDrawer = false;
+          }else{
+             this.$message.error('同期失败：'+e.data.Message);
+          }  
+        }).catch(()=>{
+          loading.close();
+        })
+      }else{
+        loading.close();
+        this.$message.error('远程地址请以.git结尾');
+      }
+        
+        
     },
     copyUrl(val) {
       this.axios
         .get('/actionapi/WarehouseApi/ProjectURL', {
           params: {
             pj_id: val.id
-          }
+          },
         })
         .then((e) => {
           this.$copyText(e.data.url).then(() => {
@@ -1099,7 +1327,7 @@ export default {
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
               pj_id: val.id
-            }
+            },
           })
           .then((e) => {
             window.open(e.data.url + '/activity');
@@ -1142,18 +1370,26 @@ export default {
     openPopover(val2) {
       for (let k = 0; k < val2.project_member.length; k++) {
         if (val2.project_member[k].name === this.username) {
+          if(val2.project_member[k].access_level==='Owner'||val2.project_member[k].access_level==='M'){
+            this.Syncflg=true
+          }
           this.operationFlg = true;
           break;
         } else {
+          this.Syncflg=false;
           this.operationFlg = false;
         }
       }
       if (!this.operationFlg) {
         for (let g = 0; g < val2.group_member.length; g++) {
           if (val2.group_member[g].name === this.username) {
+            if(val2.group_member[g].access_level==='Owner'||val2.group_member[g].access_level==='M'){
+            this.Syncflg=true
+          }
             this.operationFlg = true;
             break;
           } else {
+            this.Syncflg=false;
             this.operationFlg = false;
           }
         }
@@ -1171,76 +1407,63 @@ export default {
     emptyInput() {
       this.input = '';
     },
+    dataTreating(val){
+    var arr=[]
+      for (let j = 0; j < val.length; j += 4) {
+              let Replace = (
+                val[j] +
+                ',' +
+                val[j + 1] +
+                ',' +
+                val[j + 2] +
+                ',' +
+                val[j + 3]
+              ).replace(/\'/g, '"');
+              if (
+                Replace.indexOf('"name":') === -1 
+              ) {
+                Replace =
+                  '{"id":"","name":"","access_level":"","avatar":""}';
+              }
+              let Parse = JSON.parse(Replace);
+              
+              arr.push(Parse)              
+            }
+            return arr
+    },
     async getTableData() {
+      this.loadingtable=true
       this.tableData = [];
       await this.axios
         .get('/actionapi/QcdApi/QCDProjectDetail', {
           params: {
-            pj_name: this.input,
-            group_name: this.input,
+            id:this.$route.query.id,
+            pj_name: this.input.trim(),
+            group_name: this.input.trim(),
             pageSize: this.pageSize,
             pageNum: this.curPage,
-            userId:this.usercd,
-            id:this.$route.query.id
+            userId: this.usercd
           }
         })
         .then((e) => {
-          if (!e.data.Warehouses) {
-            this.tableData = [];
-            return this.tableData;
+          if(!e.data.Warehouses){
+            this.loadingtable=false
+            return
           }
           this.pageTotal = e.data.rowCount;
           for (let i = 0; i < e.data.Warehouses.length; i++) {
             var groupSplit = e.data.Warehouses[i].group_member.split(',');
             var projectSplit = e.data.Warehouses[i].project_member.split(',');
-            e.data.Warehouses[i].project_member = [];
-            for (let j = 0; j < projectSplit.length; j += 4) {
-              let projectReplace = (
-                projectSplit[j] +
-                ',' +
-                projectSplit[j + 1] +
-                ',' +
-                projectSplit[j + 2] +
-                ',' +
-                projectSplit[j + 3]
-              ).replace(/\'/g, '"');
-              if (
-                projectReplace.indexOf('"name":') === -1 ||
-                projectReplace.indexOf('"avatar":') === -1
-              ) {
-                projectReplace =
-                  '{"id":"","name":"","access_level":"","avatar":""}';
-              }
-              let projectParse = JSON.parse(projectReplace);
-              e.data.Warehouses[i].project_member.push(projectParse);
-            }
+            e.data.Warehouses[i].project_member = [];            
+            e.data.Warehouses[i].project_member=this.dataTreating(projectSplit)
             e.data.Warehouses[i].group_member = [];
-            for (let k = 0; k < groupSplit.length; k += 4) {
-              let groupReplace = (
-                groupSplit[k] +
-                ',' +
-                groupSplit[k + 1] +
-                ',' +
-                groupSplit[k + 2] +
-                ',' +
-                groupSplit[k + 3]
-              ).replace(/\'/g, '"');
-              if (
-                groupReplace.indexOf('"name":') === -1 ||
-                groupReplace.indexOf('"avatar":') === -1
-              ) {
-                groupReplace =
-                  '{"id":"","name":"","access_level":"","avatar":""}';
-              }
-              let groupParse = JSON.parse(groupReplace);
-              e.data.Warehouses[i].group_member.push(groupParse);
-            }
+            e.data.Warehouses[i].group_member=this.dataTreating(groupSplit);
             e.data.Warehouses[i]['openFlag'] = false;
             this.tableData.push(e.data.Warehouses[i]);
-
             this.tableData[i].last_activity_at =
               this.tableData[i].last_activity_at.split(' ')[0];
           }
+          this.loadingtable=false
         });
       document.getElementsByClassName(
         'el-pagination__total'
@@ -1300,6 +1523,38 @@ export default {
   display: flex;
   padding: 0 0 0 20px;
   height: calc(100vh - 100px);
+  &-left {
+    width: 240px;
+    box-shadow: inset -1px 0px 0px #ececec;
+    min-height: calc(100vh - 100px);
+    & > div {
+      padding-top: 20px;
+    }
+    &-headlab {
+      line-height: 25px;
+      padding-left: 20px;
+      align-items: center;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    &-children {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 15px 0px 30px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      &-left {
+        margin-left: 20px;
+      }
+      &-right {
+        color: #909aaa;
+        position: absolute;
+        right: 13%;
+      }
+    }
+  }
   &-right {
     padding: 20px 0;
     width: calc(100vw - 80px);
@@ -1412,19 +1667,34 @@ export default {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
 }
-.el-page-header .el-page-header__content,
-.el-page-header .el-page-header__left {
-  font-size: 20px;
-  color: #4b4b4b;
+.projectStyle{
+height: 60px;
 }
-.el-page-header .el-page-header__left {
-  margin-right: 0 !important;
-  position: none !important;
-}
-.el-page-header .el-page-header__left::after {
-  width: 0 !important;
-}
-.el-page-header .el-page-header__content {
-  margin-left: 18px;
-}
+// .el-loading-spinner .circular{
+//   display: none;
+// }
+// .el-loading-spinner{
+//   text-align: start;
+//   background: url(../../assets/logo.png) no-repeat;
+//   background-size: 48px 48px;
+//   width: 100%;
+//   height: 100%;
+//   position: relative;
+//   top: 45%;
+//   left: 50%;
+//   animation: show 5s;
+// }
+// @keyframes show{
+//   0%{
+//     width: 0%;
+//   }
+//   100%{
+//     width: 100%;
+//   }
+// }
+// .el-loading-text{
+//   position: relative;
+//   left: -2%;
+//   top: 6%;
+// }
 </style>

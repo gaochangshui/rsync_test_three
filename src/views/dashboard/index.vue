@@ -158,17 +158,31 @@
     <el-table
     ref="multipleTableRef"
     :data="retableData"
+    max-height="300px"
     :header-cell-style="{ background: '#FAFAFA' }"
+    :header-cell-class-name="cellClass"
     style="width: 100%"
     @selection-change="handleSelectionChange"
   >
-    <el-table-column  label="本次评审" width="80" >
-      <input type="checkbox" style="margin-left: 20px;">
+    <el-table-column   width="80" type="selection">
     </el-table-column>
     <el-table-column label="仓库名称" >
-      <template #default="scope">{{ scope.row.name }}</template>
+      <template #default="scope">{{ scope.row.pj_name }}
+      <div
+        style="
+        color: #8e8e8e;
+        width:100%;
+        overflow: hidden;
+        white-space: nowrap;
+       text-overflow: ellipsis;
+       -o-text-overflow: ellipsis;
+        "
+         >
+         {{ scope.row.description }}
+        </div>
+      </template>
     </el-table-column>
-    <el-table-column property="name" label="主要语言"  >
+    <el-table-column  label-class-name="star" property="name" label="主要语言"  width="300px" >
       <template #default="scope">
         <el-select
           v-model="scope.row.languageoptions"
@@ -191,28 +205,48 @@
         </el-select>
       </template>
     </el-table-column>
-    <el-table-column property="address" label="分支" show-overflow-tooltip >
-    <el-select v-model="value" class="m-2" placeholder="Select">
+    <el-table-column label-class-name="star" property="address" label="分支"  >
+      <template #default="scope">
+        <el-select v-model="scope.row.bvalue" class="m-2" placeholder="请选择" @click="getbranch(scope.row)">
     <el-option
-      v-for="item in options"
+      v-for="item in scope.row.branchoptions"
+      :key="item"
+      :label="item"
+      :value="item"
+    />
+  </el-select>
+      </template>   
+    </el-table-column>
+    <el-table-column label-class-name="star" property="address" label="数据库操作" >
+      <template #default="scope">
+        <el-select v-model="scope.row.value" class="m-2" placeholder="请选择" style="width:100%">
+    <el-option
+      v-for="item in databaseoptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
     />
   </el-select>
+      </template>
+    
     </el-table-column>
   </el-table>
-  <div style="margin-top:16px">
-    <span style="line-height: 40px;margin-right: 16px;">完成时间</span>
+  <div style="margin-top:16px;display: flex;justify-content:space-between;">
+    <div >
+      <span style="color:red">*</span>
+      <span style="line-height: 40px;margin-right: 16px;">完成时间</span>
       <el-date-picker
           :disabled-date="disabledDate"
           v-model="completeDate"
           type="date"
           placeholder="选择日期"
-          style="width: 37%;margin-right: 85px;"
+          style="width: 70%;"
           value-format="YYYY-MM-DD"
         >
         </el-date-picker>
+    </div>
+    <div style="padding-right:12px">
+    <span style="color:red">*</span>
         <span style="line-height: 40px;margin-right: 16px;"
           >评审信息</span
         >
@@ -223,7 +257,7 @@
           collapse-tags
           collapse-tags-tooltip
           class="reSelect"
-          style="width: 37%;"
+          style="width: 350px;"
         >
           <el-option-group
             v-for="group in reviewOptions"
@@ -238,6 +272,8 @@
             />
           </el-option-group>
         </el-select>
+    </div>
+        
   </div>
   <div style="margin-top:16px">
     <span style="line-height: 40px;margin-right: 44px;">备注</span>
@@ -249,7 +285,7 @@
   </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogReview = false">取消</el-button>
+        <el-button @click="closere">取消</el-button>
         <el-button type="primary" @click="reWarehouse"
           >确定</el-button
         >
@@ -336,6 +372,7 @@
                   margin-bottom: 8px;
                   height: 36px;
                   font-size: 14px;
+                  line-height: 36px;
                 "
                 @close.stop="handleClose(item)"
               >
@@ -386,7 +423,17 @@ export default {
       languageValue:[],
       reviewRadio:[],
       noteText:'',
-      retableData:[{}],
+      retableData:[],
+      databaseoptions: [
+        {
+          value: '有',
+          label: '有'
+        },
+        {
+          value: '无',
+          label: '无'
+        }
+      ],
       languageoptions: [
         {
           label: '前端语言',
@@ -599,7 +646,9 @@ export default {
       warehouseType: 'Index',
       checkedData:[],
       selectData:[],
-      operationFlg: false
+      operationFlg: false,
+      pjId:'',
+      pjName:''
     };
   },
   computed: {
@@ -642,13 +691,47 @@ export default {
     }
   },
   methods: {
+    closere(){
+      this.completeDate=''
+      this.noteText='';
+      this.reviewRadio=[];
+      for(let i=0;i<this.tableData.length;i++){
+        this.tableData[i].languageoptions=[]
+      }
+      this.dialogReview = false
+    },
+    cellClass(row){
+       if (row.columnIndex === 0) {
+        return 'addAllChecked'
+      }
+    },
+    getbranch(val){
+      if(!val.branchoptions){
+        val.branchoptions=[]
+        this.axios
+        .get('/actionapi/WarehouseApi/ProjectBranches',{
+          params:{
+            pj_id:val.id
+          }
+        }).then((e)=>{
+          for(let i=0;i<e.data.branchs.length;i++){
+            val.branchoptions.push(e.data.branchs[i].name)
+          }
+        })
+      }
+    },
     check(val){
-      if(JSON.stringify(this.checkedData).indexOf(JSON.stringify(val))===-1){
-        this.checkedData.push(val);
+      if(this.checkedData.length){
+        for(let i=0;i<this.checkedData.length;i++){
+          if(this.checkedData[i].name===val.name){
+            this.checkedData.splice(i, 1);
+            return
+          }
+        }
+        this.checkedData.push(val)
       }else{
-        this.checkedData.splice(this.checkedData.indexOf(val),1);
-      }  
-      console.log(this.checkedData);
+        this.checkedData.push(val)
+      }
     },
     setWarehouse(){
       this.axios
@@ -664,6 +747,42 @@ export default {
       this.dialogVisible = false
     },
     reWarehouse(){
+      let reinfor=this.$refs.multipleTableRef.getSelectionRows()
+      var reviewItem=[]
+      for(let i=0;i<reinfor.length;i++){
+        var obj={}
+        if(reinfor[i].bvalue===undefined||reinfor[i].languageoptions.length===0||reinfor[i].value===undefined){
+          this.$message.error(reinfor[i].pj_name+'仓库有未填写的信息');
+          return
+        }else{
+        obj.projectId=reinfor[i].id
+        obj.branches=reinfor[i].bvalue
+        obj.language=reinfor[i].languageoptions.join(',')
+        obj.dataBase=reinfor[i].value
+        }
+        reviewItem.push(obj)
+      }
+      if(reinfor.length===0){
+        this.$message.error('您还未选择仓库');
+        return
+      }
+      if(this.completeDate===''||this.reviewRadio.length===0){
+        this.$message.error('您还有未填写完成时间或评审信息');
+        return
+      }
+      this.axios
+      .post('/actionapi/QcdApi/QCDCodeReview',{
+          id:this.pjId,
+          userId:this.usercd,
+          name:this.pjName,
+          reviewInfo:this.reviewRadio.join(','),
+          expecteDate:this.completeDate,
+          comment:this.noteText,
+          reviewItem:reviewItem
+      }).then(()=>{
+        this.$message.success('申请评审邮件已发出');
+      })
+      this.completeDate=''
       this.noteText='';
       this.reviewRadio=[];
       for(let i=0;i<this.tableData.length;i++){
@@ -704,17 +823,40 @@ export default {
      this.$nextTick(function(){
       this.getsubjected(val.agreement_cd)
      })
-     console.log(1,this.checked1);
       this.selectid=val.agreement_cd
       this.dialogVisible = true;
     },
     showReview(val){
       this.reTitle=val.agreement_cd+': '+val.agreement_name
+      this.getReviewinfor(val.agreement_cd)
+      this.pjId=val.agreement_cd
+      this.pjName=val.agreement_name
         this.dialogReview = true;
+    },
+    getReviewinfor(val){
+      this.axios
+        .get('/actionapi/QcdApi/QCDProjectDetail',{
+          params:{
+            userId:this.usercd,
+            id:val
+          }
+        }).then((e)=>{
+          this.retableData=e.data.Warehouses
+        })
     },
     handleClose(val) {
       this.selected.splice(this.selected.indexOf(val), 1);
-      this.checkedData.splice(this.checkedData.indexOf(val),1);
+      if(this.checkedData.length){
+        for(let i=0;i<this.checkedData.length;i++){
+          if(this.checkedData[i].name===val){
+            this.checkedData.splice(i, 1);
+            return
+          }
+        }
+        this.checkedData.push(val)
+      }else{
+        this.checkedData.push(val)
+      }
     },
     checkSelect() {
       this.selected = this.checked1;
@@ -727,7 +869,6 @@ export default {
             userId:this.usercd
           }
         }).then((e)=>{
-          console.log(e.data);
           if(e.data.Warehouses){
             for(let i=0;i<e.data.Warehouses.length;i++){
             let subjectarr={}
@@ -735,7 +876,6 @@ export default {
             subjectarr.name=e.data.Warehouses[i].pj_name
             this.checkedData.push(subjectarr)
             this.selected.push(e.data.Warehouses[i].pj_name)
-            console.log(this.checkedData);
           }
           }else{
             this.selected=[]
@@ -1012,5 +1152,16 @@ height: 32px !important;
 .tableBtn:hover{
   color: #3E79F6;
 background-color: #ECF4FF;
+}
+.el-table .addAllChecked .cell .el-checkbox__inner{
+    display: none !important;  
+}
+.el-table .addAllChecked .cell::before{
+    content: '本次评审';
+    text-align: center;
+}
+table th.star div::before {
+content: '*';
+color: red;
 }
 </style>
