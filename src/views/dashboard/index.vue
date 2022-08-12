@@ -153,7 +153,8 @@
     <el-dialog
     v-model="dialogReview"
     :title="reTitle"
-    width="50%"
+    width="1000px"
+    class="rebox"
   >
     <el-table
     ref="multipleTableRef"
@@ -207,7 +208,7 @@
     </el-table-column>
     <el-table-column label-class-name="star" property="address" label="分支"  >
       <template #default="scope">
-        <el-select v-model="scope.row.bvalue" class="m-2" placeholder="请选择" @click="getbranch(scope.row)">
+        <el-select v-model="scope.row.bvalue" class="m-2" placeholder="请选择" @click="getbranch(scope.row) " @change="changeBranch(scope.row)">
     <el-option
       v-for="item in scope.row.branchoptions"
       :key="item"
@@ -231,7 +232,7 @@
     
     </el-table-column>
   </el-table>
-  <div style="margin-top:16px;display: flex;justify-content:space-between;">
+  <div style="margin-top:21px;display: flex;justify-content:space-between;">
     <div >
       <span style="color:red">*</span>
       <span style="line-height: 40px;margin-right: 16px;">完成时间</span>
@@ -275,7 +276,7 @@
     </div>
         
   </div>
-  <div style="margin-top:16px">
+  <div style="margin-top:21px">
     <span style="line-height: 40px;margin-right: 44px;">备注</span>
         <el-input
           v-model="noteText"
@@ -397,6 +398,7 @@
 </template>
 
 <script>
+import { ElLoading } from 'element-plus'
 export default {
   name: 'Dashboard',
   data() {
@@ -411,7 +413,7 @@ export default {
       username: '',
       usercd: '',
       checked1: [],
-      completeDate:'',
+      completeDate:null,
       dialogVisible: false,
       dialogReview:false,
       pageTotal: 50,
@@ -598,29 +600,6 @@ export default {
       ],
       labs: [
         {
-          name: '代码仓库',
-          children: [
-            {
-              name: '所有仓库',
-              number: ''
-            },
-            {
-              name: '我参与的',
-              number: ''
-            },
-            {
-              name: '星标项目',
-              number: ''
-            },
-            {
-              name: '模板仓库',
-              number: ''
-            }
-          ]
-        }
-      ],
-      labs: [
-        {
           name: '项目',
           children: [
             {
@@ -688,11 +667,27 @@ export default {
       this.checked1 = [];
       this.checkedData=[];
       this.input2=''
+    },
+    dialogReview(){
+      this.completeDate=null
+      this.noteText='';
+      this.reviewRadio=[];
+      for(let i=0;i<this.tableData.length;i++){
+        this.tableData[i].languageoptions=[]
+      }
     }
   },
   methods: {
+    changeBranch(val){
+      for(let i=0;i<val.branchchangeurl.length;i++){
+        if(val.branchchangeurl[i].name===val.bvalue){
+          val.branchUrl=val.branchchangeurl[i].url
+          return
+        }
+      }
+    },
     closere(){
-      this.completeDate=''
+      this.completeDate=null
       this.noteText='';
       this.reviewRadio=[];
       for(let i=0;i<this.tableData.length;i++){
@@ -708,6 +703,7 @@ export default {
     getbranch(val){
       if(!val.branchoptions){
         val.branchoptions=[]
+        val.branchchangeurl=[]
         this.axios
         .get('/actionapi/WarehouseApi/ProjectBranches',{
           params:{
@@ -716,6 +712,10 @@ export default {
         }).then((e)=>{
           for(let i=0;i<e.data.branchs.length;i++){
             val.branchoptions.push(e.data.branchs[i].name)
+            let obj={}
+            obj.name=e.data.branchs[i].name
+            obj.url=e.data.branchs[i].web_url
+            val.branchchangeurl.push(obj)
           }
         })
       }
@@ -756,9 +756,10 @@ export default {
           return
         }else{
         obj.projectId=reinfor[i].id
-        obj.branches=reinfor[i].bvalue
+        obj.branchName=reinfor[i].bvalue
         obj.language=reinfor[i].languageoptions.join(',')
         obj.dataBase=reinfor[i].value
+        obj.branchUrl=reinfor[i].branchUrl
         }
         reviewItem.push(obj)
       }
@@ -766,10 +767,14 @@ export default {
         this.$message.error('您还未选择仓库');
         return
       }
-      if(this.completeDate===''||this.reviewRadio.length===0){
+      if(this.completeDate===null||this.reviewRadio.length===0){
         this.$message.error('您还有未填写完成时间或评审信息');
         return
       }
+       const loading=ElLoading.service({
+              lock: true,
+              text: '发送邮件中，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
       this.axios
       .post('/actionapi/QcdApi/QCDCodeReview',{
           id:this.pjId,
@@ -780,15 +785,16 @@ export default {
           comment:this.noteText,
           reviewItem:reviewItem
       }).then(()=>{
-        this.$message.success('申请评审邮件已发出');
+        loading.close()
+        this.dialogReview = false
+        this.$message.success('申请评审邮件已发出');       
       })
-      this.completeDate=''
+      this.completeDate=null
       this.noteText='';
       this.reviewRadio=[];
       for(let i=0;i<this.tableData.length;i++){
         this.tableData[i].languageoptions=[]
       }
-      this.dialogReview = false
     },
     empty() {
       this.selected = [];
