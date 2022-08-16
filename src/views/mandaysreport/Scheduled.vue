@@ -14,7 +14,7 @@
           clearable            
           filterable
           size="large"
-          placeholder="Select "
+          placeholder="请选择"
           @change="chengeEmployees"
         />
         </el-form-item>
@@ -26,8 +26,8 @@
           range-separator="To"
           format="YYYYMM"
           value-format="YYYYMM"
-          start-placeholder="Start Date"
-          end-placeholder="End Date"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
           size="large"
         >
           </el-date-picker>

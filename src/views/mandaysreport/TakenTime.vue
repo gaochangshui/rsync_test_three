@@ -11,7 +11,7 @@
             remote
             reserve-keyword
             clearable
-            placeholder="Select"
+            placeholder="请选择"
             :remote-method="remoteMethod"
             style="width: 925px"
             multiple-limit="6"
@@ -43,7 +43,7 @@
             collapse-tags
             clearable
             filterable
-            placeholder="Select"
+            placeholder="请选择"
             size="large"
           />
         </el-form-item> 
@@ -53,8 +53,8 @@
             type="daterange"
             range-separator="To"
             value-format="YYYY-MM-DD"
-            start-placeholder="Stare Date"
-            end-placeholder="End Date"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
             class="el-marginLR"
             style="width: 380px"
             size="large"
@@ -547,7 +547,7 @@ export default defineComponent({
       }).catch(()=>{
         loading.close()
       });
-      ;
+      
     };
     const changeTab = (val: any) => {
       showDownload.value = tableId.value == 0 ? false : true;
