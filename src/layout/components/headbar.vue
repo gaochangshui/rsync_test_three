@@ -113,7 +113,7 @@ export default {
     justify-content: left;
     .left-logo{
       margin-left: 30px;
-      margin-top: 14px;
+      margin-top: 18px;
     }
     .logo-name{
         font-size: 25px;

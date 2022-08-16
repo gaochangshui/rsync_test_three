@@ -34,7 +34,7 @@
          </el-form-item>
       </div>
       <div class="row-second">
-        <el-form-item label="人员检索">
+        <el-form-item label="成员">
           <el-cascader
             v-model="takenEmployeeList"
             :options="options"
@@ -66,7 +66,7 @@
             type="primary"
             @click="searchTakenHours"
             size="large"
-            >検索</el-button
+            >查询</el-button
           >
           <el-tooltip
             class="item"
@@ -111,7 +111,7 @@
       <el-tabs
         v-model="tableId"
         tab-position="left"
-        style="height: 100%"
+        style="height: 100%;"
         v-show="HoursTotal"
         @tab-click="changeTab"
       >
@@ -125,9 +125,9 @@
             </el-result>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="个别工数" name="Employee">
+        <el-tab-pane label="成员" name="Employee">
           <div
-            style="height: calc(100vh - 250px); padding: 0px 0px 0px 0px"
+            style="height: calc(100vh - 250px); padding: 0px 0px 0px 0px;"
             v-if="dataEmployee.length"
           >
             <el-table
@@ -137,7 +137,6 @@
               :data="dataEmployee"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
-              :cell-style="tableCellClass"
             >
               <el-table-column
                 align="center"
@@ -160,7 +159,7 @@
                 width="300"
               >
                 <template #default="scope">
-                  <span style="margin-left: 10px">{{
+                  <span style="margin-left: 10px;">{{
                     scope.row.sum % 1 === 0
                       ? `${scope.row.sum}.0`
                       : scope.row.sum
@@ -172,7 +171,7 @@
         </el-tab-pane>
         <el-tab-pane label="项目" name="Projects">
           <div
-            style="height: calc(100vh - 250px); padding: 00px 0px 0px 0px"
+            style="height: calc(100vh - 250px); padding: 0px 0px 0px 0px;"
             v-if="dataProjects.length"
           >
             <el-table
@@ -180,9 +179,8 @@
               id="Projects"
               v-if="dataProjects.length"
               :data="dataProjects"
-              style="width: 100%; margin: 0 auto; height: 100%"
+              style="width: 100%; margin: 0 auto; height: 100%;"
               height="height:100%"
-              :cell-style="tableCellClass"
             >
               <el-table-column
                 align="center"
@@ -253,9 +251,9 @@
             </el-table>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="项目人别" name="ProjectEmployee">
+        <el-tab-pane label="成员项目" name="ProjectEmployee">
           <div
-            style="height: calc(100vh - 250px); 00px 0px 0px 0px"
+            style="height: calc(100vh - 250px); "
             v-if="dataProjectEmployee.length"
           >
             <el-table
@@ -265,7 +263,6 @@
               :data="dataProjectEmployee"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
-              :cell-style="tableCellClass"
             >
               <el-table-column
                 align="center"
@@ -311,7 +308,7 @@
             </el-table>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="实际明细" name="takenHoursDetails">
+        <el-tab-pane label="工时明细" name="takenHoursDetails">
           <div style="height: calc(100vh - 300px)" v-if="takenHoursData.length">
             <el-table
               class="table"
@@ -320,7 +317,6 @@
               :data="takenHoursData"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
-              :cell-style="tableCellClass"
             >
               <el-table-column
                 align="center"
@@ -406,6 +402,7 @@ import toDecimal from "@/utils/index";
 import { defineComponent, ref, onMounted } from "vue";
 import { Download } from "@element-plus/icons";
 import noData from "@/assets/images/noData.png"
+import { ElLoading } from 'element-plus'
 export default defineComponent({
   components: {
     Download
@@ -431,26 +428,26 @@ export default defineComponent({
     const tableId = ref(0);
     const tableName = ref("");
     const loading = ref(false);
-    const tableCellClass = ({ row, column, rowIndex, columnIndex }: any) => {
-      if (tableId.value.toString() === "Employee" && columnIndex === 2) {
-        return "padding-right: 35px;";
-      }
-      if (
-        tableId.value.toString() === "Projects" &&
-        (columnIndex === 2 || columnIndex === 3)
-      ) {
-        return "padding-right: 35px;";
-      }
-      if (tableId.value.toString() === "ProjectEmployee" && columnIndex === 4) {
-        return "padding-right: 35px;";
-      }
-      if (
-        tableId.value.toString() === "takenHoursDetails" &&
-        columnIndex === 6
-      ) {
-        return "padding-right: 20px;";
-      }
-    };
+    // const tableCellClass = ({ row, column, rowIndex, columnIndex }: any) => {
+    //   if (tableId.value.toString() === "Employee" && columnIndex === 2) {
+    //     return "padding-right: 35px;";
+    //   }
+    //   if (
+    //     tableId.value.toString() === "Projects" &&
+    //     (columnIndex === 2 || columnIndex === 3)
+    //   ) {
+    //     return "padding-right: 35px;";
+    //   }
+    //   if (tableId.value.toString() === "ProjectEmployee" && columnIndex === 4) {
+    //     return "padding-right: 35px;";
+    //   }
+    //   if (
+    //     tableId.value.toString() === "takenHoursDetails" &&
+    //     columnIndex === 6
+    //   ) {
+    //     return "padding-right: 20px;";
+    //   }
+    // };
     const remoteMethod = (query: string) => {
       if (query !== "") {
         loading.value = true;
@@ -474,7 +471,7 @@ export default defineComponent({
         }, 1000);
       }
     };
-    const takenHours = () => {
+    const takenHours = (loading:any) => {
       const params = {
         id: takenEmployeeList.value.map((item: any) => item[3]).join(","),
         projects: projects.value.join(","),
@@ -487,6 +484,7 @@ export default defineComponent({
       };
       getTakenHours(params).then((res) => {
         //showDownload.value = false;
+        loading.close()
         if (res.data.HoursTotal === 0) {
           ElMessage({
             type: "warning",
@@ -546,15 +544,22 @@ export default defineComponent({
             ManHours: res.man_hours,
           };
         });
+      }).catch(()=>{
+        loading.close()
       });
+      ;
     };
     const changeTab = (val: any) => {
       showDownload.value = tableId.value == 0 ? false : true;
       tableName.value = val.props.label;
     };
-    const searchTakenHours = () => {
+     const searchTakenHours = () => {
+      const loading=ElLoading.service({
+              lock: true,
+              text: '查询中，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
       projects.value || date.value || takenEmployeeList.value.length
-        ? takenHours()
+        ? takenHours(loading)
         : ElMessage({
             type: "warning",
             showClose: true,
@@ -605,7 +610,7 @@ export default defineComponent({
       handleSizeChange,
       exportTable,
       changeTab,
-      tableCellClass,
+      // tableCellClass,
       props: { multiple: true },
       links,
       projectResult,
@@ -672,6 +677,9 @@ export default defineComponent({
   }
 }
 .el-select-dropdown__item {
-  height: 60px;
+  height: auto;
+}
+.el-tabs--left .el-tabs__item.is-left{
+  text-align: left !important;
 }
 </style>

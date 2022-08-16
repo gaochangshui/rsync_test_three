@@ -1033,7 +1033,7 @@ export default {
         }
         this.timer= setTimeout(()=>{
           this.axios
-        .get('/agora/api/projects', {
+        .get('/api/projects', {
           params: {
             filter:val.trim()
           },
@@ -1503,8 +1503,8 @@ export default {
             return arr
     },
     async getTableData() {
-      this.loadingtable=true
       this.tableData = [];
+      this.loadingtable=true
       await this.axios
         .get('/actionapi/WarehouseApi/' + this.warehouseType, {
           params: {
@@ -1753,31 +1753,4 @@ export default {
 .projectStyle{
 height: 60px;
 }
-// .el-loading-spinner .circular{
-//   display: none;
-// }
-// .el-loading-spinner{
-//   text-align: start;
-//   background: url(../../assets/logo.png) no-repeat;
-//   background-size: 48px 48px;
-//   width: 100%;
-//   height: 100%;
-//   position: relative;
-//   top: 45%;
-//   left: 50%;
-//   animation: show 5s;
-// }
-// @keyframes show{
-//   0%{
-//     width: 0%;
-//   }
-//   100%{
-//     width: 100%;
-//   }
-// }
-// .el-loading-text{
-//   position: relative;
-//   left: -2%;
-//   top: 6%;
-// }
 </style>

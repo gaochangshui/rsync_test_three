@@ -14,9 +14,25 @@
           @click="getTitle(labchildren.name)"
         >
           <div class="dashboard-left-children-left">{{ labchildren.name }}</div>
-          <div class="dashboard-left-children-right">
+          <!-- <div class="dashboard-left-children-right">
+            {{ labchildren.number }}
+          </div> -->
+          <el-skeleton :loading="numloading" animated  >
+      <template #template>
+      <div :class="image_class">
+        <el-skeleton-item
+          variant="image"
+          class="dashboard-left-children-right"
+          style="width:60px"
+        />
+      </div>
+    </template>
+    <template #default>
+      <div class="dashboard-left-children-right">
             {{ labchildren.number }}
           </div>
+    </template>
+    </el-skeleton>
         </el-menu-item>
       </el-menu>
     </div>
@@ -75,6 +91,8 @@
             :data="tableData"
             style="width: 100%"
             :header-cell-style="{ background: '#FAFAFA' }"
+            v-loading="loadingtable"
+            element-loading-text="加载中..."
             @cell-mouse-enter="tableHover"
             @cell-mouse-leave="tablaLeave"
           >
@@ -412,6 +430,8 @@ export default {
       reTitle:'',
       username: '',
       usercd: '',
+      numloading:true,
+      loadingtable:true,
       checked1: [],
       completeDate:null,
       dialogVisible: false,
@@ -604,15 +624,15 @@ export default {
           children: [
             {
               name: '所有项目',
-              number: '140'
+              number: ''
             },
             {
               name: '进行中的',
-              number: '75'
+              number: ''
             },
             {
               name: '已完成的',
-              number: '15'
+              number: ''
             }
           ]
         }
@@ -950,6 +970,7 @@ export default {
       this.input2 = '';
     },
    async getIndexNum(){
+    this.numloading=true;
      await this.axios
         .get('/actionapi/QcdApi/QCDProjectCount',{
           params:{
@@ -959,9 +980,11 @@ export default {
           this.labs[0].children[0].number=e.data.allCount
           this.labs[0].children[1].number=e.data.doingCount
           this.labs[0].children[2].number=e.data.endCount
+          this.numloading=false
         })
     },
     async getTableData(){
+      this.loadingtable=true;
       await this.axios
         .get('/actionapi/QcdApi/QCDProjectShow', {
           params: {
@@ -978,6 +1001,7 @@ export default {
           for(let i=0; i<this.tableData.length;i++){
             this.tableData[i]['showbnt']=false
           }
+          this.loadingtable=false
         });
         document.getElementsByClassName(
         'el-pagination__total'

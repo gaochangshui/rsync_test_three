@@ -3,7 +3,7 @@
     <div class="head">
       <el-form :model="form" label-width="80px"  size="large">
         <div class="row-first">
-                <el-form-item label="人员检索" >
+                <el-form-item label="成员" >
         <el-cascader
           v-model="employeeList"
           :options="options"
@@ -32,7 +32,7 @@
         >
           </el-date-picker>
         </el-form-item>
-                 <el-form-item label='受注完成'>
+                 <el-form-item label='合同完成'>
          <el-switch
           v-model="isReceive"
           @change="getInfo"
@@ -48,7 +48,7 @@
           type="primary"
           @click="searchOrdersReceived"
           size="large"
-          >検索</el-button
+          >查询</el-button
         >
         <el-button
           v-if="tableHeaders.length"
@@ -188,6 +188,7 @@ import { exportTable2Excel } from "@/utils/excel";
 import storage from "@/utils/storage";
 import { defineComponent, ref, onMounted } from "vue";
 import noData from "@/assets/images/noData.png"
+import { ElLoading } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -210,6 +211,10 @@ export default defineComponent({
     const  yearmonthbegin = ref("");
     const  yearmonthend = ref("");
     const searchOrdersReceived = () => {
+      const loading=ElLoading.service({
+              lock: true,
+              text: '查询中，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
       yearmonthbegin.value = date.value ? date.value[0] : "";
       yearmonthend.value = date.value ? date.value[1] : "";
       const params = {
@@ -221,6 +226,7 @@ export default defineComponent({
       
       const data = getSumMandays(params);
       data.then((res) => {
+        loading.close()
         if (res.data.length === 0) {
           ElMessage({
             type: "warning",
@@ -253,7 +259,9 @@ export default defineComponent({
           };
         });
         storage.set("employeeList", employeeList.value);
-      });
+      }).catch(()=>{
+        loading.close()
+      });;
     };
     const getInfo = () => {
       if (tableHeaders.value.length !== 0) {
@@ -372,7 +380,7 @@ export default defineComponent({
   .head {
     height: 56px;
     width: 100%;
-    box-shadow: 0 0 4px rgb(0 0 0 / 12%);
+    box-shadow: 0 0 0 rgb(0 0 0 / 12%);
     margin: 3px 0 16px;
     padding: 16px;
     display: flex;

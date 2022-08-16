@@ -1,31 +1,32 @@
+import { Loading } from '@element-plus/icons';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElLoading,ElMessage } from 'element-plus';
 
-let loading: any;
+// let loading: any;
 // const outList:string[] = ["/qcdapi/projectlist","/apiv1/employeelist","/qcdapi/EmployeeMandays"];
-const startLoading = () => {
+// const startLoading = () => {
 
-  interface Options {
-    lock: boolean;
-    text: string;
-    background: string;
-  }
+//   interface Options {
+//     lock: boolean;
+//     text: string;
+//     background: string;
+//   }
 
-  const options: Options = {
-    lock: true,
-    text: "loading...",
-    background: 'rgba(0,0,0,0.7)'
-  }
-  loading = ElLoading.service(options);
-}
+//   const options: Options = {
+//     lock: true,
+//     text: "loading...",
+//     background: 'rgba(0,0,0,0.7)'
+//   }
+//   loading = ElLoading.service(options);
+// }
 
-const endLoading = () => {
-  if(loading)loading.close();
-}
+// const endLoading = () => {
+//   if(loading)loading.close();
+// }
 
 // 请求拦截
 axios.interceptors.request.use((config:AxiosRequestConfig) => {
-    startLoading();
+    
 // 加载
 //  if(!(outList.indexOf(config)>-1)){
 //     startLoading();
@@ -47,13 +48,8 @@ axios.interceptors.request.use((config:AxiosRequestConfig) => {
 
 // 响应拦截
 axios.interceptors.response.use((response: AxiosResponse) => {
-  // 结束loading
-  endLoading();
-  
   return response;
 }, error => {
-  // 结束loading
-  endLoading();
   // 错误提醒
   ElMessage({
     type: 'error',

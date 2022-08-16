@@ -11,10 +11,10 @@ const routes = [
     path: '/',
     name: 'page',
     component: Layout,
-    redirect: 'code',
+    redirect: 'project',
     children: [
       {
-        path:'dashboard',
+        path:'project',
         name:'项目',
         component: () => import('@/views/dashboard/index.vue'),
         meta: { title: '项目', icon: 'home' },
@@ -42,14 +42,14 @@ const routes = [
       {
         path: 'Scheduled',
         component: () => import('@/views/mandaysreport/Scheduled.vue'),
-        name: '人员预定',
-        meta: { title: '人员预定', icon: 'table' }
+        name: '成员预定',
+        meta: { title: '成员预定', icon: 'table' }
       },
       {
         path: 'TakenTime',
         component: () => import('@/views/mandaysreport/TakenTime.vue'),
-        name: '实际工数',
-        meta: { title: '实际工数', icon: 'link' }
+        name: '消耗工时',
+        meta: { title: '消耗工时', icon: 'link' }
       }
     ],
   },

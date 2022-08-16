@@ -15,7 +15,7 @@ export default {
             Password: this.password
         }).then(e => {
            if(e.data.UserCD){
-               this.$router.push('/code');
+               this.$router.push('/project');
            }else{
                this.$message.error('账号或密码错误');
            }
