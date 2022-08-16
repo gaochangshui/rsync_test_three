@@ -243,25 +243,29 @@ export default defineComponent({
             if (Headers.indexOf(YearMonth) === -1) {
               Headers.push(YearMonth);
             }
+            console.log('rs',JSON.parse(`{"${rs["YearMonth"]}":${rs["SumManDays"]}}`))
             return JSON.parse(`{"${rs["YearMonth"]}":${rs["SumManDays"]}}`);
           }).reduce(function (result: any, currentObject: any) {
             for (var key in currentObject) {
-              if (Object.prototype.hasOwnProperty.call(currentObject, "key")) {
+              if (Object.prototype.hasOwnProperty.call(currentObject, key)) {
                 result[key] = currentObject[key];
               }
             }
             return result;
           }, {});
+          console.log('b',b)
           return {
             EmployeeCode: res.EmployeeCode,
             EmployeeName: res.EmployeeName,
             ...b,
           };
         });
+        console.log('tableData',tableData.value);
+        console.log('tableHeaders',tableHeaders.value);
         storage.set("employeeList", employeeList.value);
       }).catch(()=>{
         loading.close()
-      });;
+      });
     };
     const getInfo = () => {
       if (tableHeaders.value.length !== 0) {

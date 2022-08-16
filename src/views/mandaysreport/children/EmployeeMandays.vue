@@ -112,7 +112,7 @@ export default {
           return JSON.parse(`{"${rs["YearMonth"]}　":${rs["SumManDays"]}}`);
         }).reduce(function (result, currentObject) {
           for (var key in currentObject) {
-            if (Object.prototype.hasOwnProperty.call(currentObject, "key")) {
+            if (Object.prototype.hasOwnProperty.call(currentObject, key)) {
               result[key] = currentObject[key];
             }
           }
