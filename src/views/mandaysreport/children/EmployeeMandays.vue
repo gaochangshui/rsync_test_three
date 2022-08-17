@@ -138,16 +138,16 @@ export default {
             ? 0
             : Number(row[this.tableHeaders[index]]);
         if (val <= 10) {
-          return "red";
+          return "bg-red";
         }
         if (val > 10 && val <= 20) {
-          return "banana";
+          return "bg-banana";
         }
         if (val > 20 && val <= 25) {
-          return "green";
+          return "bg-green";
         }
         if (val > 25) {
-          return "blue";
+          return "bg-blue";
         }
       }
     },

@@ -64,7 +64,7 @@
         </div>
       </el-form>
     </div>
-    <div style="height: calc(100vh - 200px)">
+    <div style="height: calc(100vh - 250px)">
       <div v-show="!tableHeaders.length" style="
       height: 90%;
     width: 1120px;
@@ -280,16 +280,16 @@ export default defineComponent({
             ? 0
             : Number(row[tableHeaders.value[index]]);
         if (val <= 10) {
-          return "red";
+          return "bg-red";
         }
         if (val > 10 && val <= 20) {
-          return "banana";
+          return "bg-banana";
         }
         if (val > 20 && val <= 25) {
-          return "green";
+          return "bg-green";
         }
         if (val > 25) {
-          return "blue";
+          return "bg-blue";
         }
       }
     };
