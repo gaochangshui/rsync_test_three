@@ -243,7 +243,7 @@ export default defineComponent({
             if (Headers.indexOf(YearMonth) === -1) {
               Headers.push(YearMonth);
             }
-            console.log('rs',JSON.parse(`{"${rs["YearMonth"]}":${rs["SumManDays"]}}`))
+            // console.log('rs',JSON.parse(`{"${rs["YearMonth"]}":${rs["SumManDays"]}}`))
             return JSON.parse(`{"${rs["YearMonth"]}":${rs["SumManDays"]}}`);
           }).reduce(function (result: any, currentObject: any) {
             for (var key in currentObject) {
@@ -253,15 +253,15 @@ export default defineComponent({
             }
             return result;
           }, {});
-          console.log('b',b)
+          // console.log('b',b)
           return {
             EmployeeCode: res.EmployeeCode,
             EmployeeName: res.EmployeeName,
             ...b,
           };
         });
-        console.log('tableData',tableData.value);
-        console.log('tableHeaders',tableHeaders.value);
+        // console.log('tableData',tableData.value);
+        // console.log('tableHeaders',tableHeaders.value);
         storage.set("employeeList", employeeList.value);
       }).catch(()=>{
         loading.close()

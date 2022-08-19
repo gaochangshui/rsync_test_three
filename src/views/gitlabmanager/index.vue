@@ -930,6 +930,10 @@ export default {
             {
               value: '第三方组件使用合理性',
               label: '第三方组件使用合理性'
+            },
+            {
+              value: '前端自研开发前端utils（frontend-utils）',
+              label: '前端自研开发前端utils（frontend-utils）'
             }
           ]
         }

@@ -27,7 +27,7 @@ export default {
 </script>
 
 <template>
-    <div class="login">
+    <div class="login" @keyup.enter="login">
         <div>
             <div class="login-head">Please Sign in</div>
             <el-input class="userInput" 
