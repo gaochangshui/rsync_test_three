@@ -64,7 +64,7 @@
         </div>
       </el-form>
     </div>
-    <div style="height: calc(100vh - 250px)">
+    <div style="height: calc(100vh - 250px); margin-left: 16px;">
       <div v-show="!tableHeaders.length" style="
       height: 90%;
     width: 1120px;
@@ -408,4 +408,16 @@ export default defineComponent({
     }
   }
 }
+input::-webkit-input-placeholder { /* WebKit browsers */ 
+font-size:14px;
+} 
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+font-size:14px;
+} 
+input::-moz-placeholder { /* Mozilla Firefox 19+ */  
+font-size:14px;
+} 
+input:-ms-input-placeholder { /* Internet Explorer 10+ */  
+font-size:14px;
+} 
 </style>

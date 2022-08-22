@@ -126,7 +126,7 @@
                 <el-button
                 class="tableBtn"
                 style="width:56px;height:22px"
-                  @click="showSelect(scope.row)"
+                  @click="showSelect(scope.row.agreement_cd)"
                   type="text"
                   size="small"
                   v-show="scope.row.showbnt"
@@ -416,7 +416,7 @@
 </template>
 
 <script>
-import { ElLoading } from 'element-plus'
+import { ElLoading , ElMessageBox } from 'element-plus'
 export default {
   name: 'Dashboard',
   data() {
@@ -745,6 +745,7 @@ export default {
       }
     },
     check(val){
+      console.log(this.checkedData);
       if(this.checkedData.length){
         for(let i=0;i<this.checkedData.length;i++){
           if(this.checkedData[i].name===val.name){
@@ -849,22 +850,27 @@ export default {
       }
     },
     async showSelect(val) {
+      console.log(val);
      await this.getsubject()
      this.$nextTick(function(){
-      this.getsubjected(val.agreement_cd)
+      this.getsubjected(val)
      })
-      this.selectid=val.agreement_cd
+      this.selectid=val
       this.dialogVisible = true;
     },
-    showReview(val){
+    async showReview(val){
       this.reTitle=val.agreement_cd+': '+val.agreement_name
-      this.getReviewinfor(val.agreement_cd)
+      await this.getReviewinfor(val.agreement_cd)
       this.pjId=val.agreement_cd
       this.pjName=val.agreement_name
-        this.dialogReview = true;
+      await this.$nextTick(function(){
+        if(this.retableData!==null){
+          this.$refs.multipleTableRef.toggleAllSelection()
+        }
+     })
     },
-    getReviewinfor(val){
-      this.axios
+    async getReviewinfor(val){
+      await this.axios
         .get('/actionapi/QcdApi/QCDProjectDetail',{
           params:{
             userId:this.usercd,
@@ -872,6 +878,24 @@ export default {
           }
         }).then((e)=>{
           this.retableData=e.data.Warehouses
+      if(this.retableData===null){
+         ElMessageBox.confirm(
+    '请先进行仓库设定',
+    '提示',
+    {
+      confirmButtonText: '设定仓库',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      this.showSelect(val)
+    })
+    .catch(() => {
+    })
+      }else{
+        this.dialogReview = true;
+      }
         })
     },
     handleClose(val) {

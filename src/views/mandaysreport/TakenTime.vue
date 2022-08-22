@@ -13,7 +13,7 @@
             clearable
             placeholder="请选择"
             :remote-method="remoteMethod"
-            style="width: 925px"
+            style="width: 925px;"
             multiple-limit="6"
             :loading="loading"
             class="el-marginLR"
@@ -88,7 +88,7 @@
      </el-form>
     </div>
     <div class="body">
-     <div v-show="!HoursTotal" style="
+     <div v-show="!executedTime" style="
       height: 90%;
     width: 1120px;
     display: flex;
@@ -112,7 +112,7 @@
         v-model="tableId"
         tab-position="left"
         style="height: 100%;"
-        v-show="HoursTotal"
+        v-show="executedTime"
         @tab-click="changeTab"
       >
         <el-tab-pane label="概览" name="" class="HoursTotal">
@@ -128,12 +128,12 @@
         <el-tab-pane label="成员" name="Employee">
           <div
             style="height: calc(100vh - 250px); padding: 0px 0px 0px 0px;"
-            v-if="dataEmployee.length"
+         
           >
             <el-table
               class="table"
               id="Employee"
-              v-if="dataEmployee.length"
+          
               :data="dataEmployee"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
@@ -172,12 +172,12 @@
         <el-tab-pane label="项目" name="Projects">
           <div
             style="height: calc(100vh - 250px); padding: 0px 0px 0px 0px;"
-            v-if="dataProjects.length"
+      
           >
             <el-table
               class="table"
               id="Projects"
-              v-if="dataProjects.length"
+
               :data="dataProjects"
               style="width: 100%; margin: 0 auto; height: 100%;"
               height="height:100%"
@@ -254,12 +254,11 @@
         <el-tab-pane label="成员项目" name="ProjectEmployee">
           <div
             style="height: calc(100vh - 250px); "
-            v-if="dataProjectEmployee.length"
+ 
           >
             <el-table
               class="table"
               id="ProjectEmployee"
-              v-if="dataProjectEmployee.length"
               :data="dataProjectEmployee"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
@@ -309,11 +308,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="工时明细" name="takenHoursDetails">
-          <div style="height: calc(100vh - 300px)" v-if="takenHoursData.length">
+          <div style="height: calc(100vh - 300px)">
             <el-table
               class="table"
               id="takenHoursDetails"
-              v-if="takenHoursData.length"
               :data="takenHoursData"
               style="width: 100%; margin: 0 auto; height: 100%"
               height="height:100%"
@@ -485,16 +483,16 @@ export default defineComponent({
       getTakenHours(params).then((res) => {
         //showDownload.value = false;
         loading.close()
-        if (res.data.HoursTotal === 0) {
-          ElMessage({
-            type: "warning",
-            showClose: true,
-            dangerouslyUseHTMLString: true,
-            message: "データがありません",
-          });
-          HoursTotal.value = 0;
-          return;
-        }
+        // if (res.data.HoursTotal === 0) {
+        //   ElMessage({
+        //     type: "warning",
+        //     showClose: true,
+        //     dangerouslyUseHTMLString: true,
+        //     message: "データがありません",
+        //   });
+        //   HoursTotal.value = 0;
+        //   return;
+        // }
         total.value = res.data.ResultCount;
         HoursTotal.value = toDecimal(Number(res.data.HoursTotal / 8), 1);
         executedTime.value = res.data.executedTime;
@@ -681,5 +679,11 @@ export default defineComponent({
 }
 .el-tabs--left .el-tabs__item.is-left{
   text-align: left !important;
+}
+.table .el-table__empty-block{
+  text-align: left;
+}
+.el-select__input{
+  margin-left: 15px !important;
 }
 </style>
