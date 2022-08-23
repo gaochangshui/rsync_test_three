@@ -40,14 +40,14 @@ export default {
   },
   computed: {
     routes() {
-      console.log(this.$router.options.routes);
+      // console.log(this.$router.options.routes);
       return this.$router.options.routes[1].children;
     },
     activeMenu() {
       const route = this.$route;
-      console.log('route', route, this.$router.options);
+      // console.log('route', route, this.$router.options);
       const { meta, path } = route;
-      console.log('meta', meta, path);
+      // console.log('meta', meta, path);
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
         return meta.activeMenu;

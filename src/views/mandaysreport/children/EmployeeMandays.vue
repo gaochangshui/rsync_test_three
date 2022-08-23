@@ -104,7 +104,7 @@ export default {
       }
 
       this.tableData = result.map((res) => {
-        console.log(res);
+        // console.log(res);
         let b = res.YearMonthSumMandayList.map((rs) => {
           if (this.tableHeaders.indexOf(rs["YearMonth"] + "　") === -1) {
             this.tableHeaders.push(rs["YearMonth"] + "　");
