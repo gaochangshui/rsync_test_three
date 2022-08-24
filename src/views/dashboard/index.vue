@@ -465,16 +465,20 @@ export default {
               label: 'HTML'
             },
             {
-              value: 'JavaScript',
-              label: 'JavaScript'
-            },
-            {
               value: 'CSS',
               label: 'CSS'
             },
             {
+              value: 'JavaScript',
+              label: 'JavaScript'
+            },
+            {
               value: 'TypeScript',
               label: 'TypeScript'
+            },
+            {
+              value: 'Vue',
+              label: 'Vue'
             }
           ]
         },
@@ -482,16 +486,12 @@ export default {
           label: '后端语言',
           options: [
             {
-              value: 'XML',
-              label: 'XML'
-            },
-            {
               value: 'Java',
               label: 'Java'
             },
             {
-              value: 'SMART Scripts',
-              label: 'SMART Scripts'
+              value: 'C#',
+              label: 'C#'
             },
             {
               value: 'Python',
@@ -506,16 +506,16 @@ export default {
               label: 'Kotlin'
             },
             {
-              value: 'JSP',
-              label: 'JSP'
-            },
-            {
               value: 'Ruby',
               label: 'Ruby'
             },
             {
               value: 'PHP',
               label: 'PHP'
+            },
+            {
+              value: 'SMART',
+              label: 'SMART'
             }
           ]
         }

@@ -3,7 +3,7 @@ import request from '@/http'
 export const getOrdersReceived = (params:Object) =>
   request({
     url: '/qcdapi/sum_mandays/OrdersReceived',
-    method: 'get',　  
+    method: 'get',
     params
   })
 
