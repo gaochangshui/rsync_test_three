@@ -93,10 +93,8 @@
             :header-cell-style="{ background: '#FAFAFA' }"
             v-loading="loadingtable"
             element-loading-text="加载中..."
-            @cell-mouse-enter="tableHover"
-            @cell-mouse-leave="tablaLeave"
           >
-            <el-table-column label="项目" sortable :sort-method="sortDevName">
+            <el-table-column label="项目" sortable :sort-method="sortDevName" width="600px">
               <template #default="scope">
                 <div style="color: #0b2646">{{ scope.row.agreement_cd }}</div>
                 <el-tooltip
@@ -120,39 +118,151 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="plan_mandays" label="预订工数" sortable />
-            <el-table-column width="300px" align="right">
+            <el-table-column  label="负责人"   >
+               <template #default="scope">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="scope.row.manager_id+':'+scope.row.manager_name"
+                  placement="top-start"
+                >
+                  <span
+                    style="
+                      color: #8e8e8e;
+                      /* width:100%; */
+                      overflow: hidden;
+                      white-space: nowrap;
+                      text-overflow: ellipsis;
+                      -o-text-overflow: ellipsis;
+                    "
+                  >
+                    {{scope.row.manager_name}}
+                  </span>
+                </el-tooltip>
+              </template>
+              </el-table-column>
+            
+             <el-table-column label="成员" width="100px">
               <template #default="scope">
-                <el-button
-                class="tableBtn"
-                style="width:56px;height:22px"
-                  @click="showSelect(scope.row.agreement_cd)"
-                  type="text"
-                  size="small"
-                  v-show="scope.row.showbnt"
+              <span v-show="scope.row.member_ids.length == 0" style="margin-left: 10px"
+                    >-</span
+                  >
+                <div
+                  v-for="(item, index) in scope.row.member_ids"
+                  :key="index"
                 >
-                  仓库设定
-                </el-button>
-                <el-button
-                class="tableBtn"
-                style="width:56px;height:22px"
-                  @click="showReview(scope.row)"
-                  type="text"
-                  size="small"
-                  v-show="scope.row.showbnt"
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="item.MemberName"
+                    placement="top-start"
+                    
+                  >
+                    <img
+                      :src="item.avatar"
+                      :class="'membericon' + index"
+                      style="border: 1px solid #40a9ff"
+                      v-if="index<=2 &&
+                       scope.row.member_ids.length !== 0"  
+                    />
+                  </el-tooltip>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column >
+              <template #default="scope">
+                <div v-show="scope.row.member_ids.length != 0">
+                  {{ scope.row.member_ids.length }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column  label="状态">
+              <template #default="scope">
+                <el-tag color="#E4F2FF" class="tableTag" >{{scope.row.statusName}}</el-tag>
+              </template>
+            </el-table-column>
+            
+            <el-table-column prop="project_count" label="仓库数"   sortable >
+              </el-table-column>
+              <el-table-column prop="plan_mandays" label="预订工数"  sortable />
+            <el-table-column
+              fixed="right"
+              label="操作"
+              align="right"
+              width="60px"
+            >
+              <template #default="scope">
+                <el-popover
+                  width="300"
+                  placement="left-start"
+                  popper-class="atooltip"
+                  ref="popoverRef"
+                  trigger="click"
+                  effect="light"
+                  :enterable="false"
+                  v-model:visible="scope.row.openFlag"
                 >
-                  项目评审
-                </el-button>
-                <el-button
-                class="tableBtn"
-                style="width:56px;height:22px;margin-right: 10px"
-                  @click="showwarehouse(scope.row)"
-                  type="text"
-                  size="small"
-                  v-show="scope.row.showbnt"
-                >
-                  查看仓库
-                </el-button>
+                  <template #reference>
+                    <svg-icon
+                      style="
+                        cursor: pointer;
+                        margin-left: 5px;
+                        padding: 5px 5px;
+                        border-radius: 5px;
+                      "
+                      width="15" 
+                      height="18" 
+                      icon-class="point"
+                     
+                      class="pointFrom"
+                    />
+                  </template>
+                  <div class="atooltip-div" @click.stop="showSelect(scope.row.agreement_cd)">
+                    <img
+                      src="../../assets/icons/fromicon/Frame-6.png"
+                      style="
+                        width: 18px;
+                        height: 18px;
+                        position: relative;
+                        top: 4px;
+                        margin-right: 5px;
+                      "
+                    />
+                    仓库设定
+                  </div>
+                      <div
+                        class="atooltip-div"
+                        @click="showReview(scope.row)" 
+                      >
+                        <img
+                          src="../../assets/icons/fromicon/Frame-1.png"
+                          style="
+                            width: 18px;
+                            height: 18px;
+                            position: relative;
+                            top: 4px;
+                            margin-right: 5px;
+                          "
+                        />
+                        项目评审
+                      </div>
+                  <div
+                    class="atooltip-div"
+                    @click.stop="showwarehouse(scope.row)"
+                  >
+                    <img
+                      src="../../assets/icons/fromicon/Frame-7.png"
+                      style="
+                        width: 18px;
+                        height: 18px;
+                        position: relative;
+                        top: 4px;
+                        margin-right: 5px;
+                      "
+                    />
+                    查看仓库
+                  </div>
+                </el-popover>
               </template>
             </el-table-column>
           </el-table>
@@ -763,11 +873,13 @@ export default {
         .post('/actionapi/QcdApi/QCDProjectSetting',{
             id:this.selectid,
             userId:this.usercd,
+            count:this.checkedData.length,
             gitlabProject:this.checkedData
         }).then((e)=>{
           if(e.data.Success){
             this.$message.success('设定仓库成功');
           }
+          this.getTableData()
         })
       this.dialogVisible = false
     },
@@ -835,22 +947,7 @@ export default {
         }
       });
     },
-    tablaLeave(row) {
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].agreement_name === row.agreement_name) {
-          this.tableData[i].showbnt = false;
-        }
-      }
-    },
-    tableHover(row) {
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].agreement_name === row.agreement_name) {
-          this.tableData[i].showbnt = true;
-        }
-      }
-    },
     async showSelect(val) {
-      console.log(val);
      await this.getsubject()
      this.$nextTick(function(){
       this.getsubjected(val)
@@ -1027,9 +1124,27 @@ export default {
           this.pageTotal=e.data.pageNumAll
           this.tableData=e.data.qcdProject
           for(let i=0; i<this.tableData.length;i++){
-            this.tableData[i]['showbnt']=false
+            this.tableData[i]['member_ids']=JSON.parse(e.data.qcdProject[i].member_ids);
+            switch(this.tableData[i]['status']){
+              case 1:
+                this.tableData[i]['statusName']='見積中'
+                break;
+              case 2:
+                this.tableData[i]['statusName']='見積提出済'
+                break;
+              case 3:
+                this.tableData[i]['statusName']='受注済'
+                break;
+              case 4:
+                this.tableData[i]['statusName']='課題完了'
+                break;
+              case 5:
+                this.tableData[i]['statusName']='課題中止'
+                break;
+            }
           }
           this.loadingtable=false
+          console.log(this.tableData);
         });
         document.getElementsByClassName(
         'el-pagination__total'
@@ -1221,5 +1336,67 @@ background-color: #ECF4FF;
 table th.star div::before {
 content: '*';
 color: red;
+}
+.membericon0 {
+  width: 20px;
+  height: 20px;
+  border-radius: 11px;
+  z-index: 3;
+}
+.membericon1 {
+  width: 20px;
+  height: 20px;
+  border-radius: 11px;
+  left: 25px;
+  z-index: 2;
+}
+.membericon2 {
+  width: 20px;
+  height: 20px;
+  border-radius: 11px;
+  left: 35px;
+  z-index: 1;
+}
+.membericon0,
+.membericon1,
+.membericon2 {
+  position: absolute;
+  top: 30%;
+}
+.pointFrom:focus {
+  outline: none;
+}
+.pointFrom:hover {
+  background-color: #f0eeee;
+}
+.el-pagination {
+  position: relative;
+  top: 80%;
+}
+.atooltip-div:hover {
+  background: #f3f2f2;
+  cursor: pointer;
+}
+.atooltip-div {
+  padding-left: 5px;
+  padding-right: 5px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 30px;
+  color: #4b4b4b;
+  height: 30px;
+  border-radius: 5px;
+}
+.atooltip {
+  padding: 2px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+.tableTag{
+  color:#3B82F6;
+  height: 20px;
+}
+.el-tag__content{
+  font-size: 12px;
 }
 </style>
