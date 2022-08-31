@@ -97,12 +97,6 @@
             <el-table-column label="项目" sortable :sort-method="sortDevName" >
               <template #default="scope">
                 <div style="color: #0b2646">{{ scope.row.agreement_cd }}</div>
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  :content="scope.row.agreement_name"
-                  placement="top-start"
-                >
                   <div
                     style="
                       color: #8e8e8e;
@@ -115,7 +109,6 @@
                   >
                     {{scope.row.agreement_name}}
                   </div>
-                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column  label="负责人" width="150px"   >
@@ -144,9 +137,11 @@
             
              <el-table-column label="成员" width="60px">
               <template #default="scope">
-              <span v-show="scope.row.member_ids.length == 0" style="margin-left: 10px"
+                <div>
+                  <span v-show="scope.row.member_ids.length===0" style="margin-left: 10px"
                     >-</span
                   >
+                </div>
                 <div
                   v-for="(item, index) in scope.row.member_ids"
                   :key="index"
@@ -162,7 +157,7 @@
                       :src="item.avatar"
                       :class="'membericon' + index"
                       v-if="index<=2 &&
-                       scope.row.member_ids.length !== 0"  
+                       scope.row.member_ids.length !== 0 "  
                     />
                   </el-tooltip>
                 </div>
@@ -170,14 +165,14 @@
             </el-table-column>
             <el-table-column  width="90px">
               <template #default="scope">
-                <div v-show="scope.row.member_ids.length != 0">
+                <div v-show="scope.row.member_ids.length != 0 ">
                   {{ scope.row.member_ids.length }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column  label="状态" width="150px">
               <template #default="scope">
-                <el-tag color="#E4F2FF" class="tableTag" >{{scope.row.statusName}}</el-tag>
+                <el-tag :color="tagColor(scope.row.statusName)" :class="'tableTag'+scope.row.status" >{{scope.row.statusName}}</el-tag>
               </template>
             </el-table-column>
             
@@ -220,7 +215,7 @@
                         padding: 5px 5px;
                         border-radius: 5px;
                       "
-                      width="15" 
+                     width="15"   
                       height="18" 
                       icon-class="point"
                      
@@ -826,6 +821,21 @@ export default {
     }
   },
   methods: {
+    tagColor(val){
+      switch(val){
+        case '待报价':
+          return '#FFF7E1'
+        case '已报价':
+          return '#DFF7F7'
+        case '合同已签':
+          return '#E4F2FF'
+        case '已完成':
+          return '#E5F5EC'
+        case '已中止':
+          return '#FFEBEE'
+
+      }
+    },
     changeBranch(val){
       for(let i=0;i<val.branchchangeurl.length;i++){
         if(val.branchchangeurl[i].name===val.bvalue){
@@ -1144,19 +1154,19 @@ export default {
             this.tableData[i]['member_ids']=JSON.parse(e.data.qcdProject[i].member_ids);
             switch(this.tableData[i]['status']){
               case 1:
-                this.tableData[i]['statusName']='見積中'
+                this.tableData[i]['statusName']='待报价'
                 break;
               case 2:
-                this.tableData[i]['statusName']='見積提出済'
+                this.tableData[i]['statusName']='已报价'
                 break;
               case 3:
-                this.tableData[i]['statusName']='受注済'
+                this.tableData[i]['statusName']='合同已签'
                 break;
               case 4:
-                this.tableData[i]['statusName']='課題完了'
+                this.tableData[i]['statusName']='已完成'
                 break;
               case 5:
-                this.tableData[i]['statusName']='課題中止'
+                this.tableData[i]['statusName']='已中止'
                 break;
             }
           }
@@ -1409,8 +1419,29 @@ color: red;
   padding-top: 5px !important;
   padding-bottom: 5px !important;
 }
-.tableTag{
+.tableTag1{
+  color:#FFAD0D;
+  border: none;
+  height: 20px;
+}
+.tableTag2{
+  color:#15C5CE;
+  border: none;
+  height: 20px;
+}
+.tableTag3{
   color:#3B82F6;
+  border: none;
+  height: 20px;
+}
+.tableTag4{
+  color:#47B881;
+  border: none;
+  height: 20px;
+}
+.tableTag5{
+  color:#F64C4C;
+  border: none;
   height: 20px;
 }
 .el-tag__content{
