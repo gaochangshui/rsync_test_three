@@ -94,7 +94,7 @@
             v-loading="loadingtable"
             element-loading-text="加载中..."
           >
-            <el-table-column label="项目" sortable :sort-method="sortDevName" width="600px">
+            <el-table-column label="项目" sortable :sort-method="sortDevName" >
               <template #default="scope">
                 <div style="color: #0b2646">{{ scope.row.agreement_cd }}</div>
                 <el-tooltip
@@ -118,7 +118,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column  label="负责人"   >
+            <el-table-column  label="负责人" width="150px"   >
                <template #default="scope">
                 <el-tooltip
                   class="box-item"
@@ -142,7 +142,7 @@
               </template>
               </el-table-column>
             
-             <el-table-column label="成员" width="100px">
+             <el-table-column label="成员" width="60px">
               <template #default="scope">
               <span v-show="scope.row.member_ids.length == 0" style="margin-left: 10px"
                     >-</span
@@ -161,7 +161,6 @@
                     <img
                       :src="item.avatar"
                       :class="'membericon' + index"
-                      style="border: 1px solid #40a9ff"
                       v-if="index<=2 &&
                        scope.row.member_ids.length !== 0"  
                     />
@@ -169,22 +168,33 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column >
+            <el-table-column  width="90px">
               <template #default="scope">
                 <div v-show="scope.row.member_ids.length != 0">
                   {{ scope.row.member_ids.length }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column  label="状态">
+            <el-table-column  label="状态" width="150px">
               <template #default="scope">
                 <el-tag color="#E4F2FF" class="tableTag" >{{scope.row.statusName}}</el-tag>
               </template>
             </el-table-column>
             
-            <el-table-column prop="project_count" label="仓库数"   sortable >
+            <el-table-column prop="project_count"  width="150px" label="仓库数" sortable >
+              <template #default="scope">
+                  <div style="text-align:right;margin-right: 50px;">
+                    {{scope.row.project_count}}
+                  </div>
+                </template>
               </el-table-column>
-              <el-table-column prop="plan_mandays" label="预订工数"  sortable />
+              <el-table-column prop="plan_mandays" width="150px" label="预订工数"  sortable >
+                <template #default="scope">
+                  <div style="text-align:right;margin-right: 50px;">
+                    {{scope.row.plan_mandays}}
+                  </div>
+                </template>
+              </el-table-column>
             <el-table-column
               fixed="right"
               label="操作"
@@ -741,6 +751,10 @@ export default {
               number: ''
             },
             {
+              name: '我参与的',
+              number: ''
+            },
+            {
               name: '进行中的',
               number: ''
             },
@@ -855,7 +869,7 @@ export default {
       }
     },
     check(val){
-      console.log(this.checkedData);
+      // console.log(this.checkedData);
       if(this.checkedData.length){
         for(let i=0;i<this.checkedData.length;i++){
           if(this.checkedData[i].name===val.name){
@@ -1052,8 +1066,10 @@ export default {
         this.leftType=0
       }else if(this.topTitle==='进行中的'){
         this.leftType=1
-      }else{
+      }else if(this.topTitle==='已完成的'){
         this.leftType=2
+      }else{
+        this.leftType=3
       }
       this.getTableData()
     },
@@ -1103,8 +1119,9 @@ export default {
           }
         }).then((e)=>{
           this.labs[0].children[0].number=e.data.allCount
-          this.labs[0].children[1].number=e.data.doingCount
-          this.labs[0].children[2].number=e.data.endCount
+          this.labs[0].children[2].number=e.data.doingCount
+          this.labs[0].children[3].number=e.data.endCount
+          this.labs[0].children[1].number=e.data.myCount
           this.numloading=false
         })
     },
@@ -1144,7 +1161,7 @@ export default {
             }
           }
           this.loadingtable=false
-          console.log(this.tableData);
+          // console.log(this.tableData);
         });
         document.getElementsByClassName(
         'el-pagination__total'
