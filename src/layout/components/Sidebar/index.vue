@@ -27,9 +27,24 @@
       >
       <el-menu-item >
             <svg-icon icon-class="package" />
+            <span style="position:absolute;top:14px;left:8px">资源包</span>
           </el-menu-item>
-      </el-tooltip>
-          
+      </el-tooltip>         
+        </div>
+        <div>
+          <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="routes[2].meta?.title"
+        placement="right"
+        show-after="1000"
+      >
+      <el-menu-item :index="'/'+routes[2].path" >
+      <svg-icon :icon-class="routes[2].meta?.icon" />
+      <span style="position:absolute;top:14px;left:8px">{{routes[2].meta?.name}}</span>
+      <!-- <template #title>{{item.meta?.title}}</template> -->
+    </el-menu-item>
+      </el-tooltip>    
         </div>
       </el-menu>
     </el-scrollbar>
@@ -81,5 +96,6 @@ export default {
 }
 .el-menu-item{
   color: #18263C !important;
+  padding-bottom: 15px !important;
 }
 </style>

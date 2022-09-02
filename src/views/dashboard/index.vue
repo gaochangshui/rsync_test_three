@@ -111,7 +111,7 @@
                   </div>
               </template>
             </el-table-column>
-            <el-table-column  label="负责人" width="150px"   >
+            <el-table-column  label="负责人" width="100px"   >
                <template #default="scope">
                 <el-tooltip
                   class="box-item"
@@ -163,20 +163,20 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column  width="90px">
+            <el-table-column  width="50px">
               <template #default="scope">
                 <div v-show="scope.row.member_ids.length != 0 ">
                   {{ scope.row.member_ids.length }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column  label="状态" width="150px">
+            <el-table-column  label="状态" width="110px">
               <template #default="scope">
                 <el-tag :color="tagColor(scope.row.statusName)" :class="'tableTag'+scope.row.status" >{{scope.row.statusName}}</el-tag>
               </template>
             </el-table-column>
             
-            <el-table-column prop="project_count"  width="150px" label="仓库数" sortable >
+            <el-table-column prop="project_count"  width="110px" label="仓库数" sortable >
               <template #default="scope">
                   <div style="display:flex">
                     <img src="../../assets/icons/fromicon/code.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
@@ -184,7 +184,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="plan_mandays" width="150px" label="预订工数"  sortable >
+              <el-table-column prop="plan_mandays" width="110px" label="预订工数"  sortable >
                 <template #default="scope">
                   <div style="display:flex">
                     <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
@@ -192,7 +192,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="plan_mandays" width="150px" label="星标"  sortable >
+              <el-table-column prop="plan_mandays" width="110px" label="星标"  sortable >
                 <template #default="scope">
                   <div>
                     <img src='../../assets/icons/fromicon/star1.png' 

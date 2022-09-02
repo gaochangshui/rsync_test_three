@@ -7,8 +7,9 @@
         placement="right"
         show-after="1000"
       >
-      <el-menu-item :index="'/'+basePath" v-show="item.name!=='查看仓库'">
+      <el-menu-item :index="'/'+basePath" v-show="item.name!=='查看仓库'&&item.name!=='虚拟机'">
       <svg-icon :icon-class="item.meta?.icon" />
+      <span :class="item.meta?.icon">{{item.meta?.name}}</span>
       <!-- <template #title>{{item.meta?.title}}</template> -->
     </el-menu-item>
       </el-tooltip>
@@ -42,6 +43,18 @@ export default {
 .sub-el-icon {
   color: currentColor;
   width: 10px;
-  height: 1em;
+  height: 10em;
+}
+.code,.project{
+  position:absolute;
+  top:14px;
+  left:18px;
+  font-size: 12px;
+}
+.table,.link{
+  position:absolute;
+  top:15px;
+  left:6px;
+  font-size: 12px;
 }
 </style>

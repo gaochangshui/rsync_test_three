@@ -17,7 +17,7 @@ const routes = [
         path:'project',
         name:'项目',
         component: () => import('@/views/dashboard/index.vue'),
-        meta: { title: '项目', icon: 'home' },
+        meta: { title: '项目', icon: 'project',name:'项目'},
       },
       {
         path:'project/warehousepage',
@@ -27,7 +27,7 @@ const routes = [
         path: 'virtualmachine',
         name: '虚拟机',
         component: () => import('@/views/virtualmachine/index.vue'),
-        meta: { title: '虚拟机', icon: 'xuniji' },
+        meta: { title: '虚拟机', icon: 'xuniji',name:'虚拟机' },
       },{
         path: 'code',
         name: '代码仓库',
@@ -43,13 +43,13 @@ const routes = [
         path: 'Scheduled',
         component: () => import('@/views/mandaysreport/Scheduled.vue'),
         name: '成员预定',
-        meta: { title: '成员预定', icon: 'table' }
+        meta: { title: '成员预定', icon: 'table',name:'成员预定' }
       },
       {
         path: 'TakenTime',
         component: () => import('@/views/mandaysreport/TakenTime.vue'),
         name: '消耗工时',
-        meta: { title: '消耗工时', icon: 'link' }
+        meta: { title: '消耗工时', icon: 'link',name:'消耗工时' }
       }
     ],
   },

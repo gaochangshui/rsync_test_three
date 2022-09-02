@@ -50,18 +50,22 @@ nav a.router-link-exact-active {
 }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-red{
     background-color: rgb(244,81,30)  !important;
+    opacity: 0.9 !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-blue{
     background-color: #039BE5 !important;
+    opacity: 0.9 !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-green{
     background-color: #7CB342 !important;
+    opacity: 0.9 !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-banana{
     background-color: #F6BF26 !important;
+    opacity: 0.9 !important;
     border-bottom: solid 1px #eee;
   }
 .el-cascader-panel{

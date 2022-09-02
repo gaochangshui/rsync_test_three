@@ -42,7 +42,7 @@ hamburgerList(){
 <style lang="less" scoped>
 .navbar {
   width: 100%;
-  height: 40px;
+  height: 35px;
   overflow: hidden;
   position: relative;
   background: #f2f3f5;

@@ -109,6 +109,8 @@ export default {
   background: #f2f3f5;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid #e0e1e2;
+  padding-bottom: 10px;
 }
 .left-title{
     display: flex;
