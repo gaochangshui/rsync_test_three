@@ -96,7 +96,9 @@ export default {
     }
   },
   created(){
-    this.getCookie();
+    this.$nextTick(function(){
+      this.getCookie();
+    })
   }
 };
 </script>

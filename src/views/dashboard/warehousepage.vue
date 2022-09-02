@@ -970,7 +970,14 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      let flag=1
+      this.$router.push({
+        name: '项目',
+        query: {
+          inputValue:this.$route.query.selectVale,
+          flag:flag
+        }
+      });
     },
     projectquery(val){
       if(this.timer){

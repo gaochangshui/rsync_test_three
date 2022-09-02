@@ -951,7 +951,7 @@ export default {
               number: ''
             },
             {
-              name: '星标项目',
+              name: '星标仓库',
               number: ''
             },
             {

@@ -49,22 +49,18 @@ nav a.router-link-exact-active {
    color:#FFF;
 }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-red{
-    color: #000;
-    background-color: #F4511E !important;
+    background-color: rgb(244,81,30)  !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-blue{
-    color: #000;
     background-color: #039BE5 !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-green{
-    color: #000;
     background-color: #7CB342 !important;
     border-bottom: solid 1px #eee;
   }
 .el-table--enable-row-hover .el-table__body tr:hover >.bg-banana{
-    color: #000;
     background-color: #F6BF26 !important;
     border-bottom: solid 1px #eee;
   }

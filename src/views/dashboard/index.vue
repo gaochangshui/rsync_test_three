@@ -178,23 +178,40 @@
             
             <el-table-column prop="project_count"  width="150px" label="仓库数" sortable >
               <template #default="scope">
-                  <div style="text-align:right;margin-right: 50px;">
-                    {{scope.row.project_count}}
+                  <div style="display:flex">
+                    <img src="../../assets/icons/fromicon/code.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
+                    <span>{{scope.row.project_count}}</span>         
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="plan_mandays" width="150px" label="预订工数"  sortable >
                 <template #default="scope">
-                  <div style="text-align:right;margin-right: 50px;">
+                  <div style="display:flex">
+                    <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
                     {{scope.row.plan_mandays}}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="plan_mandays" width="150px" label="星标"  sortable >
+                <template #default="scope">
+                  <div>
+                    <img src='../../assets/icons/fromicon/star1.png' 
+                    style="width:18px;height:18px; margin:10px" 
+                    @click="changeStar(scope.row)" 
+                    v-show="!scope.row.Star" 
+                    class="starClass" />
+                    <img src='../../assets/icons/fromicon/star2.png' 
+                    style="width:18px;height:18px; margin:10px" 
+                    @click="changeStar(scope.row)" 
+                    v-show="scope.row.Star"
+                    class="starClass" />
                   </div>
                 </template>
               </el-table-column>
             <el-table-column
               fixed="right"
               label="操作"
-              align="right"
-              width="60px"
+              width="75px"
             >
               <template #default="scope">
                 <el-popover
@@ -542,6 +559,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      value1:"../../assets/icons/fromicon/star1.png",
       reTitle:'',
       username: '',
       usercd: '',
@@ -750,6 +768,10 @@ export default {
               number: ''
             },
             {
+              name: '星标项目',
+              number: ''
+            },
+            {
               name: '进行中的',
               number: ''
             },
@@ -821,13 +843,30 @@ export default {
     }
   },
   methods: {
+    async changeStar(val){
+      if(val.Star){
+        val.Star=false
+        this.labs[0].children[2].number--
+      }else{
+        val.Star=true
+        this.labs[0].children[2].number++
+      } 
+     await this.axios.post('/actionapi/QcdApi/QCDProjectStarSetting',{ 
+          userId:this.usercd,
+          agreement_cd:val.agreement_cd,
+          flag:val.Star
+      })
+        if(this.topTitle==='星标项目'){
+          await this.getTableData()
+      }    
+    },
     tagColor(val){
       switch(val){
         case '待报价':
           return '#FFF7E1'
         case '已报价':
           return '#DFF7F7'
-        case '合同已签':
+        case '进行中':
           return '#E4F2FF'
         case '已完成':
           return '#E5F5EC'
@@ -967,7 +1006,8 @@ export default {
         name: '查看仓库',
         query: {
           title: val.agreement_name,
-          id:val.agreement_cd
+          id:val.agreement_cd,
+          selectVale:this.input
         }
       });
     },
@@ -1078,8 +1118,10 @@ export default {
         this.leftType=1
       }else if(this.topTitle==='已完成的'){
         this.leftType=2
-      }else{
+      }else if(this.topTitle==='我参与的'){
         this.leftType=3
+      }else{
+        this.leftType=4
       }
       this.getTableData()
     },
@@ -1129,13 +1171,18 @@ export default {
           }
         }).then((e)=>{
           this.labs[0].children[0].number=e.data.allCount
-          this.labs[0].children[2].number=e.data.doingCount
-          this.labs[0].children[3].number=e.data.endCount
+          this.labs[0].children[3].number=e.data.doingCount
+          this.labs[0].children[4].number=e.data.endCount
           this.labs[0].children[1].number=e.data.myCount
+          this.labs[0].children[2].number=e.data.starCount
           this.numloading=false
         })
     },
     async getTableData(){
+      if(this.$route.query.inputValue&&this.$route.query.flag==='1'){
+    this.input=this.$route.query.inputValue
+    this.$route.query.flag++
+  }
       this.loadingtable=true;
       await this.axios
         .get('/actionapi/QcdApi/QCDProjectShow', {
@@ -1148,10 +1195,13 @@ export default {
           }
         })
         .then((e) => {
+          this.tableData=[]
           this.pageTotal=e.data.pageNumAll
-          this.tableData=e.data.qcdProject
-          for(let i=0; i<this.tableData.length;i++){
-            this.tableData[i]['member_ids']=JSON.parse(e.data.qcdProject[i].member_ids);
+          for(let i=0; i<e.data.qcdProject.length;i++){
+            this.tableData.push(e.data.qcdProject[i].agreement)
+            this.tableData[i]['member_ids']=JSON.parse(e.data.qcdProject[i].agreement.member_ids);
+            this.tableData[i]['Star']=e.data.qcdProject[i].IsStar;
+            
             switch(this.tableData[i]['status']){
               case 1:
                 this.tableData[i]['statusName']='待报价'
@@ -1160,7 +1210,7 @@ export default {
                 this.tableData[i]['statusName']='已报价'
                 break;
               case 3:
-                this.tableData[i]['statusName']='合同已签'
+                this.tableData[i]['statusName']='进行中'
                 break;
               case 4:
                 this.tableData[i]['statusName']='已完成'
@@ -1169,6 +1219,7 @@ export default {
                 this.tableData[i]['statusName']='已中止'
                 break;
             }
+            
           }
           this.loadingtable=false
           // console.log(this.tableData);
@@ -1446,5 +1497,11 @@ color: red;
 }
 .el-tag__content{
   font-size: 12px;
+}
+.starClass:hover{
+  width: 20px !important;
+  height: 20px !important;
+  transition-property:all;
+  transition-duration:0.5s;
 }
 </style>

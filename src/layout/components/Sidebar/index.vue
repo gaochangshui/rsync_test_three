@@ -18,10 +18,18 @@
         </el-menu-item> -->
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         <div @click.stop="goUrl('https://code.trechina.cn/package')">
-          <el-menu-item title="资源包管理">
+          <el-tooltip
+        class="box-item"
+        effect="dark"
+        content="资源包管理"
+        placement="right"
+        show-after="1000"
+      >
+      <el-menu-item >
             <svg-icon icon-class="package" />
-            <template #title>资源包管理</template>
           </el-menu-item>
+      </el-tooltip>
+          
         </div>
       </el-menu>
     </el-scrollbar>

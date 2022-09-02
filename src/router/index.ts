@@ -20,7 +20,7 @@ const routes = [
         meta: { title: '项目', icon: 'home' },
       },
       {
-        path:'dashboard/warehousepage',
+        path:'project/warehousepage',
         name:'查看仓库',
         component: () => import('@/views/dashboard/warehousepage.vue'),
       },{

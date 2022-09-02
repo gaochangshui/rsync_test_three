@@ -3,8 +3,9 @@
     <div class="hamburger-container">
       <el-breadcrumb separator="/">
     <el-breadcrumb-item 
-    to="/dashboard" 
-    v-show="hamburgerList[1].path==='/dashboard/warehousepage'"
+    style="cursor: pointer;"
+    @click="goBack" 
+    v-show="hamburgerList[1].path==='/project/warehousepage'"
     >项目</el-breadcrumb-item>
     <el-breadcrumb-item :to="hamburgerList[1].path">{{hamburgerList[1].name}}</el-breadcrumb-item>
   </el-breadcrumb>
@@ -24,7 +25,16 @@ hamburgerList(){
 }
   },
   methods: {
-   
+    goBack() {
+      let flag=1
+      this.$router.push({
+        name: '项目',
+        query: {
+          inputValue:this.$route.query.selectVale,
+          flag:flag
+        }
+      });
+    }
   }
 }
 </script>
