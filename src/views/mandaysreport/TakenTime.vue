@@ -308,7 +308,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="工时明细" name="takenHoursDetails">
-          <div style="height: calc(100vh - 300px)">
+          <div style="height: calc(100vh - 310px)">
             <el-table
               class="table"
               id="takenHoursDetails"

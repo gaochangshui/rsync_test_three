@@ -1117,7 +1117,7 @@ export default {
       } else if (val === '我参与的') {
         this.warehouseType = 'ProjectsIInvolved';
         this.getTableData();
-      } else if (val === '星标项目') {
+      } else if (val === '星标仓库') {
         this.warehouseType = 'ProjectsIStarrd';
         this.getTableData();
       } else if (val === '模板仓库') {

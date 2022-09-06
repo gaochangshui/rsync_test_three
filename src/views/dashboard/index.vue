@@ -192,7 +192,6 @@
                   <el-popover
                     placement="top"
                     :width="200"
-                    show-after="500"
                     trigger="click"
                     style="height:70px !important;"
                     popper-class="reserveTimePovover"
@@ -200,12 +199,38 @@
                     <p class="expendTime">
                       <img src="../../assets/icons/fromicon/time.png" >
                       已消耗
+                      <el-skeleton :loading="exoendloading" animated  >
+                    <template #template>
+                      <div :class="image_class">
+                        <el-skeleton-item
+                          variant="image"
+                          class="dashboard-left-children-right"
+                          style="width:50px;position: absolute;top: 32px;right:15px ;"
+                        />
+                      </div>
+                    </template>
+                    <template #default>
                       <span @click="expendTime">{{(Math.round(Number(reserveTimes) * 10) / 10).toFixed(1) }}</span>
+                    </template>
+                      </el-skeleton>
                     </p>
                     <p class="expendTime">
                       <img src="../../assets/icons/fromicon/reserveTime.png" >
                       预定工数
+                      <el-skeleton :loading="exoendloading" animated  >
+                    <template #template>
+                      <div :class="image_class">
+                        <el-skeleton-item
+                          variant="image"
+                          class="dashboard-left-children-right"
+                          style="width:50px;position: absolute;top: 77px;right:15px ;"
+                        />
+                      </div>
+                    </template>
+                    <template #default>
                       <span @click="openReserveTable(scope.row)">{{scope.row.plan_mandays}}</span>
+                    </template>
+                      </el-skeleton>
                     </p>  
                     <template #reference>
                       <div class="reserveTime" @click="openReserveTime(scope.row)">
@@ -616,6 +641,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      exoendloading:false,
       tableHeaders: [],
       dialogTableVisible:false,
       value1:"../../assets/icons/fromicon/star1.png",
@@ -989,12 +1015,14 @@ export default {
     this.getProject()
     },
     openReserveTime(val){
+      this.exoendloading=true;
       this.axios.get('/api/taken_hours/ProjectMandays',{
         params:{
           project_cd:val.agreement_cd
         }
       }).then((e)=>{
         this.reserveTimes=e.data.man_day;
+        this.exoendloading=false;
       })
     },
     async changeStar(val){
