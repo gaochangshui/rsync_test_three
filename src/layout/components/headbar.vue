@@ -2,7 +2,8 @@
   <div class="headbar">
     <div class="left-title">
         <el-tooltip
-          effect="dark"
+          show-after="1000"
+          effect="light"
           content="原意为广场，地处古典城市中心，它理性、开放、包容，故取名为agora。"
         >
           <svg class="left-logo" width="78" height="22" viewBox="0 0 78 22" fill="none" xmlns="http://www.w3.org/2000/svg">

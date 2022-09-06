@@ -93,6 +93,7 @@
             :header-cell-style="{ background: '#FAFAFA' }"
             v-loading="loadingtable"
             element-loading-text="加载中..."
+            cell-class-name="mainTable"
           >
             <el-table-column label="项目" sortable :sort-method="sortDevName" >
               <template #default="scope">
@@ -115,9 +116,10 @@
                <template #default="scope">
                 <el-tooltip
                   class="box-item"
-                  effect="dark"
+                  effect="light"
                   :content="scope.row.manager_id+':'+scope.row.manager_name"
                   placement="top-start"
+                  show-after="1000"
                 >
                   <span
                     style="
@@ -148,9 +150,10 @@
                 >
                   <el-tooltip
                     class="item"
-                    effect="dark"
+                    effect="light"
                     :content="item.MemberName"
                     placement="top-start"
+                    show-after="1000"
                     
                   >
                     <img
@@ -179,17 +182,41 @@
             <el-table-column prop="project_count"  width="110px" label="仓库数" sortable >
               <template #default="scope">
                   <div style="display:flex">
-                    <img src="../../assets/icons/fromicon/code.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
+                    <img src="../../assets/icons/fromicon/code.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 4px;" >
                     <span>{{scope.row.project_count}}</span>         
                   </div>
                 </template>
               </el-table-column>
               <el-table-column prop="plan_mandays" width="110px" label="预订工数"  sortable >
                 <template #default="scope">
-                  <div style="display:flex">
-                    <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="width:16px;height:16px;margin-right: 5px;margin-top: 3px;" >
-                    {{scope.row.plan_mandays}}
-                  </div>
+                  <el-popover
+                    placement="top"
+                    :width="200"
+                    show-after="500"
+                    trigger="click"
+                    style="height:70px !important;"
+                    popper-class="reserveTimePovover"
+                    >
+                    <p class="expendTime">
+                      <img src="../../assets/icons/fromicon/time.png" >
+                      已消耗
+                      <span @click="expendTime">{{(Math.round(Number(reserveTimes) * 10) / 10).toFixed(1) }}</span>
+                    </p>
+                    <p class="expendTime">
+                      <img src="../../assets/icons/fromicon/reserveTime.png" >
+                      预定工数
+                      <span @click="openReserveTable(scope.row)">{{scope.row.plan_mandays}}</span>
+                    </p>  
+                    <template #reference>
+                      <div class="reserveTime" @click="openReserveTime(scope.row)">
+                        <span v-show="scope.row.plan_mandays">
+                          <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="" >
+                        {{scope.row.plan_mandays}}
+                        </span>  
+                      </div>
+                    </template>
+                  </el-popover>
+                  
                 </template>
               </el-table-column>
               <el-table-column prop="plan_mandays" width="110px" label="星标"  sortable >
@@ -232,7 +259,7 @@
                         padding: 5px 5px;
                         border-radius: 5px;
                       "
-                     width="15"   
+                      width="15"   
                       height="18" 
                       icon-class="point"
                      
@@ -443,6 +470,35 @@
       </span>
     </template>
   </el-dialog>
+  <el-dialog v-model="dialogTableVisible" :title="projectCd+': '+projectName" width="900px" >
+    <div
+    style="
+      background: #dcdfe6;
+      height: 570px;
+    "
+  >
+    <el-table
+      class="table"
+      :data="dtableData"
+      border
+      style="width: 100%; margin: 0 auto; height: 100%"
+      height="height:100%"
+      max-height="570px"
+    >
+      <el-table-column fixed prop="EmployeeCode" label="社員CD" width="95" />
+      <el-table-column fixed prop="EmployeeName" label="名前" width="70">
+      </el-table-column>
+      <el-table-column
+        :prop="head"
+        :label="head"
+        align="center"
+        v-for="(head, index) in tableHeaders.sort()"
+        :key="index"
+        width="85"
+      />
+    </el-table>
+  </div>
+  </el-dialog>
     <el-dialog title="仓库设定" v-model="dialogVisible" width="900px">
       <div>
         <el-input
@@ -548,7 +604,8 @@
 </template>
 
 <script>
-import { ElLoading , ElMessageBox } from 'element-plus'
+import { getProjectMandays } from "@/api/qcd";
+import { ElLoading , ElMessageBox , ElMessage } from 'element-plus'
 export default {
   name: 'Dashboard',
   data() {
@@ -559,6 +616,8 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      tableHeaders: [],
+      dialogTableVisible:false,
       value1:"../../assets/icons/fromicon/star1.png",
       reTitle:'',
       username: '',
@@ -783,6 +842,7 @@ export default {
         }
       ],
       tableData: [],
+      dtableData: [],
       input: '',
       input2: '',
       leftType:0,
@@ -792,7 +852,10 @@ export default {
       selectData:[],
       operationFlg: false,
       pjId:'',
-      pjName:''
+      pjName:'',
+      reserveTimes:'',
+      projectCd:'',
+      projectName:''
     };
   },
   computed: {
@@ -842,7 +905,98 @@ export default {
       }
     }
   },
+  mounted(){
+    
+  },
   methods: {
+    getProject(){
+      getProjectMandays(this.projectCd).then((res) => {
+      if (res.data.length === 0) {
+              ElMessage({
+                type: "warning",
+                showClose: true,
+                dangerouslyUseHTMLString: true,
+                message: "データがありません",
+              });
+            }
+      let result = [];
+      let temp = [];
+      for (let i = 0; i < res.data.length; i++) {
+        let yearmonth = [];
+        if (
+          result.length === 0 ||
+          (temp.length !== 0 &&
+            temp.indexOf(
+              res.data[i]["employee_cd"] + "_" + 'res.data[i]["project_cd"]'
+            ) === -1)
+        ) {
+          temp.push(
+            res.data[i]["employee_cd"] + "_" + 'res.data[i]["project_cd"]'
+          );
+          this.dtableData = res.data.map((rs) => {
+            if (
+              rs["employee_cd"] + "_" + rs["project_cd"] ===
+              res.data[i]["employee_cd"] + "_" + res.data[i]["project_cd"]
+            ) {
+              yearmonth.push({
+                YearMonth: rs["year_month"],
+                SumManDays: rs["sum"],
+              });
+            }
+          });
+          result.push({
+            EmployeeCode: res.data[i]["employee_cd"],
+            EmployeeName: res.data[i]["employee_name"],
+            ProjectCode: res.data[i]["project_cd"],
+            ProjectName: res.data[i]["project_name"],
+            YearMonthSumMandayList: yearmonth,
+          });
+        }
+      }
+
+      this.dtableData = result.map((res) => {
+        // console.log(res);
+        let b = res.YearMonthSumMandayList.map((rs) => {
+          if (this.tableHeaders.indexOf(rs["YearMonth"] + "　") === -1) {
+            this.tableHeaders.push(rs["YearMonth"] + "　");
+          }
+          return JSON.parse(`{"${rs["YearMonth"]}　":${rs["SumManDays"]}}`);
+        }).reduce(function (result, currentObject) {
+          for (var key in currentObject) {
+            if ( Object.prototype.hasOwnProperty.call(currentObject, key)) {
+              result[key] = currentObject[key];
+            }
+          }
+          return result;
+        }, {});
+        return {
+          EmployeeCode: res.EmployeeCode,
+          EmployeeName: res.EmployeeName,
+          ProjectCode: res.ProjectCode,
+          ProjectName: res.ProjectName,
+          ...b,
+        };
+      });
+    });
+    },
+    expendTime(){
+      this.$router.push('/TakenTime')
+    },
+    openReserveTable(val){
+    this.projectCd=val.agreement_cd
+    this.projectName=val.agreement_name
+    this.dialogTableVisible=true
+    this.getProject()
+    },
+    openReserveTime(val){
+      this.axios.get('/api/taken_hours/ProjectMandays',{
+        params:{
+          project_cd:val.agreement_cd
+        }
+      }).then((e)=>{
+        this.reserveTimes=e.data.man_day;
+      })
+    },
     async changeStar(val){
       if(val.Star){
         val.Star=false
@@ -1251,6 +1405,9 @@ export default {
 .menu-item {
   height: 40px;
 }
+.el-menu-item:hover{
+  background-color: #E1E2E5 !important;
+}
 .dashboard {
   display: flex;
   padding: 0 0 0 20px;
@@ -1276,7 +1433,7 @@ export default {
       padding: 10px 15px 0px 30px;
       font-weight: 400;
       font-size: 14px;
-      line-height: 22px;
+      line-height: 40px;
       &-left {
         margin-left: 20px;
       }
@@ -1318,7 +1475,7 @@ export default {
 .el-table__header {
   height: 48px;
 }
-.el-table {
+.mainTable {
   tbody tr:hover > td {
     background: #fafafa !important;
   }
@@ -1439,7 +1596,7 @@ color: red;
 .membericon1,
 .membericon2 {
   position: absolute;
-  top: 30%;
+  top: 38%;
 }
 .pointFrom:focus {
   outline: none;
@@ -1504,4 +1661,112 @@ color: red;
   transition-property:all;
   transition-duration:0.5s;
 }
+.expendTime{
+  background:#FAFAFA;
+  font-size:12px;
+  padding: 7px 9px;
+}
+.expendTime img{
+  width:14px;
+  position: relative;
+  top: 3px;
+  margin-right: 11px;
+}
+.expendTime span{
+  float: right;
+  color: #3E79F6;
+  cursor: pointer;
+}
+.expendTime span:hover{
+  color:#039BE5;
+}
+.reserveTime{
+  display:flex;
+  cursor: pointer;
+}
+.reserveTime span{
+padding: 3px 8px;
+border-radius: 5px;
+}
+.reserveTime img{
+  width:16px;
+  height:16px;
+  margin-right: 5px;  
+  position: relative;
+  top: 2px;
+}
+.reserveTime span:hover{
+  background-color: #f0eeee ;
+}
+.reserveTimePovover .el-popper{
+  padding:0 !important;
+}
+
+.tabs {
+  .el-range-editor.is-active,
+  .el-range-editor.is-active:hover,
+  .el-select .el-input.is-focus .el-input__inner,
+  .el-button .el-button.is-focus .el-button__inner {
+    border-color: #292fb2;
+  }
+  .el-tabs__nav-wrap {
+    height: 55px;
+    line-height: 55px;
+    padding-left: 30px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    .is-active {
+      color: #292fb2;
+    }
+    .el-tabs__active-bar {
+      background-color: #292fb2;
+    }
+    .el-tabs__item:hover {
+      color: #292fb2;
+    }
+  }
+  .el-tabs__content {
+    padding: 0px 28px;
+    .table {
+      .has-gutter {
+        background: #fafafa;
+      }
+    }
+    .panel {
+      height: 56px;
+      width: 100%;
+      background: #ffffff;
+      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+      margin: 3px 0px 16px;
+      padding: 0px 16px;
+      display: flex;
+      align-items: center;
+      .el-switch {
+        height: inherit;
+        margin: 20px;
+        .el-switch__core {
+          width: 44px;
+          height: 22px;
+          .el-switch__action {
+            top: 2;
+          }
+        }
+      }
+      .el-select {
+        width: 395px;
+        margin-right: 20px;
+      }
+      .search {
+        background-color: #292fb2;
+        color: #fff;
+        margin-left: 20px;
+      }
+      .reset {
+        color: #0000;
+      }
+    }
+  }
+}
+
 </style>

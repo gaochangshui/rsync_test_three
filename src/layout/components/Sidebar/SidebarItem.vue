@@ -2,7 +2,7 @@
   <div v-if="!item.hidden">
     <el-tooltip
         class="box-item"
-        effect="dark"
+        effect="light"
         :content="item.meta?.title"
         placement="right"
         show-after="1000"
@@ -47,14 +47,25 @@ export default {
 }
 .code,.project{
   position:absolute;
-  top:14px;
-  left:18px;
+  top:24px;
+  left:23px;
   font-size: 12px;
 }
 .table,.link{
   position:absolute;
-  top:15px;
-  left:6px;
+  top:24px;
+  left:11px;
   font-size: 12px;
+}
+.el-menu-item{
+  color: #18263C !important;
+  padding-bottom: 15px !important;
+  height: 70px !important;
+}
+.el-menu-item.is-active{
+  color: #3E79F6 !important;
+}
+.el-menu-item:hover{
+  background-color: #E1E2E5 !important;
 }
 </style>

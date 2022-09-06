@@ -15,7 +15,7 @@ export default {
             Password: this.password
         }).then(e => {
            if(e.data.UserCD){
-            if(this.$route.query.redirect && this.$route.redirectedFrom){
+            if(this.$route.query.redirect || this.$route.redirectedFrom){
                 this.$router.push(this.$route.query.redirect?this.$route.query.redirect:this.$route.redirectedFrom.fullPath);
             }else{
                 this.$router.push('/project');

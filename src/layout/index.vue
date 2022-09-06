@@ -27,15 +27,15 @@ export default {
 </script>
 <style lang="less">
 .sidebar-container {
-  width: 60px;
-  height: calc(100vh - 65px);
+  width: 69px;
+  height: calc(100vh - 64px);
   background-color: #f2f3f5;
   position:absolute ;
   padding-top: 35px;
 }
 .main-container {
-  margin-left: 60px;
-  height: calc(100vh - 65px);
+  margin-left: 69px;
+  height: calc(100vh - 64px);
   & > div {
     background: #f2f3f5;
   }

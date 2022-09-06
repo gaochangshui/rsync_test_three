@@ -107,9 +107,10 @@
                 <div style="color: #0b2646">{{ scope.row.pj_name }}</div>
                 <el-tooltip
                   class="box-item"
-                  effect="dark"
+                  effect="light"
                   :content="scope.row.description"
                   placement="top-start"
+                  show-after="1000"
                 >
                   <div
                     style="
@@ -143,9 +144,10 @@
                   >
                   <el-tooltip
                     class="item"
-                    effect="dark"
+                    effect="light"
                     :content="item.name"
                     placement="top-start"
+                    show-after="1000"
                   >
                     <img
                       :src="item.avatar"
@@ -229,9 +231,10 @@
                   >
                   <el-tooltip
                     class="item"
-                    effect="dark"
+                    effect="light"
                     :content="item.name"
                     placement="top-start"
+                    show-after="1000"
                   >
                     <img
                       :src="item.avatar"
@@ -312,9 +315,10 @@
                 >
                   <el-tooltip
                     class="item"
-                    effect="dark"
+                    effect="light"
                     :content="item.name"
                     placement="top-start"
+                    show-after="1000"
                   >
                     <img
                       :src="item.avatar"
