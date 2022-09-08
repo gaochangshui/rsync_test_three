@@ -370,7 +370,7 @@
     <el-table-column   width="80" type="selection">
     </el-table-column>
     <el-table-column label="仓库名称" >
-      <template #default="scope">{{ scope.row.pj_name }}
+      <template #default="scope">{{ scope.row.name }}
       <div
         style="
         color: #8e8e8e;
@@ -524,13 +524,13 @@
     </el-table>
   </div>
   </el-dialog>
-    <el-dialog title="仓库设定" v-model="dialogVisible" width="900px">
+    <el-dialog title="仓库设定"  v-model="dialogVisible" width="1290px">
       <div>
         <el-input
           v-model="input2"
           placeholder="搜索仓库"
           size="large"
-          style="width: 418px; margin-bottom: 12px"
+          style="width: 616px; margin-bottom: 12px"
           maxlength="100"
           @keyup.enter="getsubject"
         >
@@ -568,10 +568,10 @@
               ></path>
             </svg> </template
         ></el-input>
-        <div class="allwarehouse">
+        <div class="allwarehouse" v-loading="wloding">
           <span class="dialogTittle">全部仓库</span>
           <div class="warehousebox1">
-            <div style="overflow-y: auto;overflow-x: hidden;height: 400px;">
+            <div style="overflow-y: auto;overflow-x: hidden;height: 450px;">
               <el-checkbox-group v-model="checked1" @change="checkSelect" style="display: flex ;flex-direction: column;">
               <el-checkbox
               v-for="item in allselect" :key="item"
@@ -589,13 +589,13 @@
             </div>
           </div>
         </div>
-        <div class="selectedwarehouse">
+        <div class="selectedwarehouse" v-loading="wloding">
           <span class="dialogTittle"
             >已选择
             <div class="emptybtn" @click="empty">清空</div>
           </span>
           <div class="warehousebox2">
-            <div style="overflow-y: auto;overflow-x: hidden;height: 400px;">
+            <div style="overflow-y: auto;overflow-x: hidden;height: 450px;">
               <div
               v-for="(item, index) in selected"
               :key="index"
@@ -623,8 +623,8 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="setWarehouse"
+          <el-button @click="dialogVisible = false" >取 消</el-button>
+          <el-button :loading="wloding" type="primary"  @click="setWarehouse"
             >确 定</el-button
           >
         </span>
@@ -647,6 +647,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      wloding:false,
       exoendloading:false,
       tableHeaders: [],
       dialogTableVisible:false,
@@ -1120,7 +1121,8 @@ export default {
       }
     },
     setWarehouse(){
-      this.axios
+      if(!this.wloding){
+        this.axios
         .post('/actionapi/QcdApi/QCDProjectSetting',{
             id:this.selectid,
             userId:this.usercd,
@@ -1133,6 +1135,7 @@ export default {
           this.getTableData()
         })
       this.dialogVisible = false
+      }
     },
     reWarehouse(){
       let reinfor=this.$refs.multipleTableRef.getSelectionRows()
@@ -1200,12 +1203,13 @@ export default {
       });
     },
     async showSelect(val) {
+      this.dialogVisible = true; 
+        this.wloding=true
      await this.getsubject()
      this.$nextTick(function(){
       this.getsubjected(val)
      })
       this.selectid=val
-      this.dialogVisible = true;
     },
     async showReview(val){
       this.reTitle=val.agreement_cd+': '+val.agreement_name
@@ -1213,21 +1217,22 @@ export default {
       this.pjId=val.agreement_cd
       this.pjName=val.agreement_name
       await this.$nextTick(function(){
-        if(this.retableData!==null){
+        if(this.retableData.name!==null){
           this.$refs.multipleTableRef.toggleAllSelection()
         }
      })
     },
     async getReviewinfor(val){
       await this.axios
-        .get('/actionapi/QcdApi/QCDProjectDetail',{
+        .get('/actionapi/QcdApi/QCDProjectInfoDetail',{
           params:{
             userId:this.usercd,
             id:val
           }
         }).then((e)=>{
-          this.retableData=e.data.Warehouses
-      if(this.retableData===null){
+          this.retableData=e.data
+          let dataFlg=e.data.name
+      if(dataFlg===null){
          ElMessageBox.confirm(
     '请先进行仓库设定',
     '提示',
@@ -1266,24 +1271,25 @@ export default {
     },
     async getsubjected(val){
      await this.axios
-        .get('/actionapi/QcdApi/QCDProjectDetail',{
+        .get('/actionapi/QcdApi/QCDProjectInfoDetail',{
           params:{
             id:val,
             userId:this.usercd
           }
         }).then((e)=>{
-          if(e.data.Warehouses){
-            for(let i=0;i<e.data.Warehouses.length;i++){
+          if(e.data){
+            for(let i=0;i<e.data.length;i++){
             let subjectarr={}
-            subjectarr.id=Number(e.data.Warehouses[i].id)
-            subjectarr.name=e.data.Warehouses[i].pj_name
+            subjectarr.id=Number(e.data[i].id)
+            subjectarr.name=e.data[i]._name
             this.checkedData.push(subjectarr)
-            this.selected.push(e.data.Warehouses[i].pj_name)
+            this.selected.push(e.data[i].name)
           }
           }else{
             this.selected=[]
           }
           this.checked1=this.selected
+          this.wloding=false
         })
     },
     async getsubject(){
@@ -1543,15 +1549,15 @@ export default {
 }
 .allwarehouse,
 .selectedwarehouse {
-  width: 416px;
-  height: 450px;
+  width: 616px;
+  height: 500px;
   border: 1px solid #eeeeee;
   border-radius: 5px;
 }
 .selectedwarehouse {
   position: absolute;
   top: 136px;
-  left: 460px;
+  left: 650px;
 }
 .dialogTittle {
   font-size: 16px;
@@ -1570,14 +1576,14 @@ export default {
   justify-content: space-between !important;
 }
 .selectTag .el-tag__content {
-width: 360px;
+width: 480px;
 overflow: hidden;
 } 
 .emptybtn {
   font-size: 12px;
   position: absolute;
   top: 0px;
-  left: 370px;
+  left: 570px;
   color: #8e8e8e;
   cursor: pointer;
 }
