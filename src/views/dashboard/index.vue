@@ -577,8 +577,14 @@
               v-for="item in allselect" :key="item"
                 :label="item.name"
                 @change="check(item)"
-                style="margin-left: 16px; margin-top: 5px;"
-              ></el-checkbox>
+                style="margin-left: 16px; margin-top: 10px;"
+              >{{item.name}}<br>
+              <div style="color:#8e8e8e;
+              line-height: 20px;
+              font-size: 12px;">
+                {{item.description}}
+              </div>
+            </el-checkbox>
             </el-checkbox-group>
             </div>
           </div>
@@ -979,7 +985,7 @@ export default {
           });
         }
       }
-
+      this.tableHeaders=[]
       this.dtableData = result.map((res) => {
         // console.log(res);
         let b = res.YearMonthSumMandayList.map((rs) => {
@@ -1327,15 +1333,10 @@ export default {
     sortDevName(str1, str2) {
       let res = 0;
       for (let i = 0; ; i++) {
-        if (!str1[i] || !str2[i]) {
-          res = str1.length - str2.length;
-          break;
-        }
-        const char1 = str1[i];
-        const char2 = str2[i];
-        res = char1.charCodeAt(0) - char2.charCodeAt(0);
+        res = Number(str1.agreement_cd) - Number(str2.agreement_cd);
         break;
       }
+      console.log(res);
       return res;
     },
     emptyInput() {
