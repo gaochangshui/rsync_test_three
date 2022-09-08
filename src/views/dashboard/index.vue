@@ -228,7 +228,7 @@
                       </div>
                     </template>
                     <template #default>
-                      <span @click="openReserveTable(scope.row)">{{scope.row.plan_mandays}}</span>
+                      <span @click="openReserveTable(scope.row)">{{scope.row.plan_mandays.toFixed(1)}}</span>
                     </template>
                       </el-skeleton>
                     </p>  
@@ -236,7 +236,7 @@
                       <div class="reserveTime" @click="openReserveTime(scope.row)">
                         <span v-show="scope.row.plan_mandays">
                           <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="" >
-                        {{scope.row.plan_mandays}}
+                        {{scope.row.plan_mandays.toFixed(1)}}
                         </span>  
                       </div>
                     </template>
@@ -244,7 +244,7 @@
                   
                 </template>
               </el-table-column>
-              <el-table-column prop="plan_mandays" width="110px" label="星标"  sortable >
+              <el-table-column prop="plan_mandays" width="110px" label="星标" >
                 <template #default="scope">
                   <div>
                     <img src='../../assets/icons/fromicon/star1.png' 
@@ -1380,10 +1380,11 @@ export default {
           this.tableData=[]
           this.pageTotal=e.data.pageNumAll
           for(let i=0; i<e.data.qcdProject.length;i++){
-            this.tableData.push(e.data.qcdProject[i].agreement)
+            this.tableData.push(e.data.qcdProject[i].agreement)         
             this.tableData[i]['member_ids']=JSON.parse(e.data.qcdProject[i].agreement.member_ids);
             this.tableData[i]['Star']=e.data.qcdProject[i].IsStar;
-            
+            this.tableData[i]['plan_mandays']=Number(this.tableData[i]['plan_mandays'])
+            this.tableData[i]['project_count']=Number(this.tableData[i]['project_count'])
             switch(this.tableData[i]['status']){
               case 1:
                 this.tableData[i]['statusName']='待报价'

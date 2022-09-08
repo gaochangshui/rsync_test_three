@@ -1118,7 +1118,7 @@ export default {
         this.warehouseType = 'ProjectsIInvolved';
         this.getTableData();
       } else if (val === '星标仓库') {
-        this.warehouseType = 'ProjectsIStarrd';
+        this.warehouseType = 'ProjectsIStarred';
         this.getTableData();
       } else if (val === '模板仓库') {
         this.warehouseType = 'ProjectsTemplate';
@@ -1566,7 +1566,7 @@ export default {
         .then((e) => {
           this.labs[0].children[0].number = e.data.num.all;
           this.labs[0].children[1].number = e.data.num.my;
-          this.labs[0].children[2].number = e.data.num.starrd;
+          this.labs[0].children[2].number = e.data.num.starred;
           this.labs[0].children[3].number = e.data.num.temp;
           this.loading = false;
         });
