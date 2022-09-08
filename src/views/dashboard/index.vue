@@ -571,7 +571,7 @@
         <div class="allwarehouse" v-loading="wloding">
           <span class="dialogTittle">全部仓库</span>
           <div class="warehousebox1">
-            <div style="overflow-y: auto;overflow-x: hidden;height: 450px;">
+            <div style="overflow-y: auto;overflow-x: hidden;height: 350px;">
               <el-checkbox-group v-model="checked1" @change="checkSelect" style="display: flex ;flex-direction: column;">
               <el-checkbox
               v-for="item in allselect" :key="item"
@@ -595,7 +595,7 @@
             <div class="emptybtn" @click="empty">清空</div>
           </span>
           <div class="warehousebox2">
-            <div style="overflow-y: auto;overflow-x: hidden;height: 450px;">
+            <div style="overflow-y: auto;overflow-x: hidden;height: 350px;">
               <div
               v-for="(item, index) in selected"
               :key="index"
@@ -1107,7 +1107,6 @@ export default {
       }
     },
     check(val){
-      // console.log(this.checkedData);
       if(this.checkedData.length){
         for(let i=0;i<this.checkedData.length;i++){
           if(this.checkedData[i].name===val.name){
@@ -1281,7 +1280,9 @@ export default {
             for(let i=0;i<e.data.length;i++){
             let subjectarr={}
             subjectarr.id=Number(e.data[i].id)
-            subjectarr.name=e.data[i]._name
+            subjectarr.name=e.data[i].name
+            subjectarr.description=e.data[i].description
+            subjectarr.spacename=e.data[i].spacename
             this.checkedData.push(subjectarr)
             this.selected.push(e.data[i].name)
           }
@@ -1550,7 +1551,7 @@ export default {
 .allwarehouse,
 .selectedwarehouse {
   width: 616px;
-  height: 500px;
+  height: 400px;
   border: 1px solid #eeeeee;
   border-radius: 5px;
 }
