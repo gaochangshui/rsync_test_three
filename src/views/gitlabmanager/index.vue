@@ -91,6 +91,7 @@
            style="font-size:16px;
            height:40px;
            margin-left: 28px;"
+           v-show="topTitle === '所有仓库' "
            @click="formDialogVisible=true">
             <span style="margin-right:5px;font-size:26px">+</span>
             新建仓库

@@ -287,11 +287,17 @@
                       width="15"   
                       height="18" 
                       icon-class="point"
-                     
+                      @click="changeDisabled(scope.row)"
                       class="pointFrom"
                     />
                   </template>
-                  <div class="atooltip-div" @click.stop="showSelect(scope.row.agreement_cd)">
+                  <el-tooltip class="item"
+                    effect="light"
+                    content="未参与的成员无权操作"
+                    placement="top"
+                    show-after="1000" :disabled="!disabledShow">
+                    <div :class="[disabledShow ? 'atooltip-div2' : 'atooltip-div']" 
+                    @click.stop="showSelect(scope.row.agreement_cd)">
                     <img
                       src="../../assets/icons/fromicon/Frame-6.png"
                       style="
@@ -304,8 +310,14 @@
                     />
                     仓库设定
                   </div>
+                  </el-tooltip>
+                  <el-tooltip class="item"
+                    effect="light"
+                    content="未参与的成员无权操作"
+                    placement="top"
+                    show-after="1000" :disabled="!disabledShow">
                       <div
-                        class="atooltip-div"
+                      :class="[disabledShow ? 'atooltip-div2' : 'atooltip-div']"
                         @click="showReview(scope.row)" 
                       >
                         <img
@@ -320,6 +332,7 @@
                         />
                         项目评审
                       </div>
+                    </el-tooltip>
                   <div
                     class="atooltip-div"
                     @click.stop="showwarehouse(scope.row)"
@@ -647,6 +660,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      disabledShow:false,
       wloding:false,
       exoendloading:false,
       tableHeaders: [],
@@ -942,6 +956,17 @@ export default {
     
   },
   methods: {
+    changeDisabled(val){
+      let flag=true
+      for(let i=0;i<val.member_ids.length;i++){
+        if(val.member_ids[i].MemberID===this.usercd || val.manager_name===this.username){
+          flag =false
+        }else{
+          flag =true
+        }
+      }
+      this.disabledShow=flag
+    },
     getProject(){
       getProjectMandays(this.projectCd).then((res) => {
       if (res.data.length === 0) {
@@ -1202,6 +1227,7 @@ export default {
       });
     },
     async showSelect(val) {
+      if(!this.disabledShow){
       this.dialogVisible = true; 
         this.wloding=true
      await this.getsubject()
@@ -1209,9 +1235,11 @@ export default {
       this.getsubjected(val)
      })
       this.selectid=val
+    }
     },
     async showReview(val){
-      this.reTitle=val.agreement_cd+': '+val.agreement_name
+      if(!this.disabledShow){
+        this.reTitle=val.agreement_cd+': '+val.agreement_name
       await this.getReviewinfor(val.agreement_cd)
       this.pjId=val.agreement_cd
       this.pjName=val.agreement_name
@@ -1220,6 +1248,8 @@ export default {
           this.$refs.multipleTableRef.toggleAllSelection()
         }
      })
+      }
+      
     },
     async getReviewinfor(val){
       await this.axios
@@ -1644,6 +1674,16 @@ color: red;
 .el-pagination {
   position: relative;
   top: 80%;
+}
+.atooltip-div2 {
+  padding-left: 5px !important;
+  padding-right: 5px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 30px;
+  color: #a3a2a2;
+  height: 30px;
+  cursor: pointer;
 }
 .atooltip-div:hover {
   background: #f3f2f2;
