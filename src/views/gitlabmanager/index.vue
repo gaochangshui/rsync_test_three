@@ -42,7 +42,7 @@
         <div class="gitlabmanager-right-search-left">{{ topTitle }}</div>
         <div
           class="gitlabmanager-right-search-right"
-          v-show="topTitle === '所有仓库'"
+          v-show="topTitle === '所有仓库' || topTitle === '我参与的'"
         >
           <el-input
             v-model="input"
@@ -87,8 +87,121 @@
               </svg>
             </template>
           </el-input>
+          <el-button type="primary"
+           style="font-size:16px;
+           height:40px;
+           margin-left: 28px;"
+           @click="formDialogVisible=true">
+            <span style="margin-right:5px;font-size:26px">+</span>
+            新建仓库
+          </el-button>
         </div>
       </div>
+      <el-dialog
+        v-model="formDialogVisible"
+        title="新建仓库"
+        width="800px"
+        top="6vh"
+        :before-close="handleClose"
+      >
+      <el-form :model="form" 
+      label-width="120px" 
+      label-position="top">
+    <el-form-item >
+      <template #label>
+        <p>仓库名<span style="margin-left:5px">（字母开头并只支持小写字母、数字和"-"）
+          <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa="" width="15" style="position:relative;top: 3px;left: -4px;">
+            <path fill="currentColor" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm23.744 191.488c-52.096 0-92.928 14.784-123.2 44.352-30.976 29.568-45.76 70.4-45.76 122.496h80.256c0-29.568 5.632-52.8 17.6-68.992 13.376-19.712 35.2-28.864 66.176-28.864 23.936 0 42.944 6.336 56.32 19.712 12.672 13.376 19.712 31.68 19.712 54.912 0 17.6-6.336 34.496-19.008 49.984l-8.448 9.856c-45.76 40.832-73.216 70.4-82.368 89.408-9.856 19.008-14.08 42.24-14.08 68.992v9.856h80.96v-9.856c0-16.896 3.52-31.68 10.56-45.76 6.336-12.672 15.488-24.64 28.16-35.2 33.792-29.568 54.208-48.576 60.544-55.616 16.896-22.528 26.048-51.392 26.048-86.592 0-42.944-14.08-76.736-42.24-101.376-28.16-25.344-65.472-37.312-111.232-37.312zm-12.672 406.208a54.272 54.272 0 0 0-38.72 14.784 49.408 49.408 0 0 0-15.488 38.016c0 15.488 4.928 28.16 15.488 38.016A54.848 54.848 0 0 0 523.072 768c15.488 0 28.16-4.928 38.72-14.784a51.52 51.52 0 0 0 16.192-38.72 51.968 51.968 0 0 0-15.488-38.016 55.936 55.936 0 0 0-39.424-14.784z">
+            </path></svg></span></p>
+      </template>
+      <el-input v-model="form.name" />
+    </el-form-item>
+    <el-row>
+      <el-col :span="10">
+      <el-form-item label="创建的位置">
+      <el-select v-model="form.location" placeholder="请选择创建位置" style="width:90%">
+        <el-option label="Zone one" value="shanghai" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    </el-col>
+    <el-col :span="14">
+      <el-form-item>
+        <template #label>
+        <p style="margin:0 0 0 8px">群组<span style="margin-left:5px">（新建群组请联系营业事务）</span></p>
+      </template>
+        <el-cascader :options="options" 
+        :props="props1" 
+        clearable 
+        v-model="form.group" 
+        placeholder=" "
+        style="width:100%"/>
+    </el-form-item>
+    </el-col>
+    </el-row> 
+    <el-form-item label="仓库描述">
+      <el-input v-model="form.description" 
+      type="textarea" 
+      placeholder="请输入清晰描述以便区别" 
+      rows='4'/>
+    </el-form-item>  
+    <el-form-item label="关联项目">
+      <el-select v-model="form.associated" placeholder="请选择关联项目" style="width:100%">
+        <el-option label="Zone one" value="shanghai" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="分支策略">
+      <el-select v-model="form.breach" style="width:100%">
+        <el-option label="单分支模型" value="单分支模型" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+      <el-form-item label="主要编程语言">
+      <el-select v-model="form.language" placeholder="请选择编程语言" style="width:95%">
+        <el-option label="Zone one" value="shanghai" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="添加 .gitignore">
+        <el-select v-model="form.gitignore" style="width:95%">
+        <el-option label="Android" value="Android" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    </el-col>
+    </el-row> 
+    <el-form-item label="Readme文件选择">
+        <el-select v-model="form.Readme" style="width:30%">
+        <el-option label="默认Readme文件（中文）" value="默认Readme文件（中文）" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="维护者有效期">
+      <el-date-picker
+          :disabled-date="disabledDate"
+          v-model="form.time"
+          type="date"
+          placeholder="结束时间"
+          style="width: 30%"
+          value-format="YYYY-MM-DD"
+        >
+        </el-date-picker>
+    </el-form-item>
+    </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="formDialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="formDialogVisible = false"
+              >确定</el-button
+            >
+          </span>
+        </template>
+      </el-dialog>
       <div style="overflow: auto; height: calc(100vh - 180px)">
         <div class="gitlabmanager-right-table">
           <el-table
@@ -730,6 +843,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      formDialogVisible:false,
       languageValue: '',
       loading:true,
       loadingtable:true,
@@ -756,6 +870,289 @@ export default {
       branchoptions: [],
       projectOptions:[],
       projectvalue:'',
+      form:{
+        name: '',
+        location: '',
+        group: '',
+        description: '',
+        associated: '',
+        breach:'单分支模型',
+        language: '',
+        gitignore:'Android',
+        Readme:'默认Readme文件（中文）',
+        time: ''
+      },
+      props1:{
+        checkStrictly: true,
+      },
+      options:[
+  {
+    value: 'guide',
+    label: 'Guide',
+    children: [
+      {
+        value: 'disciplines',
+        label: 'Disciplines',
+        children: [
+          {
+            value: 'consistency',
+            label: 'Consistency',
+          },
+          {
+            value: 'feedback',
+            label: 'Feedback',
+          },
+          {
+            value: 'efficiency',
+            label: 'Efficiency',
+          },
+          {
+            value: 'controllability',
+            label: 'Controllability',
+          },
+        ],
+      },
+      {
+        value: 'navigation',
+        label: 'Navigation',
+        children: [
+          {
+            value: 'side nav',
+            label: 'Side Navigation',
+          },
+          {
+            value: 'top nav',
+            label: 'Top Navigation',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'component',
+    label: 'Component',
+    children: [
+      {
+        value: 'basic',
+        label: 'Basic',
+        children: [
+          {
+            value: 'layout',
+            label: 'Layout',
+          },
+          {
+            value: 'color',
+            label: 'Color',
+          },
+          {
+            value: 'typography',
+            label: 'Typography',
+          },
+          {
+            value: 'icon',
+            label: 'Icon',
+          },
+          {
+            value: 'button',
+            label: 'Button',
+          },
+        ],
+      },
+      {
+        value: 'form',
+        label: 'Form',
+        children: [
+          {
+            value: 'radio',
+            label: 'Radio',
+          },
+          {
+            value: 'checkbox',
+            label: 'Checkbox',
+          },
+          {
+            value: 'input',
+            label: 'Input',
+          },
+          {
+            value: 'input-number',
+            label: 'InputNumber',
+          },
+          {
+            value: 'select',
+            label: 'Select',
+          },
+          {
+            value: 'cascader',
+            label: 'Cascader',
+          },
+          {
+            value: 'switch',
+            label: 'Switch',
+          },
+          {
+            value: 'slider',
+            label: 'Slider',
+          },
+          {
+            value: 'time-picker',
+            label: 'TimePicker',
+          },
+          {
+            value: 'date-picker',
+            label: 'DatePicker',
+          },
+          {
+            value: 'datetime-picker',
+            label: 'DateTimePicker',
+          },
+          {
+            value: 'upload',
+            label: 'Upload',
+          },
+          {
+            value: 'rate',
+            label: 'Rate',
+          },
+          {
+            value: 'form',
+            label: 'Form',
+          },
+        ],
+      },
+      {
+        value: 'data',
+        label: 'Data',
+        children: [
+          {
+            value: 'table',
+            label: 'Table',
+          },
+          {
+            value: 'tag',
+            label: 'Tag',
+          },
+          {
+            value: 'progress',
+            label: 'Progress',
+          },
+          {
+            value: 'tree',
+            label: 'Tree',
+          },
+          {
+            value: 'pagination',
+            label: 'Pagination',
+          },
+          {
+            value: 'badge',
+            label: 'Badge',
+          },
+        ],
+      },
+      {
+        value: 'notice',
+        label: 'Notice',
+        children: [
+          {
+            value: 'alert',
+            label: 'Alert',
+          },
+          {
+            value: 'loading',
+            label: 'Loading',
+          },
+          {
+            value: 'message',
+            label: 'Message',
+          },
+          {
+            value: 'message-box',
+            label: 'MessageBox',
+          },
+          {
+            value: 'notification',
+            label: 'Notification',
+          },
+        ],
+      },
+      {
+        value: 'navigation',
+        label: 'Navigation',
+        children: [
+          {
+            value: 'menu',
+            label: 'Menu',
+          },
+          {
+            value: 'tabs',
+            label: 'Tabs',
+          },
+          {
+            value: 'breadcrumb',
+            label: 'Breadcrumb',
+          },
+          {
+            value: 'dropdown',
+            label: 'Dropdown',
+          },
+          {
+            value: 'steps',
+            label: 'Steps',
+          },
+        ],
+      },
+      {
+        value: 'others',
+        label: 'Others',
+        children: [
+          {
+            value: 'dialog',
+            label: 'Dialog',
+          },
+          {
+            value: 'tooltip',
+            label: 'Tooltip',
+          },
+          {
+            value: 'popover',
+            label: 'Popover',
+          },
+          {
+            value: 'card',
+            label: 'Card',
+          },
+          {
+            value: 'carousel',
+            label: 'Carousel',
+          },
+          {
+            value: 'collapse',
+            label: 'Collapse',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'resource',
+    label: 'Resource',
+    children: [
+      {
+        value: 'axure',
+        label: 'Axure Components',
+      },
+      {
+        value: 'sketch',
+        label: 'Sketch Templates',
+      },
+      {
+        value: 'docs',
+        label: 'Design Documentation',
+      },
+    ],
+  },
+    ],
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -1760,5 +2157,11 @@ export default {
 }
 .projectStyle{
 height: 60px;
+}
+.el-textarea__inner{
+  padding: 5px 11px;
+}
+.el-dialog__body{
+  padding: 0 20px;
 }
 </style>
