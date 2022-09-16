@@ -961,6 +961,7 @@ export default {
       for(let i=0;i<val.member_ids.length;i++){
         if(val.member_ids[i].MemberID===this.usercd || val.manager_name===this.username){
           flag =false
+          return
         }else{
           flag =true
         }

@@ -111,16 +111,27 @@
     <el-form-item >
       <template #label>
         <p>仓库名<span style="margin-left:5px">（字母开头并只支持小写字母、数字和"-"）
-          <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa="" width="15" style="position:relative;top: 3px;left: -4px;">
+        <el-dropdown>
+          <div>
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa="" width="15" style="position:relative;top: 4px;">
             <path fill="currentColor" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm23.744 191.488c-52.096 0-92.928 14.784-123.2 44.352-30.976 29.568-45.76 70.4-45.76 122.496h80.256c0-29.568 5.632-52.8 17.6-68.992 13.376-19.712 35.2-28.864 66.176-28.864 23.936 0 42.944 6.336 56.32 19.712 12.672 13.376 19.712 31.68 19.712 54.912 0 17.6-6.336 34.496-19.008 49.984l-8.448 9.856c-45.76 40.832-73.216 70.4-82.368 89.408-9.856 19.008-14.08 42.24-14.08 68.992v9.856h80.96v-9.856c0-16.896 3.52-31.68 10.56-45.76 6.336-12.672 15.488-24.64 28.16-35.2 33.792-29.568 54.208-48.576 60.544-55.616 16.896-22.528 26.048-51.392 26.048-86.592 0-42.944-14.08-76.736-42.24-101.376-28.16-25.344-65.472-37.312-111.232-37.312zm-12.672 406.208a54.272 54.272 0 0 0-38.72 14.784 49.408 49.408 0 0 0-15.488 38.016c0 15.488 4.928 28.16 15.488 38.016A54.848 54.848 0 0 0 523.072 768c15.488 0 28.16-4.928 38.72-14.784a51.52 51.52 0 0 0 16.192-38.72 51.968 51.968 0 0 0-15.488-38.016 55.936 55.936 0 0 0-39.424-14.784z">
-            </path></svg></span></p>
+            </path></svg>
+          </div>
+          <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item><a href="http://docs.trechina.cn/docs/code_management/naming_conventions" target="_blank">命名规则</a></el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+        </el-dropdown>
+        </span>
+          </p>
       </template>
       <el-input v-model="form.name" />
     </el-form-item>
     <el-row>
       <el-col :span="10">
       <el-form-item label="创建的位置">
-      <el-select v-model="form.location" placeholder="请选择创建位置" style="width:90%">
+      <el-select v-model="form.location" placeholder="请选择创建位置" style="width:95%">
         <el-option label="Zone one" value="shanghai" />
         <el-option label="Zone two" value="beijing" />
       </el-select>
@@ -147,10 +158,21 @@
       rows='4'/>
     </el-form-item>  
     <el-form-item label="关联项目">
-      <el-select v-model="form.associated" placeholder="请选择关联项目" style="width:100%">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
-      </el-select>
+      <el-select v-model="projectvalue"
+        style="width: 100%;"
+         filterable placeholder="请选择关联项目"
+         :filter-method="(value)=>projectquery(value)">
+    <el-option
+    class="projectStyle"
+      v-for="item in projectOptions"
+      :key="item.ProjectCode"
+      :label="item.ProjectCode"
+      :value="[item.ProjectCode+' '+item.ProjectName]"
+    >
+    <div style="line-height: 15px;color: black;font-weight:normal;">{{item.ProjectCode}}</div>
+    <span style="color: black;font-weight:normal;">{{item.ProjectName}}</span>
+    </el-option>
+  </el-select>
     </el-form-item>
     <el-form-item label="分支策略">
       <el-select v-model="form.breach" style="width:100%">
@@ -177,7 +199,7 @@
     </el-col>
     </el-row> 
     <el-form-item label="Readme文件选择">
-        <el-select v-model="form.Readme" style="width:30%">
+        <el-select v-model="form.Readme" style="width:47.5%">
         <el-option label="默认Readme文件（中文）" value="默认Readme文件（中文）" />
         <el-option label="Zone two" value="beijing" />
       </el-select>
@@ -188,7 +210,7 @@
           v-model="form.time"
           type="date"
           placeholder="结束时间"
-          style="width: 30%"
+          style="width: 47.5%"
           value-format="YYYY-MM-DD"
         >
         </el-date-picker>
@@ -2164,5 +2186,17 @@ height: 60px;
 }
 .el-dialog__body{
   padding: 0 20px;
+}
+</style>
+<style lang="less" scoped >
+.el-dropdown-menu a{
+  text-decoration:none;
+  color: #4B4B4B;
+}
+.el-dropdown-menu a:hover{
+  color: #3E79F6;
+}
+/deep/.el-dropdown-menu__item:not(.is-disabled):hover{
+  background-color:white;
 }
 </style>
