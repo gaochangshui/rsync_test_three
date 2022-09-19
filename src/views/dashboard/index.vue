@@ -957,16 +957,15 @@ export default {
   },
   methods: {
     changeDisabled(val){
-      let flag=true
+      this.disabledShow=true
       for(let i=0;i<val.member_ids.length;i++){
         if(val.member_ids[i].MemberID===this.usercd || val.manager_name===this.username){
-          flag =false
+          this.disabledShow=false
           return
         }else{
-          flag =true
+          this.disabledShow=true
         }
       }
-      this.disabledShow=flag
     },
     getProject(){
       getProjectMandays(this.projectCd).then((res) => {

@@ -46,7 +46,7 @@
         >
           <el-input
             v-model="input"
-            placeholder="搜索仓库名称、分组名称"
+            placeholder="搜索分组、仓库名称和描述"
             size="large"
             style="width: 300px; margin-bottom: 12px"
             maxlength="100"
@@ -92,13 +92,14 @@
            height:40px;
            margin-left: 28px;"
            v-show="topTitle === '所有仓库' "
-           @click="formDialogVisible=true">
+           @click="getOptions">
             <span style="margin-right:5px;font-size:26px">+</span>
             新建仓库
           </el-button>
         </div>
       </div>
-      <el-dialog
+      <div class="formDialog">
+        <el-dialog
         v-model="formDialogVisible"
         title="新建仓库"
         width="800px"
@@ -131,9 +132,8 @@
     <el-row>
       <el-col :span="10">
       <el-form-item label="创建的位置">
-      <el-select v-model="form.location" placeholder="请选择创建位置" style="width:95%">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
+      <el-select v-model="form.location" placeholder="请选择创建位置" style="width:95%" @change="changeLocation(form.location)">
+        <el-option :label="item.nameView" :value="item.id" v-for="item in location" :key="item.id" />
       </el-select>
     </el-form-item>
     </el-col>
@@ -176,32 +176,55 @@
     </el-form-item>
     <el-form-item label="分支策略">
       <el-select v-model="form.breach" style="width:100%">
-        <el-option label="单分支模型" value="单分支模型" />
-        <el-option label="Zone two" value="beijing" />
+        <el-option 
+        label="单分支模型(只创建main分支)" 
+        value="单分支模型(只创建main分支)" />
+        <el-option 
+        label="生产/开发模型(支持main/develop类型分支)" 
+        value="生产/开发模型(支持main/develop类型分支)" />
+        <el-option 
+        label="特性/发布模型(支持main/develop/feature类型分支)" 
+        value="特性/发布模型(支持main/develop/feature类型分支)" />
+        <el-option 
+        label="开发/发布/分离模型(支持main/develop/feature/relase类型分支)" 
+        value="开发/发布/分离模型(支持main/develop/feature/relase类型分支)" />
+        <el-option 
+        label="开发/发布/缺陷分离模型(支持main/develop/feature/release/hotfix类型分支)" 
+        value="开发/发布/缺陷分离模型(支持main/develop/feature/release/hotfix类型分支)" />
       </el-select>
     </el-form-item>
     <el-row>
       <el-col :span="12">
       <el-form-item label="主要编程语言">
-      <el-select v-model="form.language" placeholder="请选择编程语言" style="width:95%">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
-      </el-select>
+      <el-select v-model="form.language" placeholder="请选择编程语言" multiple style="width:95%" size="default">
+          <el-option-group
+            v-for="group in languageoptions"
+            :key="group.label"
+            :label="group.label"
+          >
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-option-group>
+        </el-select>
     </el-form-item>
     </el-col>
     <el-col :span="12">
       <el-form-item label="添加 .gitignore">
         <el-select v-model="form.gitignore" style="width:95%">
-        <el-option label="Android" value="Android" />
-        <el-option label="Zone two" value="beijing" />
+        <el-option :label="item" :value="item" v-for="item in gitignoreOpution" :key="item" />
       </el-select>
     </el-form-item>
     </el-col>
     </el-row> 
     <el-form-item label="Readme文件选择">
         <el-select v-model="form.Readme" style="width:47.5%">
-        <el-option label="默认Readme文件（中文）" value="默认Readme文件（中文）" />
-        <el-option label="Zone two" value="beijing" />
+        <el-option label="Readme文件（中文）" value="Readme文件（中文）" />
+        <el-option label="Readme文件（日文）" value="Readme文件（日文）" />
+        <el-option label="Readme文件（英文）" value="Readme文件（英文）" />
       </el-select>
     </el-form-item>
     <el-form-item label="维护者有效期">
@@ -225,6 +248,7 @@
           </span>
         </template>
       </el-dialog>
+      </div>
       <div style="overflow: auto; height: calc(100vh - 180px)">
         <div class="gitlabmanager-right-table">
           <el-table
@@ -491,8 +515,8 @@
                         padding: 5px 5px;
                         border-radius: 5px;
                       "
-                      width="15"
-                      height="18"
+                    width="15"
+                    height="18"
                       icon-class="point"
                       @click.stop="openPopover(scope.row)"
                       class="pointFrom"
@@ -893,289 +917,25 @@ export default {
       branchoptions: [],
       projectOptions:[],
       projectvalue:'',
+      location:[],
+      gitignoreOpution:[],
       form:{
         name: '',
         location: '',
         group: '',
         description: '',
         associated: '',
-        breach:'单分支模型',
+        breach:'单分支模型(只创建main分支)',
         language: '',
-        gitignore:'Android',
-        Readme:'默认Readme文件（中文）',
+        gitignore:'Android.gitignore',
+        Readme:'Readme文件（中文）',
         time: ''
       },
       props1:{
         checkStrictly: true,
       },
-      options:[
-  {
-    value: 'guide',
-    label: 'Guide',
-    children: [
-      {
-        value: 'disciplines',
-        label: 'Disciplines',
-        children: [
-          {
-            value: 'consistency',
-            label: 'Consistency',
-          },
-          {
-            value: 'feedback',
-            label: 'Feedback',
-          },
-          {
-            value: 'efficiency',
-            label: 'Efficiency',
-          },
-          {
-            value: 'controllability',
-            label: 'Controllability',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'side nav',
-            label: 'Side Navigation',
-          },
-          {
-            value: 'top nav',
-            label: 'Top Navigation',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'component',
-    label: 'Component',
-    children: [
-      {
-        value: 'basic',
-        label: 'Basic',
-        children: [
-          {
-            value: 'layout',
-            label: 'Layout',
-          },
-          {
-            value: 'color',
-            label: 'Color',
-          },
-          {
-            value: 'typography',
-            label: 'Typography',
-          },
-          {
-            value: 'icon',
-            label: 'Icon',
-          },
-          {
-            value: 'button',
-            label: 'Button',
-          },
-        ],
-      },
-      {
-        value: 'form',
-        label: 'Form',
-        children: [
-          {
-            value: 'radio',
-            label: 'Radio',
-          },
-          {
-            value: 'checkbox',
-            label: 'Checkbox',
-          },
-          {
-            value: 'input',
-            label: 'Input',
-          },
-          {
-            value: 'input-number',
-            label: 'InputNumber',
-          },
-          {
-            value: 'select',
-            label: 'Select',
-          },
-          {
-            value: 'cascader',
-            label: 'Cascader',
-          },
-          {
-            value: 'switch',
-            label: 'Switch',
-          },
-          {
-            value: 'slider',
-            label: 'Slider',
-          },
-          {
-            value: 'time-picker',
-            label: 'TimePicker',
-          },
-          {
-            value: 'date-picker',
-            label: 'DatePicker',
-          },
-          {
-            value: 'datetime-picker',
-            label: 'DateTimePicker',
-          },
-          {
-            value: 'upload',
-            label: 'Upload',
-          },
-          {
-            value: 'rate',
-            label: 'Rate',
-          },
-          {
-            value: 'form',
-            label: 'Form',
-          },
-        ],
-      },
-      {
-        value: 'data',
-        label: 'Data',
-        children: [
-          {
-            value: 'table',
-            label: 'Table',
-          },
-          {
-            value: 'tag',
-            label: 'Tag',
-          },
-          {
-            value: 'progress',
-            label: 'Progress',
-          },
-          {
-            value: 'tree',
-            label: 'Tree',
-          },
-          {
-            value: 'pagination',
-            label: 'Pagination',
-          },
-          {
-            value: 'badge',
-            label: 'Badge',
-          },
-        ],
-      },
-      {
-        value: 'notice',
-        label: 'Notice',
-        children: [
-          {
-            value: 'alert',
-            label: 'Alert',
-          },
-          {
-            value: 'loading',
-            label: 'Loading',
-          },
-          {
-            value: 'message',
-            label: 'Message',
-          },
-          {
-            value: 'message-box',
-            label: 'MessageBox',
-          },
-          {
-            value: 'notification',
-            label: 'Notification',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'menu',
-            label: 'Menu',
-          },
-          {
-            value: 'tabs',
-            label: 'Tabs',
-          },
-          {
-            value: 'breadcrumb',
-            label: 'Breadcrumb',
-          },
-          {
-            value: 'dropdown',
-            label: 'Dropdown',
-          },
-          {
-            value: 'steps',
-            label: 'Steps',
-          },
-        ],
-      },
-      {
-        value: 'others',
-        label: 'Others',
-        children: [
-          {
-            value: 'dialog',
-            label: 'Dialog',
-          },
-          {
-            value: 'tooltip',
-            label: 'Tooltip',
-          },
-          {
-            value: 'popover',
-            label: 'Popover',
-          },
-          {
-            value: 'card',
-            label: 'Card',
-          },
-          {
-            value: 'carousel',
-            label: 'Carousel',
-          },
-          {
-            value: 'collapse',
-            label: 'Collapse',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'resource',
-    label: 'Resource',
-    children: [
-      {
-        value: 'axure',
-        label: 'Axure Components',
-      },
-      {
-        value: 'sketch',
-        label: 'Sketch Templates',
-      },
-      {
-        value: 'docs',
-        label: 'Design Documentation',
-      },
-    ],
-  },
-    ],
+      options:[],
+      optionsCopy:[],
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -1455,6 +1215,17 @@ export default {
     },
   },
   methods: {
+    changeLocation(val){
+      this.options=this.optionsCopy.filter(item=>{
+        console.log(Number(item.value));
+        return Number(item.value)===val
+      })[0].children;
+      if(val===17){
+        this.form.Readme='Readme文件（日文）'
+      }else{
+        this.form.Readme='Readme文件（中文）'
+      }
+    },
     projectquery(val){
       if(this.timer){
           clearTimeout(this.timer);
@@ -1930,6 +1701,20 @@ export default {
             }
             return arr
     },
+    getOptions(){
+      this.axios.
+      get('/actionapi/projects/GetLocationGroup').then((e)=>{
+        this.location=e.data.location
+        this.options=JSON.parse(e.data.group)
+        this.optionsCopy=this.options
+      })
+      this.axios.
+      get('/actionapi/projects/GetIgnoreList').then((e)=>{
+        console.log(e.data);
+        this.gitignoreOpution=e.data
+      })
+      this.formDialogVisible=true
+    },
     async getTableData() {
       this.tableData = [];
       this.loadingtable=true
@@ -2184,8 +1969,8 @@ height: 60px;
 .el-textarea__inner{
   padding: 5px 11px;
 }
-.el-dialog__body{
-  padding: 0 20px;
+.formDialog .el-dialog__body{
+  padding: 0px 20px !important;
 }
 </style>
 <style lang="less" scoped >
