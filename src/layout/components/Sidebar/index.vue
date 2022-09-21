@@ -89,15 +89,15 @@ export default {
 </script >
 
 <style scoped >
+  .el-menu-item{
+  color: #18263C !important;
+  padding-bottom: 15px !important;
+  height: 70px !important;
+}
 .el-menu-item:hover{
   background-color: #E1E2E5 !important;
 }
 .el-menu-item.is-active{
   color: #3E79F6 !important;
-}
-.el-menu-item{
-  color: #18263C !important;
-  padding-bottom: 15px !important;
-  height: 70px !important;
 }
 </style>

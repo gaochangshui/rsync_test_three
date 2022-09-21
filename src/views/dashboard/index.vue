@@ -1547,6 +1547,9 @@ export default {
     background: #fafafa !important;
   }
 }
+.reSelect .el-input__inner{
+height: 32px !important;
+}
 .el-pagination .el-input--suffix .el-input__inner {
   box-shadow: none;
 }
@@ -1620,9 +1623,6 @@ overflow: hidden;
 }
 .emptybtn:hover {
   color: #3e79f6;
-}
-.reSelect .el-input__inner{
-height: 32px !important;
 }
 .tableBtn:hover{
   color: #3E79F6;

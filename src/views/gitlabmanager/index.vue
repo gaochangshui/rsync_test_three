@@ -98,7 +98,7 @@
           </el-button>
         </div>
       </div>
-      <div class="formDialog">
+      <div class="formDialog" v-loading="formloading">
         <el-dialog
         v-model="formDialogVisible"
         title="新建仓库"
@@ -131,16 +131,19 @@
     </el-form-item>
     <el-row>
       <el-col :span="10">
-      <el-form-item label="创建的位置">
+      <el-form-item>
+        <template #label>
+          <p style="margin: 0px;">创建的位置</p>
+        </template>
       <el-select v-model="form.location" placeholder="请选择创建位置" style="width:95%" @change="changeLocation(form.location)">
-        <el-option :label="item.nameView" :value="item.id" v-for="item in location" :key="item.id" />
+        <el-option :label="item.nameView+'('+ item.name+')'" :value="item.id" v-for="item in location" :key="item.id" />
       </el-select>
     </el-form-item>
     </el-col>
     <el-col :span="14">
       <el-form-item>
         <template #label>
-        <p style="margin:0 0 0 8px">群组<span style="margin-left:5px">（新建群组请联系营业事务）</span></p>
+        <p style="margin:0px">群组<span style="margin-left:5px">（新建群组请联系营业事务）</span></p>
       </template>
         <el-cascader :options="options" 
         :props="props1" 
@@ -151,16 +154,24 @@
     </el-form-item>
     </el-col>
     </el-row> 
-    <el-form-item label="仓库描述">
+    <el-form-item>
+      <template #label>
+          <p style="margin: 0px;">仓库描述</p>
+        </template>
       <el-input v-model="form.description" 
       type="textarea" 
       placeholder="请输入清晰描述以便区别" 
       rows='4'/>
     </el-form-item>  
-    <el-form-item label="关联项目">
-      <el-select v-model="projectvalue"
+    <el-form-item>
+      <template #label>
+          <p style="margin: 0px;">关联项目</p>
+        </template>
+      <el-select v-model="form.associated"
         style="width: 100%;"
-         filterable placeholder="请选择关联项目"
+         filterable 
+         placeholder="请选择关联项目"
+         @click="projectquery('')"
          :filter-method="(value)=>projectquery(value)">
     <el-option
     class="projectStyle"
@@ -174,28 +185,24 @@
     </el-option>
   </el-select>
     </el-form-item>
-    <el-form-item label="分支策略">
+    <el-form-item>
+      <template #label>
+          <p style="margin: 0px;">分支策略</p>
+        </template>
       <el-select v-model="form.breach" style="width:100%">
         <el-option 
-        label="单分支模型(只创建main分支)" 
-        value="单分支模型(只创建main分支)" />
-        <el-option 
-        label="生产/开发模型(支持main/develop类型分支)" 
-        value="生产/开发模型(支持main/develop类型分支)" />
-        <el-option 
-        label="特性/发布模型(支持main/develop/feature类型分支)" 
-        value="特性/发布模型(支持main/develop/feature类型分支)" />
-        <el-option 
-        label="开发/发布/分离模型(支持main/develop/feature/relase类型分支)" 
-        value="开发/发布/分离模型(支持main/develop/feature/relase类型分支)" />
-        <el-option 
-        label="开发/发布/缺陷分离模型(支持main/develop/feature/release/hotfix类型分支)" 
-        value="开发/发布/缺陷分离模型(支持main/develop/feature/release/hotfix类型分支)" />
+        :label="item.label" 
+        :value="item.value" 
+        v-for="item in breachDemo" 
+        :key="item.value" />
       </el-select>
     </el-form-item>
     <el-row>
       <el-col :span="12">
-      <el-form-item label="主要编程语言">
+      <el-form-item>
+        <template #label>
+          <p style="margin: 0px;">主要编程语言</p>
+        </template>
       <el-select v-model="form.language" placeholder="请选择编程语言" multiple style="width:95%" size="default">
           <el-option-group
             v-for="group in languageoptions"
@@ -213,21 +220,30 @@
     </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="添加 .gitignore">
+      <el-form-item>
+        <template #label>
+          <p style="margin: 0px;">添加 .gitignore</p>
+        </template>
         <el-select v-model="form.gitignore" style="width:95%">
         <el-option :label="item" :value="item" v-for="item in gitignoreOpution" :key="item" />
       </el-select>
     </el-form-item>
     </el-col>
     </el-row> 
-    <el-form-item label="Readme文件选择">
+    <el-form-item>
+      <template #label>
+          <p style="margin: 0px;">Readme文件选择</p>
+        </template>
         <el-select v-model="form.Readme" style="width:47.5%">
-        <el-option label="Readme文件（中文）" value="Readme文件（中文）" />
-        <el-option label="Readme文件（日文）" value="Readme文件（日文）" />
-        <el-option label="Readme文件（英文）" value="Readme文件（英文）" />
+        <el-option label="Readme文件（中文）" value="CH" />
+        <el-option label="Readme文件（日文）" value="JP" />
+        <el-option label="Readme文件（英文）" value="EN" />
       </el-select>
     </el-form-item>
-    <el-form-item label="维护者有效期">
+    <el-form-item>
+      <template #label>
+          <p style="margin: 0px;">维护者有效期</p>
+        </template>
       <el-date-picker
           :disabled-date="disabledDate"
           v-model="form.time"
@@ -242,7 +258,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="formDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="formDialogVisible = false"
+            <el-button type="primary" @click="newWarehouse"
               >确定</el-button
             >
           </span>
@@ -879,7 +895,7 @@
 
 <script>
 import { log } from 'console';
-import { ElLoading } from 'element-plus'
+import { ElLoading ,ElMessage,ElMessageBox } from 'element-plus'
 export default {
   name: 'GitlabManager',
   data() {
@@ -919,16 +935,17 @@ export default {
       projectvalue:'',
       location:[],
       gitignoreOpution:[],
+      formloading:false,
       form:{
         name: '',
         location: '',
-        group: '',
+        group:'',
         description: '',
-        associated: '',
-        breach:'单分支模型(只创建main分支)',
+        associated: ' ',
+        breach:'1',
         language: '',
-        gitignore:'Android.gitignore',
-        Readme:'Readme文件（中文）',
+        gitignore:'',
+        Readme:'CH',
         time: ''
       },
       props1:{
@@ -936,6 +953,28 @@ export default {
       },
       options:[],
       optionsCopy:[],
+      breachDemo:[
+        {
+          label:'单分支模型(只创建main分支)',
+          value:'1'
+        },
+        {
+          label:'生产/开发模型(支持main/develop类型分支)',
+          value:'2'
+        },
+        {
+          label:'特性/发布模型(支持main/develop/feature类型分支)',
+          value:'3'
+        },
+        {
+          label:'开发/发布/分离模型(支持main/develop/feature/relase类型分支)',
+          value:'4'
+        },
+        {
+          label:'开发/发布/缺陷分离模型(支持main/develop/feature/release/hotfix类型分支)',
+          value:'5'
+        }
+      ],
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -1163,6 +1202,19 @@ export default {
     }
   },
   watch: {
+    formDialogVisible(){
+      this.form.name=''
+      this.form.location=''
+      this.form.group=''
+      this.form.description=''
+      this.form.associated=''
+      this.form.language=''
+      this.form.time=''
+      this.form.breach='1'
+      this.form.gitignore=this.gitignoreOpution[0]
+      this.form.Readme='CH'
+      this.options=[]
+    },
     addressValue() {
       if (this.addressValue === 'https://github.com/retail-ai-inc/') {
         this.userFlag = true;
@@ -1221,18 +1273,19 @@ export default {
         return Number(item.value)===val
       })[0].children;
       if(val===17){
-        this.form.Readme='Readme文件（日文）'
+        this.form.Readme='JP'
       }else{
-        this.form.Readme='Readme文件（中文）'
+        this.form.Readme='CH'
       }
     },
     projectquery(val){
+      console.log(val);
       if(this.timer){
           clearTimeout(this.timer);
         }
         this.timer= setTimeout(()=>{
           this.axios
-        .get('/api/projects', {
+        .get('/qcdapi/projects', {
           params: {
             filter:val.trim()
           },
@@ -1701,17 +1754,100 @@ export default {
             }
             return arr
     },
+    newWarehouse(){
+      let flag=true
+      for(let i in this.form){
+        if(!this.form[i]){
+          flag=false
+          ElMessage({
+            message: '您还有必填信息未填写！',
+            type: 'error',
+          })
+          return
+        }
+      }
+      const nameRegexp=/^[a-z0-9|-]+$/
+      if(!nameRegexp.test(this.form.name)){
+        flag=false
+        ElMessage({
+            message: '您的仓库名格式有问题，请更改！',
+            type: 'error',
+          })
+          return
+      }
+        ElMessageBox.confirm(
+    '请详细确认仓库名，群组等信息是否正确。一旦需删除该仓库，请联系PMO进行作业。',
+    '操作确认',
+    {
+      autofocus:true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      this.setNewWareHouse(flag)
+    }).catch(() => {
+
+    }) 
+    },
+    setNewWareHouse(flag){
+      if(flag){
+        const loading=ElLoading.service({
+              lock: true,
+              text: '创建仓库中，请稍后。。。',
+              background: 'rgba(0, 0, 0, 0.7)',})
+        this.axios.post('/actionapi/projects/SetWareHouse',{
+        name:this.form.name,
+        location:this.form.group[this.form.group.length-1],
+        description:this.form.description,
+        qcdId:this.form.associated[0].split(' ')[0],
+        branchType:this.form.breach,
+        language:this.form.language.join(),
+        gitignore:this.form.gitignore,
+        readmePrefix:this.form.Readme,
+        expiryDate:this.form.time,
+        user_id:this.usercd,
+      }).then((e)=>{
+        loading.close()
+        if(e.data.flag){
+          this.formDialogVisible=false
+          ElMessageBox.confirm(
+    '仓库创建成功，是否跳转到新建的仓库页面？',
+    '操作确认',
+    {
+      autofocus:true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'success',
+    }
+  )
+    .then(() => {
+      window.open(e.data.web_url)
+    }).catch(() => {
+
+    })
+        }else{
+          ElMessage({
+            message: e.data.message,
+            type: 'error',
+            duration:5000,
+          })
+        }
+      })
+      }
+    },
     getOptions(){
       this.axios.
       get('/actionapi/projects/GetLocationGroup').then((e)=>{
         this.location=e.data.location
-        this.options=JSON.parse(e.data.group)
-        this.optionsCopy=this.options
+        this.optionsCopy=JSON.parse(e.data.group)
       })
       this.axios.
       get('/actionapi/projects/GetIgnoreList').then((e)=>{
         console.log(e.data);
         this.gitignoreOpution=e.data
+        this.form.gitignore=this.gitignoreOpution[0]
       })
       this.formDialogVisible=true
     },
