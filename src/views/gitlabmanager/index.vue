@@ -108,8 +108,11 @@
       >
       <el-form :model="form" 
       label-width="120px" 
-      label-position="top">
-    <el-form-item >
+      label-position="top"
+      :rules="formRules"
+      hide-required-asterisk="true"
+      ref="formRef">
+    <el-form-item prop="name">
       <template #label>
         <p>仓库名<span style="margin-left:5px">（字母开头并只支持小写字母、数字和"-"）
         <el-dropdown>
@@ -131,7 +134,7 @@
     </el-form-item>
     <el-row>
       <el-col :span="10">
-      <el-form-item>
+      <el-form-item prop="location">
         <template #label>
           <p style="margin: 0px;">创建的位置</p>
         </template>
@@ -141,7 +144,7 @@
     </el-form-item>
     </el-col>
     <el-col :span="14">
-      <el-form-item>
+      <el-form-item prop="group">
         <template #label>
         <p style="margin:0px">群组<span style="margin-left:5px">（新建群组请联系营业事务）</span></p>
       </template>
@@ -154,7 +157,7 @@
     </el-form-item>
     </el-col>
     </el-row> 
-    <el-form-item>
+    <el-form-item prop="description">
       <template #label>
           <p style="margin: 0px;">仓库描述</p>
         </template>
@@ -163,7 +166,7 @@
       placeholder="请输入清晰描述以便区别" 
       rows='4'/>
     </el-form-item>  
-    <el-form-item>
+    <el-form-item prop="associated">
       <template #label>
           <p style="margin: 0px;">关联项目</p>
         </template>
@@ -185,7 +188,7 @@
     </el-option>
   </el-select>
     </el-form-item>
-    <el-form-item>
+    <el-form-item prop="breach">
       <template #label>
           <p style="margin: 0px;">分支策略</p>
         </template>
@@ -199,7 +202,7 @@
     </el-form-item>
     <el-row>
       <el-col :span="12">
-      <el-form-item>
+      <el-form-item prop="language">
         <template #label>
           <p style="margin: 0px;">主要编程语言</p>
         </template>
@@ -220,7 +223,7 @@
     </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item>
+      <el-form-item prop="gitignore">
         <template #label>
           <p style="margin: 0px;">添加 .gitignore</p>
         </template>
@@ -230,7 +233,7 @@
     </el-form-item>
     </el-col>
     </el-row> 
-    <el-form-item>
+    <el-form-item prop="Readme">
       <template #label>
           <p style="margin: 0px;">Readme文件选择</p>
         </template>
@@ -240,7 +243,7 @@
         <el-option label="Readme文件（英文）" value="EN" />
       </el-select>
     </el-form-item>
-    <el-form-item>
+    <el-form-item prop="time">
       <template #label>
           <p style="margin: 0px;">维护者有效期</p>
         </template>
@@ -258,7 +261,7 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="formDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="newWarehouse"
+            <el-button type="primary" @click="newWarehouse()"
               >确定</el-button
             >
           </span>
@@ -943,7 +946,7 @@ export default {
         description: '',
         associated: ' ',
         breach:'1',
-        language: '',
+        language: [],
         gitignore:'',
         Readme:'CH',
         time: ''
@@ -953,6 +956,19 @@ export default {
       },
       options:[],
       optionsCopy:[],
+      formRules:{
+        name:[{required:true,message: '请输入仓库名', trigger: 'blur'},
+        {pattern: /^[a-z0-9|-]+$/ , message: '请输入正确仓库名', trigger: 'blur'}],
+        location:[{required:true,message: '请选择创建的位置', trigger: 'change'}],
+        group:[{required:true,message: '请选择群组', trigger: 'change'}],
+        description: [{required:true,message: '请输入仓库描述', trigger: 'blur'}],
+        associated: [{required:true,message: '请选择关联项目', trigger: 'change'}],
+        breach:[{required:true,message: '请选择分支策略', trigger: 'change'}],
+        language: [{type: 'array',required:true,message: '请选择主要编程语言', trigger: 'change'}],
+        gitignore:[{required:true,message: '请选择添加.gitignore', trigger: 'change'}],
+        Readme:[{required:true,message: '请选择Readme文件', trigger: 'change'}],
+        time: [{required:true,message: '请选择维护者有效期', trigger: 'change'}]
+      },
       breachDemo:[
         {
           label:'单分支模型(只创建main分支)',
@@ -1208,7 +1224,7 @@ export default {
       this.form.group=''
       this.form.description=''
       this.form.associated=''
-      this.form.language=''
+      this.form.language=[]
       this.form.time=''
       this.form.breach='1'
       this.form.gitignore=this.gitignoreOpution[0]
@@ -1268,6 +1284,7 @@ export default {
   },
   methods: {
     changeLocation(val){
+      this.form.group=''
       this.options=this.optionsCopy.filter(item=>{
         console.log(Number(item.value));
         return Number(item.value)===val
@@ -1755,27 +1772,10 @@ export default {
             return arr
     },
     newWarehouse(){
-      let flag=true
-      for(let i in this.form){
-        if(!this.form[i]){
-          flag=false
-          ElMessage({
-            message: '您还有必填信息未填写！',
-            type: 'error',
-          })
-          return
-        }
-      }
-      const nameRegexp=/^[a-z0-9|-]+$/
-      if(!nameRegexp.test(this.form.name)){
-        flag=false
-        ElMessage({
-            message: '您的仓库名格式有问题，请更改！',
-            type: 'error',
-          })
-          return
-      }
-        ElMessageBox.confirm(
+      
+      this.$refs.formRef.validate((valid)=>{
+        if(valid) {
+          ElMessageBox.confirm(
     '请详细确认仓库名，群组等信息是否正确。一旦需删除该仓库，请联系PMO进行作业。',
     '操作确认',
     {
@@ -1786,13 +1786,17 @@ export default {
     }
   )
     .then(() => {
-      this.setNewWareHouse(flag)
+      this.setNewWareHouse()
     }).catch(() => {
 
     }) 
+    } else {
+      console.log('error submit!')
+      return false
+    }
+      });
     },
-    setNewWareHouse(flag){
-      if(flag){
+    setNewWareHouse(){
         const loading=ElLoading.service({
               lock: true,
               text: '创建仓库中，请稍后。。。',
@@ -1835,7 +1839,6 @@ export default {
           })
         }
       })
-      }
     },
     getOptions(){
       this.axios.
