@@ -958,10 +958,12 @@ export default {
       optionsCopy:[],
       formRules:{
         name:[{required:true,message: '请输入仓库名', trigger: 'blur'},
+        {max:255,message:'请输入长度小于255的仓库名',trigger: 'blur'},
         {pattern: /^(?![-|0-9])[a-z0-9|-]+(?<!-)$/ , message: '请输入正确仓库名', trigger: 'blur'}],
         location:[{required:true,message: '请选择创建的位置', trigger: 'change'}],
         group:[{required:true,message: '请选择群组', trigger: 'change'}],
-        description: [{required:true,message: '请输入仓库描述', trigger: 'blur'}],
+        description: [{required:true,message: '请输入仓库描述', trigger: 'blur'},
+        {max:2000,message:'请输入长度小于2000的仓库描述',trigger: 'blur'}],
         associated: [{required:true,message: '请选择关联项目', trigger: 'change'}],
         breach:[{required:true,message: '请选择分支策略', trigger: 'change'}],
         language: [{type: 'array',required:true,message: '请选择主要编程语言', trigger: 'change'}],
@@ -1710,6 +1712,8 @@ export default {
         if (val2.project_member[k].name === this.username) {
           if(val2.project_member[k].access_level==='Owner'||val2.project_member[k].access_level==='M'){
             this.Syncflg=true
+          }else{
+            this.Syncflg=false;
           }
           this.operationFlg = true;
           break;
@@ -1723,6 +1727,8 @@ export default {
           if (val2.group_member[g].name === this.username) {
             if(val2.group_member[g].access_level==='Owner'||val2.group_member[g].access_level==='M'){
             this.Syncflg=true
+          }else{
+            this.Syncflg=false;
           }
             this.operationFlg = true;
             break;
@@ -1732,7 +1738,6 @@ export default {
           }
         }
       }
-
       for (let i in this.tableData) {
         this.tableData[i].openFlag = false;
       }
@@ -1741,6 +1746,7 @@ export default {
           this.tableData[j].openFlag = true;
         }
       }
+      console.log(this.Syncflg);
     },
     emptyInput() {
       this.input = '';

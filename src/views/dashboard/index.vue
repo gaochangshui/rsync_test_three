@@ -234,8 +234,8 @@
                     </p>  
                     <template #reference>
                       <div class="reserveTime" @click="openReserveTime(scope.row)">
-                        <span v-show="scope.row.plan_mandays">
-                          <img v-show="scope.row.plan_mandays" src="../../assets/icons/fromicon/time.png" style="" >
+                        <span >
+                          <img  src="../../assets/icons/fromicon/time.png" style="" >
                         {{scope.row.plan_mandays.toFixed(1)}}
                         </span>  
                       </div>
