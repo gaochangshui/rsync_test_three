@@ -297,7 +297,7 @@
                     placement="top"
                     show-after="1000" :disabled="!disabledShow">
                     <div :class="[disabledShow ? 'atooltip-div2' : 'atooltip-div']" 
-                    @click.stop="showSelect(scope.row.agreement_cd)">
+                    @click.stop="showSelect(scope.row)">
                     <img
                       src="../../assets/icons/fromicon/Frame-6.png"
                       style="
@@ -539,6 +539,12 @@
   </el-dialog>
     <el-dialog title="仓库设定"  v-model="dialogVisible" width="1290px">
       <div>
+        <el-switch
+    v-model="subjectSwitch"
+    active-text="使用仓库"
+    inactive-text="不使用仓库"
+    @change="changeSwitch"
+  /><br/>
         <el-input
           v-model="input2"
           placeholder="搜索仓库"
@@ -660,6 +666,7 @@ export default {
         var before = timeNow - 24 * 60 * 60 * 1000;
         return time.getTime() < before;
       },
+      subjectSwitch:true,
       disabledShow:false,
       wloding:false,
       exoendloading:false,
@@ -956,7 +963,17 @@ export default {
     
   },
   methods: {
+    changeSwitch(){
+      this.axios.post('/actionapi/QcdApi/QCDProjectIsUseGitlab',{
+        agreement_cd:this.selectid,
+        user_id:this.usercd,
+        is_use:this.subjectSwitch
+      }).then(()=>{
+        this.getTableData()
+      })
+    },
     changeDisabled(val){
+      val.openFlag=true
       this.disabledShow=true
       for(let i=0;i<val.member_ids.length;i++){
         if(val.member_ids[i].MemberID===this.usercd || val.manager_name===this.username){
@@ -1228,17 +1245,20 @@ export default {
     },
     async showSelect(val) {
       if(!this.disabledShow){
+        val.openFlag=false
+        this.subjectSwitch=val.repo_flg
       this.dialogVisible = true; 
         this.wloding=true
      await this.getsubject()
      this.$nextTick(function(){
-      this.getsubjected(val)
+      this.getsubjected(val.agreement_cd)
      })
-      this.selectid=val
+      this.selectid=val.agreement_cd
     }
     },
     async showReview(val){
       if(!this.disabledShow){
+        val.openFlag=false
         this.reTitle=val.agreement_cd+': '+val.agreement_name
       await this.getReviewinfor(val.agreement_cd)
       this.pjId=val.agreement_cd
@@ -1590,7 +1610,7 @@ height: 32px !important;
 }
 .selectedwarehouse {
   position: absolute;
-  top: 136px;
+  top: 168px;
   left: 650px;
 }
 .dialogTittle {

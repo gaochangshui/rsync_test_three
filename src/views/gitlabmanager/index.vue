@@ -114,7 +114,7 @@
       ref="formRef">
     <el-form-item prop="name">
       <template #label>
-        <p>仓库名<span style="margin-left:5px">（字母开头并只支持小写字母、数字和"-"）
+        <p>仓库名<span style="margin-left:5px">（字母开头并只支持小写字母、数字和"-"、且不能以"-"结尾）
         <el-dropdown>
           <div>
             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-029747aa="" width="15" style="position:relative;top: 4px;">
@@ -958,7 +958,7 @@ export default {
       optionsCopy:[],
       formRules:{
         name:[{required:true,message: '请输入仓库名', trigger: 'blur'},
-        {pattern: /^[a-z0-9|-]+$/ , message: '请输入正确仓库名', trigger: 'blur'}],
+        {pattern: /^(?![-|0-9])[a-z0-9|-]+(?<!-)$/ , message: '请输入正确仓库名', trigger: 'blur'}],
         location:[{required:true,message: '请选择创建的位置', trigger: 'change'}],
         group:[{required:true,message: '请选择群组', trigger: 'change'}],
         description: [{required:true,message: '请输入仓库描述', trigger: 'blur'}],
@@ -1286,7 +1286,6 @@ export default {
     changeLocation(val){
       this.form.group=''
       this.options=this.optionsCopy.filter(item=>{
-        console.log(Number(item.value));
         return Number(item.value)===val
       })[0].children;
       if(val===17){
@@ -1296,7 +1295,6 @@ export default {
       }
     },
     projectquery(val){
-      console.log(val);
       if(this.timer){
           clearTimeout(this.timer);
         }
@@ -1791,7 +1789,6 @@ export default {
 
     }) 
     } else {
-      console.log('error submit!')
       return false
     }
       });
@@ -1821,8 +1818,8 @@ export default {
     '操作确认',
     {
       autofocus:true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: '是',
+      cancelButtonText: '否',
       type: 'success',
     }
   )
@@ -1848,7 +1845,6 @@ export default {
       })
       this.axios.
       get('/actionapi/projects/GetIgnoreList').then((e)=>{
-        console.log(e.data);
         this.gitignoreOpution=e.data
         this.form.gitignore=this.gitignoreOpution[0]
       })
