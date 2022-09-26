@@ -151,6 +151,7 @@
         <el-cascader :options="options" 
         :props="props1" 
         clearable 
+        filterable
         v-model="form.group" 
         placeholder=" "
         style="width:100%"/>
@@ -985,7 +986,7 @@ export default {
           value:'3'
         },
         {
-          label:'开发/发布/分离模型(支持main/develop/feature/relase类型分支)',
+          label:'开发/发布/分离模型(支持main/develop/feature/release类型分支)',
           value:'4'
         },
         {

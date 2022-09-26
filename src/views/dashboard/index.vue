@@ -287,7 +287,7 @@
                       width="15"   
                       height="18" 
                       icon-class="point"
-                      @click="changeDisabled(scope.row)"
+                      @click.stop="changeDisabled(scope.row)"
                       class="pointFrom"
                     />
                   </template>
@@ -492,7 +492,33 @@
         
   </div>
   <div style="margin-top:21px">
-    <span style="line-height: 40px;margin-right: 44px;">备注</span>
+    <span style="color:red">*</span>
+        <span style="line-height: 40px;margin-right: 16px;"
+          >抄送成员</span
+        >
+        <el-select
+          v-model="memberSelect"
+          placeholder="请选择评选成员（多选）"
+          multiple
+          class="reSelect"
+          style="width: 91%;"
+        >
+            <el-option
+              label="1"
+              value="1"
+            />
+            <el-option
+              label="2"
+              value="2"
+            />
+            <el-option
+              label="3"
+              value="3"
+            />
+        </el-select>
+  </div>
+  <div style="margin-top:21px">
+    <span style="line-height: 40px;margin-right: 50px;">备注</span>
         <el-input
           v-model="noteText"
           placeholder="请输入内容"
@@ -539,12 +565,14 @@
   </el-dialog>
     <el-dialog title="仓库设定"  v-model="dialogVisible" width="1290px">
       <div>
-        <el-switch
+        <span style="font-size:16px;margin-left:16%">
+          本项目使用GitLab管理仓库
+          <el-switch
     v-model="subjectSwitch"
-    active-text="使用仓库"
-    inactive-text="不使用仓库"
     @change="changeSwitch"
-  /><br/>
+  />
+        </span>
+        <br/>
         <el-input
           v-model="input2"
           placeholder="搜索仓库"
@@ -692,6 +720,7 @@ export default {
       reviewRadio:[],
       noteText:'',
       retableData:[],
+      memberSelect:[1,2,3],
       databaseoptions: [
         {
           value: '有',
@@ -963,6 +992,11 @@ export default {
     
   },
   methods: {
+    onBlur() {
+      for (let i in this.tableData) {
+        this.tableData[i].openFlag = false;
+      }
+    },
     changeSwitch(){
       this.axios.post('/actionapi/QcdApi/QCDProjectIsUseGitlab',{
         agreement_cd:this.selectid,
@@ -973,6 +1007,9 @@ export default {
       })
     },
     changeDisabled(val){
+      for (let i in this.tableData) {
+        this.tableData[i].openFlag = false;
+      }
       val.openFlag=true
       this.disabledShow=true
       for(let i=0;i<val.member_ids.length;i++){
