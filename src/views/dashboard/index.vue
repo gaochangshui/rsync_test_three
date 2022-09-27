@@ -491,32 +491,25 @@
     </div>
         
   </div>
-  <!-- <div style="margin-top:21px">
-    <span style="color:red">*</span>
+  <div style="margin-top:21px">
         <span style="line-height: 40px;margin-right: 16px;"
           >抄送成员</span
         >
         <el-select
           v-model="memberSelect"
-          placeholder="请选择评选成员（多选）"
+          placeholder="请选择抄送成员（多选）"
           multiple
-          class="reSelect"
+          filterable
           style="width: 91%;"
         >
             <el-option
-              label="1"
-              value="1"
-            />
-            <el-option
-              label="2"
-              value="2"
-            />
-            <el-option
-              label="3"
-              value="3"
+            v-for="item in memberOpution"
+            :key="item.id"
+              :label="item.emailShow"
+              :value="item.username"
             />
         </el-select>
-  </div> -->
+  </div>
   <div style="margin-top:21px">
     <span style="line-height: 40px;margin-right: 50px;">备注</span>
         <el-input
@@ -720,7 +713,8 @@ export default {
       reviewRadio:[],
       noteText:'',
       retableData:[],
-      memberSelect:[1,2,3],
+      memberSelect:[],
+      memberOpution:[],
       databaseoptions: [
         {
           value: '有',
@@ -1240,6 +1234,13 @@ export default {
         this.$message.error('您还有未填写完成时间或评审信息');
         return
       }
+      let maillArr=this.memberOpution.filter((item)=>{
+        return this.memberSelect.indexOf(item.username)!==-1 
+      })
+      var maillStr=[]
+      for(let i = 0;i<maillArr.length;i++){
+        maillStr.push(maillArr[i].email)
+      }
        const loading=ElLoading.service({
               lock: true,
               text: '发送邮件中，请稍候',
@@ -1247,6 +1248,7 @@ export default {
       this.axios
       .post('/actionapi/QcdApi/QCDCodeReview',{
           id:this.pjId,
+          ccMail:maillStr.join(),
           userId:this.usercd,
           name:this.pjName,
           reviewInfo:this.reviewRadio.join(','),
@@ -1334,6 +1336,15 @@ export default {
     .catch(() => {
     })
       }else{
+        this.axios.get('/actionapi/QcdApi/GetUserEmail',{
+          params:{
+            userid:this.usercd,
+            id:val
+          }
+        }).then((res)=>{
+          this.memberSelect=res.data.User
+          this.memberOpution=res.data.List
+        })
         this.dialogReview = true;
       }
         })
