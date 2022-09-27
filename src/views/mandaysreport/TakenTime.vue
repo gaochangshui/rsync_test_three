@@ -43,6 +43,7 @@
             collapse-tags
             clearable
             filterable
+            :filter-method="(value,item)=>employeeFilter(value,item)"
             placeholder="请选择"
             size="large"
           />
@@ -426,6 +427,9 @@ export default defineComponent({
     const tableId = ref(0);
     const tableName = ref("");
     const loading = ref(false);
+    const employeeFilter = (val:any,item:any)=>{
+      return val.text.indexOf(item.trim())!==-1  
+    }
     // const tableCellClass = ({ row, column, rowIndex, columnIndex }: any) => {
     //   if (tableId.value.toString() === "Employee" && columnIndex === 2) {
     //     return "padding-right: 35px;";
@@ -628,7 +632,8 @@ export default defineComponent({
       showDownload,
       tableId,
       loading,
-      noData
+      noData,
+      employeeFilter
           };
   },
 });

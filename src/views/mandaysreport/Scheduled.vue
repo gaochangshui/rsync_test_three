@@ -15,6 +15,7 @@
           filterable
           size="large"
           placeholder="请选择"
+          :filter-method="(value,item)=>employeeFilter(value,item)"
           @change="chengeEmployees"
         />
         </el-form-item>
@@ -210,6 +211,11 @@ export default defineComponent({
     const subData = ref([]);
     const  yearmonthbegin = ref("");
     const  yearmonthend = ref("");
+    const employeeFilter = (val:any,item:any)=>{
+      return val.text.indexOf(item.trim())!==-1
+      
+
+    }
     const searchOrdersReceived = () => {
       const loading=ElLoading.service({
               lock: true,
@@ -374,7 +380,8 @@ export default defineComponent({
       chengeEmployees,
       yearmonthbegin,
       yearmonthend,
-      noData
+      noData,
+      employeeFilter
     };
   },
 });
