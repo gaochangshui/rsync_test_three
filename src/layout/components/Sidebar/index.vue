@@ -47,6 +47,20 @@
     </el-menu-item>
       </el-tooltip>    
         </div>
+        <div @click.stop="goUrl('http://yapi.trechina.cn/')">
+          <el-tooltip
+        class="box-item"
+        effect="light"
+        content="API管理平台"
+        placement="right"
+        show-after="1000"
+      >
+      <el-menu-item >
+          <svg-icon icon-class="api" />
+            <span style="position:absolute;top:24px;left:12px;font-size: 12px;">API管理</span>
+          </el-menu-item>
+      </el-tooltip>         
+        </div>
       </el-menu>
     </el-scrollbar>
   </div>
