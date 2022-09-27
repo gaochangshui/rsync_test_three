@@ -491,7 +491,7 @@
     </div>
         
   </div>
-  <div style="margin-top:21px">
+  <!-- <div style="margin-top:21px">
     <span style="color:red">*</span>
         <span style="line-height: 40px;margin-right: 16px;"
           >抄送成员</span
@@ -516,7 +516,7 @@
               value="3"
             />
         </el-select>
-  </div>
+  </div> -->
   <div style="margin-top:21px">
     <span style="line-height: 40px;margin-right: 50px;">备注</span>
         <el-input
