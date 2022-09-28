@@ -500,6 +500,8 @@
           placeholder="请选择抄送成员（多选）"
           multiple
           filterable
+          :filter-method="(value)=>memberFilter(value)"
+          @click="this.memberOpution=this.copyMemberOpution"
           style="width: 91%;"
         >
             <el-option
@@ -715,6 +717,7 @@ export default {
       retableData:[],
       memberSelect:[],
       memberOpution:[],
+      copyMemberOpution:[],
       databaseoptions: [
         {
           value: '有',
@@ -986,6 +989,23 @@ export default {
     
   },
   methods: {
+    memberFilter(val){
+      if(val){
+        let arr=[]
+        this.copyMemberOpution.map((item)=>{
+          let a =item.email.split('@')[0]
+              a = a.split('_')[0]+a.split('_')[1]
+              a = a.indexOf(val)
+          let b = item.emailShow.indexOf(val)
+          if(a!==-1||b!==-1){
+            arr.push(item)
+          }  
+        })
+        this.memberOpution=arr
+      }else{
+        this.memberOpution=this.copyMemberOpution
+      }
+    },
     onBlur() {
       for (let i in this.tableData) {
         this.tableData[i].openFlag = false;
@@ -1344,6 +1364,7 @@ export default {
         }).then((res)=>{
           this.memberSelect=res.data.User
           this.memberOpution=res.data.List
+          this.copyMemberOpution=res.data.List
         })
         this.dialogReview = true;
       }
@@ -1441,7 +1462,6 @@ export default {
         res = Number(str1.agreement_cd) - Number(str2.agreement_cd);
         break;
       }
-      console.log(res);
       return res;
     },
     emptyInput() {

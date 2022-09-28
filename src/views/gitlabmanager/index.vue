@@ -1747,7 +1747,6 @@ export default {
           this.tableData[j].openFlag = true;
         }
       }
-      console.log(this.Syncflg);
     },
     emptyInput() {
       this.input = '';
