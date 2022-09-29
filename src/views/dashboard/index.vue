@@ -210,7 +210,7 @@
                       </div>
                     </template>
                     <template #default>
-                      <span @click="expendTime">{{(Math.round(Number(reserveTimes) * 10) / 10).toFixed(1) }}</span>
+                      <span @click="expendTime(scope.row)">{{(Math.round(Number(reserveTimes) * 10) / 10).toFixed(1) }}</span>
                     </template>
                       </el-skeleton>
                     </p>
@@ -284,7 +284,7 @@
                         padding: 5px 5px;
                         border-radius: 5px;
                       "
-                      width="15"   
+                       width="15"   
                       height="18" 
                       icon-class="point"
                       @click.stop="changeDisabled(scope.row)"
@@ -1105,8 +1105,13 @@ export default {
       });
     });
     },
-    expendTime(){
-      this.$router.push('/TakenTime')
+    expendTime(val){
+      this.$router.push({
+        name: '消耗工时',
+        query: {
+          id:val.agreement_cd,
+        }
+      })
     },
     openReserveTable(val){
     this.projectCd=val.agreement_cd

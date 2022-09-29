@@ -394,6 +394,7 @@
   </div>
 </template>
 <script  lang="ts">
+import { useRoute } from 'vue-router';
 import { getEmployeelist, getProjectlist, getTakenHours } from "@/api/qcd";
 import { ElMessage } from "element-plus";
 import { exportTable2Excel } from "@/utils/excel";
@@ -410,7 +411,7 @@ export default defineComponent({
     const projectResult = ref([]);
     const takenEmployeeList = ref([]);
     const links = ref([]);
-    const projects = ref([]);
+    const projects:any = ref([]);
     const date = ref("");
     const options = ref([]);
     const takenHoursData = ref([]);
@@ -427,6 +428,7 @@ export default defineComponent({
     const tableId = ref(0);
     const tableName = ref("");
     const loading = ref(false);
+    const route = useRoute();
     const employeeFilter = (val:any,item:any)=>{
       return val.text.indexOf(item.trim())!==-1  
     }
@@ -579,6 +581,12 @@ export default defineComponent({
       searchTakenHours();
     };
     onMounted(() => {
+      if(route.query.id){
+      let a:any= route.query.id
+      projects.value=[a]
+      searchTakenHours()
+      
+    }
       getProjectlist("").then((res) => {
         projectResult.value = res.data.map((item: any) => ({
           value: item.ProjectCode,
@@ -633,7 +641,7 @@ export default defineComponent({
       tableId,
       loading,
       noData,
-      employeeFilter
+      employeeFilter,
           };
   },
 });
