@@ -130,7 +130,7 @@
         </span>
           </p>
       </template>
-      <el-input v-model="form.name" />
+      <el-input v-model.trim="form.name" />
     </el-form-item>
     <el-row>
       <el-col :span="10">
@@ -154,6 +154,7 @@
         filterable
         v-model="form.group" 
         placeholder=" "
+        :filter-method="(node,keyword)=>groupFilter(node,keyword)"
         style="width:100%"/>
     </el-form-item>
     </el-col>
@@ -961,16 +962,16 @@ export default {
         name:[{required:true,message: '请输入仓库名', trigger: 'blur'},
         {max:255,message:'请输入长度小于255的仓库名',trigger: 'blur'},
         {pattern: /^(?![-|0-9])[a-z0-9|-]+(?<!-)$/ , message: '请输入正确仓库名', trigger: 'blur'}],
-        location:[{required:true,message: '请选择创建的位置', trigger: 'change'}],
+        location:[{required:true,message: '请选择创建的位置', trigger: 'blur'}],
         group:[{required:true,message: '请选择群组', trigger: 'change'}],
         description: [{required:true,message: '请输入仓库描述', trigger: 'blur'},
         {max:2000,message:'请输入长度小于2000的仓库描述',trigger: 'blur'}],
-        associated: [{required:true,message: '请选择关联项目', trigger: 'change'}],
+        associated: [{required:true,message: '请选择关联项目', trigger: 'blur'}],
         breach:[{required:true,message: '请选择分支策略', trigger: 'change'}],
-        language: [{type: 'array',required:true,message: '请选择主要编程语言', trigger: 'change'}],
+        language: [{type: 'array',required:true,message: '请选择主要编程语言', trigger: 'blur'}],
         gitignore:[{required:true,message: '请选择添加.gitignore', trigger: 'change'}],
         Readme:[{required:true,message: '请选择Readme文件', trigger: 'change'}],
-        time: [{required:true,message: '请选择维护者有效期', trigger: 'change'}]
+        time: [{required:true,message: '请选择维护者有效期', trigger: 'blur'}]
       },
       breachDemo:[
         {
@@ -1286,6 +1287,11 @@ export default {
     },
   },
   methods: {
+    groupFilter(val,key){
+      console.log(val);
+      console.log(key);
+      return val.text.indexOf(key.trim())!==-1
+    },
     changeLocation(val){
       this.form.group=''
       this.options=this.optionsCopy.filter(item=>{
