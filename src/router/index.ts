@@ -78,22 +78,8 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next)=>{
-  const allCookie = document.cookie
-  let userCD=''
-     const aryCookie =allCookie.split(';')
-     for(const i in aryCookie){
-       const getUserid=aryCookie[i].split("=")
-        if(getUserid[0].trim()=='LoginedUser'){
-           userCD=getUserid[1]                       
-        }
-     }
-     if(to.path==='/login'){
-       next()
-     }else{
-      if(userCD =='') next('/login')  
-     else next()
-     }
-     
-     
+  let token = localStorage.getItem('token')
+  if(to.name!=='login' && !token)next({name:'login'})
+  else next()  
 })
 export default router

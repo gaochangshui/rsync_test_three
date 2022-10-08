@@ -1,6 +1,7 @@
 import { Loading } from '@element-plus/icons';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElLoading,ElMessage } from 'element-plus';
+import router from './router'
 
 // let loading: any;
 // const outList:string[] = ["/qcdapi/projectlist","/apiv1/employeelist","/qcdapi/EmployeeMandays"];
@@ -25,8 +26,9 @@ import { ElLoading,ElMessage } from 'element-plus';
 // }
 
 // 请求拦截
-axios.interceptors.request.use((config:AxiosRequestConfig) => {
-    
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) config.headers.token = token
 // 加载
 //  if(!(outList.indexOf(config)>-1)){
 //     startLoading();
@@ -43,11 +45,18 @@ axios.interceptors.request.use((config:AxiosRequestConfig) => {
 //     }
 //   }
   return config;
+},(error) => {
+  return Promise.reject(error)
 })
 
 
 // 响应拦截
-axios.interceptors.response.use((response: AxiosResponse) => {
+axios.interceptors.response.use((response) => {
+  if(response.data.Success==false){
+    router.replace({ name: 'login' })
+    localStorage.clear('token')
+    
+  }
   return response;
 }, error => {
   // 错误提醒

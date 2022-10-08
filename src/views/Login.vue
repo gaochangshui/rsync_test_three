@@ -1,4 +1,5 @@
 <script>
+import axios from '@/http'
 export default {
   data() {
     return {
@@ -10,11 +11,14 @@ export default {
   methods: {
     login() {
         this.btntitle='Signing'
-        this.axios.post('/actionapi/AccountApi/Login', {
+        axios.post('/actionapi/AccountApi/Login', {
             UserCD: this.user,
             Password: this.password
         }).then(e => {
            if(e.data.UserCD){
+            let token  = e.data.Token
+            localStorage.setItem('token', token)
+            console.log(this.$route);
             if(this.$route.query.redirect || this.$route.redirectedFrom){
                 this.$router.push(this.$route.query.redirect?this.$route.query.redirect:this.$route.redirectedFrom.fullPath);
             }else{

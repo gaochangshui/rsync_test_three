@@ -901,6 +901,7 @@
 <script>
 import { log } from 'console';
 import { ElLoading ,ElMessage,ElMessageBox } from 'element-plus'
+import axios from '@/http'
 export default {
   name: 'GitlabManager',
   data() {
@@ -1288,8 +1289,6 @@ export default {
   },
   methods: {
     groupFilter(val,key){
-      console.log(val);
-      console.log(key);
       return val.text.indexOf(key.trim())!==-1
     },
     changeLocation(val){
@@ -1308,7 +1307,7 @@ export default {
           clearTimeout(this.timer);
         }
         this.timer= setTimeout(()=>{
-          this.axios
+          axios
         .get('/qcdapi/projects', {
           params: {
             filter:val.trim()
@@ -1320,7 +1319,7 @@ export default {
       },500);
     },
     async getBreach(val) {
-     await this.axios
+     await axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
           params: {
             pj_id: val
@@ -1350,7 +1349,7 @@ export default {
       }
     },
     async getSyncWarehouse(){
-     await this.axios
+     await axios
         .get('/actionapi/WarehouseApi/WarehouseSetting', {
           params: {
             pj_id: this.pjId
@@ -1469,7 +1468,7 @@ export default {
           }
         }
         this.branchValue+branchurl
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
             params: {
               pj_id: this.pjId,
@@ -1514,7 +1513,7 @@ export default {
             }else{
               this.tokenFlg=true
             }
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1539,7 +1538,7 @@ export default {
             }else{
               this.tokenFlg=true
             }
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {   
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1574,7 +1573,7 @@ export default {
               lock: true,
               text: '正在同期，请稍后',
               background: 'rgba(0, 0, 0, 0.7)',})
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1605,7 +1604,7 @@ export default {
               lock: true,
               text: '正在同期，请稍候',
               background: 'rgba(0, 0, 0, 0.7)',})
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1628,7 +1627,7 @@ export default {
       var addressArr=this.addressinput.split('.')
       var addressSuffix=addressArr[addressArr.length-1]
       if(addressSuffix==='git'){
-        this.axios({
+        axios({
           method:'get',
           url:'/actionapi/WarehouseApi/SyncWarehouse',
           timeout:600000,
@@ -1655,7 +1654,7 @@ export default {
         
     },
     copyUrl(val) {
-      this.axios
+      axios
         .get('/actionapi/WarehouseApi/ProjectURL', {
           params: {
             pj_id: val.id
@@ -1670,7 +1669,7 @@ export default {
     },
     scanResults(val) {
       if (this.operationFlg) {
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
               pj_id: val.id
@@ -1683,7 +1682,7 @@ export default {
       }
     },
     applyForRight(val) {
-      this.axios
+      axios
         .get('/actionapi/WarehouseApi/RequestForAccess', {
           params: {
             pj_id: val.id,
@@ -1697,7 +1696,7 @@ export default {
     },
     protectedBranch(val) {
       if (this.operationFlg) {
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
               pj_id: val.id
@@ -1810,7 +1809,7 @@ export default {
               lock: true,
               text: '创建仓库中，请稍后。。。',
               background: 'rgba(0, 0, 0, 0.7)',})
-        this.axios.post('/actionapi/projects/SetWareHouse',{
+        axios.post('/actionapi/projects/SetWareHouse',{
         name:this.form.name,
         location:this.form.group[this.form.group.length-1],
         description:this.form.description,
@@ -1850,12 +1849,12 @@ export default {
       })
     },
     getOptions(){
-      this.axios.
+      axios.
       get('/actionapi/projects/GetLocationGroup').then((e)=>{
         this.location=e.data.location
         this.optionsCopy=JSON.parse(e.data.group)
       })
-      this.axios.
+      axios.
       get('/actionapi/projects/GetIgnoreList').then((e)=>{
         this.gitignoreOpution=e.data
         this.form.gitignore=this.gitignoreOpution[0]
@@ -1865,7 +1864,7 @@ export default {
     async getTableData() {
       this.tableData = [];
       this.loadingtable=true
-      await this.axios
+      await axios
         .get('/actionapi/WarehouseApi/' + this.warehouseType, {
           params: {
             pj_name: this.input.trim(),
@@ -1909,7 +1908,7 @@ export default {
         ' 条';
     },
     async getIndexNum() {
-      await this.axios
+      await axios
         .get('/actionapi/WarehouseApi/IndexNum', {
           params: {
             user_cd: this.usercd

@@ -684,6 +684,7 @@
 <script>
 import { log } from 'console';
 import { ElLoading } from 'element-plus'
+import axios from '@/http'
 export default {
   name: 'GitlabManager',
   data() {
@@ -988,7 +989,7 @@ export default {
           clearTimeout(this.timer);
         }
         this.timer= setTimeout(()=>{
-          this.axios
+          axios
         .get('/api/projects', {
           params: {
             filter:val.trim()
@@ -1000,7 +1001,7 @@ export default {
       },500);
     },
     async getBreach(val) {
-     await this.axios
+     await axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
           params: {
             pj_id: val
@@ -1030,7 +1031,7 @@ export default {
       }
     },
     async getSyncWarehouse(){
-     await this.axios
+     await axios
         .get('/actionapi/WarehouseApi/WarehouseSetting', {
           params: {
             pj_id: this.pjId
@@ -1133,7 +1134,7 @@ export default {
           }
         }
         this.branchValue+branchurl
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
             params: {
               pj_id: this.pjId,
@@ -1178,7 +1179,7 @@ export default {
             }else{
               this.tokenFlg=true
             }
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1203,7 +1204,7 @@ export default {
             }else{
               this.tokenFlg=true
             }
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {   
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1238,7 +1239,7 @@ export default {
               lock: true,
               text: '正在同期，请稍后',
               background: 'rgba(0, 0, 0, 0.7)',})
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1269,7 +1270,7 @@ export default {
               lock: true,
               text: '正在同期，请稍候',
               background: 'rgba(0, 0, 0, 0.7)',})
-             this.axios
+             axios
           .post('/actionapi/WarehouseApi/SaveWarehouseSetting', {
               pj_id: this.pjId,
               user_cd: this.usercd,
@@ -1292,7 +1293,7 @@ export default {
       var addressArr=this.addressinput.split('.')
       var addressSuffix=addressArr[addressArr.length-1]
       if(addressSuffix==='git'){
-        this.axios({
+        axios({
           method:'get',
           url:'/actionapi/WarehouseApi/SyncWarehouse',
           timeout:600000,
@@ -1319,7 +1320,7 @@ export default {
         
     },
     copyUrl(val) {
-      this.axios
+      axios
         .get('/actionapi/WarehouseApi/ProjectURL', {
           params: {
             pj_id: val.id
@@ -1334,7 +1335,7 @@ export default {
     },
     scanResults(val) {
       if (this.operationFlg) {
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
               pj_id: val.id
@@ -1347,7 +1348,7 @@ export default {
       }
     },
     applyForRight(val) {
-      this.axios
+      axios
         .get('/actionapi/WarehouseApi/RequestForAccess', {
           params: {
             pj_id: val.id,
@@ -1361,7 +1362,7 @@ export default {
     },
     protectedBranch(val) {
       if (this.operationFlg) {
-        this.axios
+        axios
           .get('/actionapi/WarehouseApi/ProjectURL', {
             params: {
               pj_id: val.id
@@ -1445,7 +1446,7 @@ export default {
     async getTableData() {
       this.loadingtable=true
       this.tableData = [];
-      await this.axios
+      await axios
         .get('/actionapi/QcdApi/QCDProjectDetail', {
           params: {
             id:this.$route.query.id,

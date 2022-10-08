@@ -679,6 +679,7 @@
 <script>
 import { getProjectMandays } from "@/api/qcd";
 import { ElLoading , ElMessageBox , ElMessage } from 'element-plus'
+import axios from '@/http'
 export default {
   name: 'Dashboard',
   data() {
@@ -1012,7 +1013,7 @@ export default {
       }
     },
     changeSwitch(){
-      this.axios.post('/actionapi/QcdApi/QCDProjectIsUseGitlab',{
+      axios.post('/actionapi/QcdApi/QCDProjectIsUseGitlab',{
         agreement_cd:this.selectid,
         user_id:this.usercd,
         is_use:this.subjectSwitch
@@ -1121,7 +1122,7 @@ export default {
     },
     openReserveTime(val){
       this.exoendloading=true;
-      this.axios.get('/api/taken_hours/ProjectMandays',{
+      axios.get('/api/taken_hours/ProjectMandays',{
         params:{
           project_cd:val.agreement_cd
         }
@@ -1188,7 +1189,7 @@ export default {
       if(!val.branchoptions){
         val.branchoptions=[]
         val.branchchangeurl=[]
-        this.axios
+        axios
         .get('/actionapi/WarehouseApi/ProjectBranches',{
           params:{
             pj_id:val.id
@@ -1219,7 +1220,7 @@ export default {
     },
     setWarehouse(){
       if(!this.wloding){
-        this.axios
+        axios
         .post('/actionapi/QcdApi/QCDProjectSetting',{
             id:this.selectid,
             userId:this.usercd,
@@ -1270,7 +1271,7 @@ export default {
               lock: true,
               text: '发送邮件中，请稍候',
               background: 'rgba(0, 0, 0, 0.7)',})
-      this.axios
+      axios
       .post('/actionapi/QcdApi/QCDCodeReview',{
           id:this.pjId,
           ccMail:maillStr.join(),
@@ -1336,7 +1337,7 @@ export default {
       
     },
     async getReviewinfor(val){
-      await this.axios
+      await axios
         .get('/actionapi/QcdApi/QCDProjectInfoDetail',{
           params:{
             userId:this.usercd,
@@ -1361,7 +1362,7 @@ export default {
     .catch(() => {
     })
       }else{
-        this.axios.get('/actionapi/QcdApi/GetUserEmail',{
+        axios.get('/actionapi/QcdApi/GetUserEmail',{
           params:{
             userid:this.usercd,
             id:val
@@ -1393,7 +1394,7 @@ export default {
       this.selected = this.checked1;
     },
     async getsubjected(val){
-     await this.axios
+     await axios
         .get('/actionapi/QcdApi/QCDProjectInfoDetail',{
           params:{
             id:val,
@@ -1418,7 +1419,7 @@ export default {
         })
     },
     async getsubject(){
-      await this.axios
+      await axios
         .get('/actionapi/QcdApi/GitlabProjectInfo',{
           params:{
             userid:this.usercd,
@@ -1477,7 +1478,7 @@ export default {
     },
    async getIndexNum(){
     this.numloading=true;
-     await this.axios
+     await axios
         .get('/actionapi/QcdApi/QCDProjectCount',{
           params:{
             userId:this.usercd
@@ -1497,7 +1498,7 @@ export default {
     this.$route.query.flag++
   }
       this.loadingtable=true;
-      await this.axios
+      await axios
         .get('/actionapi/QcdApi/QCDProjectShow', {
           params: {
             type: this.leftType,

@@ -93,6 +93,7 @@ export default {
           document.cookie=keys[i]+'=0;path=/;expires='+new Date(0).toUTCString();
         }
       }
+      localStorage.clear('token')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     }
   },
