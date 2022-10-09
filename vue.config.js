@@ -60,7 +60,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/qcdapi': {
-        target: 'http://172.17.1.22',
+        target: 'http://172.17.1.9:8095',
         changeOrigin: true,
         pathRewrite: {
           '^/qcdapi': '/api'
@@ -81,7 +81,7 @@ module.exports = defineConfig({
         }
       },
       "/api": {
-        target: "http://172.17.1.22",
+        target: "http://172.17.1.9:8095",
         changeOrigin: true,
         ws: true,//websocket支持
         secure: false,

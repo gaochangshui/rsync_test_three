@@ -18,7 +18,6 @@ export default {
            if(e.data.UserCD){
             let token  = e.data.Token
             localStorage.setItem('token', token)
-            console.log(this.$route);
             if(this.$route.query.redirect || this.$route.redirectedFrom){
                 this.$router.push(this.$route.query.redirect?this.$route.query.redirect:this.$route.redirectedFrom.fullPath);
             }else{

@@ -1779,10 +1779,6 @@ color: red;
   height: 30px;
   cursor: pointer;
 }
-.atooltip-div:hover {
-  background: #f3f2f2;
-  cursor: pointer;
-}
 .atooltip-div {
   padding-left: 5px;
   padding-right: 5px;
@@ -1792,6 +1788,10 @@ color: red;
   color: #4b4b4b;
   height: 30px;
   border-radius: 5px;
+}
+.atooltip-div:hover {
+  background: #f3f2f2;
+  cursor: pointer;
 }
 .atooltip {
   padding: 2px !important;

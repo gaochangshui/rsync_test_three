@@ -1,7 +1,6 @@
-import { Loading } from '@element-plus/icons';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ElLoading,ElMessage } from 'element-plus';
-import router from './router'
+import axios from 'axios';
+import { ElMessage } from 'element-plus';
+import router from './router';
 
 // let loading: any;
 // const outList:string[] = ["/qcdapi/projectlist","/apiv1/employeelist","/qcdapi/EmployeeMandays"];
@@ -27,8 +26,10 @@ import router from './router'
 
 // 请求拦截
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) config.headers.token = token
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.token = token;
+  }
 // 加载
 //  if(!(outList.indexOf(config)>-1)){
 //     startLoading();
@@ -46,15 +47,15 @@ axios.interceptors.request.use((config) => {
 //   }
   return config;
 },(error) => {
-  return Promise.reject(error)
-})
+  return Promise.reject(error);
+});
 
 
 // 响应拦截
 axios.interceptors.response.use((response) => {
   if(response.data.Success==false){
-    router.replace({ name: 'login' })
-    localStorage.clear('token')
+    router.replace({ name: 'login' });
+    localStorage.clear('token');
     
   }
   return response;
@@ -64,10 +65,10 @@ axios.interceptors.response.use((response) => {
     type: 'error',
     showClose: true,
     dangerouslyUseHTMLString: true,
-    message: "データ抽出失敗しました",
-  })
+    message: 'データ抽出失敗しました'
+  });
 
   return Promise.reject(error);
-})
+});
 
 export default axios;
