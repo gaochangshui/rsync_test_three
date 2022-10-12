@@ -1061,6 +1061,7 @@ export default {
         });
     },
     review(val) {
+      if (this.operationFlg) {
       ElMessageBox.confirm(
     '请到项目的菜单中申请评审，是否跳转到项目页面?',
     '提示',
@@ -1080,6 +1081,7 @@ export default {
       });
     }).catch(() => {
     })
+  }
     },
    async SyncWarehouse(val) {
       this.addressinput = '';

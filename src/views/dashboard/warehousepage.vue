@@ -446,148 +446,6 @@
       </div>
     </div>
     <el-drawer
-      v-model="reviewDrawer"
-      direction="rtl"
-      size="30%"
-      :show-close="false"
-      class="reviewDrawer"
-    >
-      <template #title>
-        <h2>技术委员会评审</h2>
-      </template>
-      <span style="line-height: 40px"
-        >分支<span style="color: red; line-height: 40px">*</span></span
-      >
-      <el-select v-model="branchValue" placeholder="请选择" style="width: 100%">
-        <el-option
-          v-for="(item, index) in branchoptions"
-          :key="index"
-          :label="item.name"
-          :value="item.name"
-        >
-        </el-option>
-      </el-select>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px"
-          >主要语言<span style="color: red; line-height: 40px">*</span></span
-        >
-        <el-select
-          v-model="languageValue"
-          multiple
-          placeholder="请选择主要语言（多选）"
-          style="width: 100%"
-        >
-          <el-option-group
-            v-for="group in languageoptions"
-            :key="group.label"
-            :label="group.label"
-          >
-            <el-option
-              v-for="item in group.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-option-group>
-        </el-select>
-      </div>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px"
-          >数据库操作<span style="color: red; line-height: 40px">*</span></span
-        >
-        <el-select
-          v-model="databaseValue"
-          placeholder="请选择"
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in databaseoptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </div>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px"
-          >评审信息<span style="color: red; line-height: 40px">*</span></span
-        >
-        <el-select
-          v-model="reviewRadio"
-          placeholder="请选择评审信息（多选）"
-          multiple
-          style="width: 100%"
-        >
-          <el-option-group
-            v-for="group in reviewOptions"
-            :key="group.label"
-            :label="group.label"
-          >
-            <el-option
-              v-for="item in group.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-option-group>
-        </el-select>
-      </div>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px"
-          >期望完成日期<span style="color: red; line-height: 40px"
-            >*</span
-          ></span
-        >
-        <el-date-picker
-          :disabled-date="disabledDate"
-          v-model="completeDate"
-          type="date"
-          placeholder="选择日期"
-          style="width: 100%"
-          value-format="YYYY-MM-DD"
-        >
-        </el-date-picker>
-      </div>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px">
-        项目<span style="color: red; line-height: 40px"
-            >*</span
-          ></span>
-        <el-select v-model="projectvalue"
-        style="width: 100%;"
-         filterable placeholder="请选择"
-         :filter-method="(value)=>projectquery(value)">
-    <el-option
-    class="projectStyle"
-      v-for="item in projectOptions"
-      :key="item.ProjectCode"
-      :label="item.ProjectCode"
-      :value="[item.ProjectCode+' '+item.ProjectName]"
-    >
-    <div style="line-height: 15px;color: black;font-weight:normal;">{{item.ProjectCode}}</div>
-    <span style="color: black;font-weight:normal;">{{item.ProjectName}}</span>
-    </el-option>
-  </el-select>
-      </div>
-      <div style="margin-top: 20px">
-        <span style="line-height: 40px">备注</span>
-        <el-input
-          v-model="noteText"
-          :rows="5"
-          type="textarea"
-          placeholder="请输入其他评审需求"
-          style="width: 100%; float: right"
-        />
-      </div>
-      <template #footer>
-        <el-button size="large" @click="closeDrawer">取消</el-button>
-        <el-button type="primary" size="large" @click="reWarehouse"
-          >确定</el-button
-        >
-      </template>
-    </el-drawer>
-    <el-drawer
       v-model="synchronousDrawer"
       direction="rtl"
       size="30%"
@@ -683,32 +541,21 @@
 
 <script>
 import { log } from 'console';
-import { ElLoading } from 'element-plus'
+import { ElLoading , ElMessageBox } from 'element-plus'
 import axios from '@/http'
 export default {
   name: 'GitlabManager',
   data() {
     return {
       name: 'gitlabmanager',
-      disabledDate(time) {
-        var timeNow = Date.now();
-        var before = timeNow - 24 * 60 * 60 * 1000;
-        return time.getTime() < before;
-      },
       headtitle: '',
-      languageValue: '',
       loading:true,
       loadingtable:true,
-      databaseValue: '',
-      completeDate: '',
-      reviewRadio: '',
-      noteText: '',
       props: { multiple: true },
       username: '',
       userinput: '',
       tokeninput:'',
       usercd: '',
-      reviewDrawer: false,
       synchronousDrawer: false,
       branchValue: [],
       addressValue: '',
@@ -720,8 +567,6 @@ export default {
       pjUrl: '',
       pjId: '',
       branchoptions: [],
-      projectOptions:[],
-      projectvalue:'',
       addressoptions: [
         {
           value: 'http://10.2.1.117/',
@@ -730,178 +575,6 @@ export default {
         {
           value: 'https://github.com/retail-ai-inc/',
           label: 'https://github.com/retail-ai-inc/'
-        }
-      ],
-      databaseoptions: [
-        {
-          value: '有',
-          label: '有'
-        },
-        {
-          value: '无',
-          label: '无'
-        }
-      ],
-      languageoptions: [
-        {
-          label: '前端语言',
-          options: [
-            {
-              value: 'HTML',
-              label: 'HTML'
-            },
-            {
-              value: 'JavaScript',
-              label: 'JavaScript'
-            },
-            {
-              value: 'CSS',
-              label: 'CSS'
-            },
-            {
-              value: 'TypeScript',
-              label: 'TypeScript'
-            }
-          ]
-        },
-        {
-          label: '后端语言',
-          options: [
-            {
-              value: 'XML',
-              label: 'XML'
-            },
-            {
-              value: 'Java',
-              label: 'Java'
-            },
-            {
-              value: 'SMART Scripts',
-              label: 'SMART Scripts'
-            },
-            {
-              value: 'Python',
-              label: 'Python'
-            },
-            {
-              value: 'Go',
-              label: 'Go'
-            },
-            {
-              value: 'Kotlin',
-              label: 'Kotlin'
-            },
-            {
-              value: 'JSP',
-              label: 'JSP'
-            },
-            {
-              value: 'Ruby',
-              label: 'Ruby'
-            },
-            {
-              value: 'PHP',
-              label: 'PHP'
-            }
-          ]
-        }
-      ],
-      reviewOptions: [
-        {
-          label: 'RESTful设计',
-          options: [
-            {
-              value: '代码是否合理',
-              label: '代码是否合理'
-            },
-            {
-              value: '面向对象',
-              label: '面向对象'
-            },
-            {
-              value: '简洁架构',
-              label: '简洁架构'
-            },
-            {
-              value: '代码原则',
-              label: '代码原则'
-            },
-            {
-              value: '设计模式',
-              label: '设计模式'
-            }
-          ]
-        },
-        {
-          label: '代码安全',
-          options: [
-            {
-              value: '代码注入',
-              label: '代码注入'
-            },
-            {
-              value: '敏感数据',
-              label: '敏感数据'
-            },
-            {
-              value: 'CSRF攻击',
-              label: 'CSRF攻击'
-            },
-            {
-              value: '代码性能',
-              label: '代码性能'
-            },
-            {
-              value: '异常处理',
-              label: '异常处理'
-            }
-          ]
-        },
-        {
-          label: '代码重复',
-          options: [
-            {
-              value: '可重用性',
-              label: '可重用性'
-            },
-            {
-              value: '核心代码的注释量',
-              label: '核心代码的注释量'
-            },
-            {
-              value: '复杂表达式',
-              label: '复杂表达式'
-            },
-            {
-              value: '资源释放',
-              label: '资源释放'
-            },
-            {
-              value: '内存泄漏',
-              label: '内存泄漏'
-            }
-          ]
-        },
-        {
-          label: '代码',
-          options: [
-            {
-              value: '可扩展性',
-              label: '可扩展性'
-            },
-            {
-              value: '配置',
-              label: '配置'
-            },
-            {
-              value: '日志处理',
-              label: '日志处理'
-            },
-            {
-              value: '第三方组件使用合理性',
-              label: '第三方组件使用合理性'
-            }
-          ]
         }
       ],
       tableData: [],
@@ -929,15 +602,6 @@ export default {
         this.userFlag = false;
         this.userinput = '';
       }
-    },
-    reviewDrawer() {
-      this.branchValue = '';
-      this.databaseValue = '';
-      this.languageValue = '';
-      this.completeDate = '';
-      this.reviewRadio = '';
-      this.noteText = '';
-      this.projectvalue=''
     },
     synchronousDrawer() {
       this.branchValue = '';
@@ -984,22 +648,6 @@ export default {
         }
       });
     },
-    projectquery(val){
-      if(this.timer){
-          clearTimeout(this.timer);
-        }
-        this.timer= setTimeout(()=>{
-          axios
-        .get('/api/projects', {
-          params: {
-            filter:val.trim()
-          },
-        })
-        .then((e) => {
-          this.projectOptions=e.data
-        });
-      },500);
-    },
     async getBreach(val) {
      await axios
         .get('/actionapi/WarehouseApi/ProjectBranches', {
@@ -1013,12 +661,26 @@ export default {
     },
     review(val) {
       if (this.operationFlg) {
-        this.reviewDrawer = true;
-        this.getBreach(val.id);
-        this.pjId = val.id;
-        val.openFlag = false;
-       this.projectquery('')
-      }
+      ElMessageBox.confirm(
+    '请到项目的菜单中申请评审，是否跳转到项目页面?',
+    '提示',
+    {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      this.$router.push({
+        name: '项目',
+        query:{
+          indexType:3,
+          indexNum:'1'
+        }
+      });
+    }).catch(() => {
+    })
+  }
     },
    async SyncWarehouse(val) {
       this.addressinput = '';
@@ -1098,61 +760,6 @@ export default {
         break;
       }
       return res;
-    },
-    closeDrawer() {
-      this.reviewDrawer = false;
-      
-    },
-    reWarehouse() {
-      var mainlan = '';
-      if (this.languageValue != '') {
-        mainlan = this.languageValue[0];
-      }
-      for (let i = 1; i < this.languageValue.length; i++) {
-        mainlan = mainlan + ',' + this.languageValue[i];
-      }
-      var reviewinfo = '';
-      if (this.reviewRadio != '') {
-        reviewinfo = this.reviewRadio[0];
-      }
-      for (let i = 1; i < this.reviewRadio.length; i++) {
-        reviewinfo = reviewinfo + ',' + this.reviewRadio[i];
-      }
-      if (
-        this.branchValue === '' ||
-        mainlan === '' ||
-        this.databaseValue === '' ||
-        reviewinfo === '' ||
-        this.completeDate === ''||
-        this.projectvalue === ''
-      ) {
-        this.$message.error('您还有必填信息未填写！！！');
-      } else {
-        for(let i=0;i<this.branchoptions.length;i++){
-          if(this.branchoptions[i].name===this.branchValue){
-            var branchurl=this.branchoptions[i].web_url
-          }
-        }
-        this.branchValue+branchurl
-        axios
-          .get('/actionapi/WarehouseApi/RequestTechnicalCommitteeReview', {
-            params: {
-              pj_id: this.pjId,
-              user_cd: this.usercd,
-              branchs: this.branchValue+'('+branchurl+')',
-              main_lan: mainlan,
-              data_base: this.databaseValue,
-              review_info: reviewinfo,
-              desire_date: this.completeDate,
-              comment: this.noteText,
-              qcd_project:this.projectvalue[0]
-            },
-          })
-          .then(() => {
-            this.$message.success('申请评审邮件已发出');
-          });
-        this.reviewDrawer = false;
-      }
     },
     branchString(){
       var branchstring='';
