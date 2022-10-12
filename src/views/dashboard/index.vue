@@ -719,7 +719,7 @@ export default {
       memberSelect:[],
       memberOpution:[],
       copyMemberOpution:[],
-      leftNum:'',
+      leftNum:'0',
       databaseoptions: [
         {
           value: '有',
