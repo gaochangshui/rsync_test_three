@@ -23,6 +23,16 @@ export default {
             }else{
                 this.$router.push('/project');
             }
+            let date = new Date();
+            date.setTime(date.getTime()+(Number(e.data.Expires)*1000*60));
+            document.cookie = "LoginedUserName="+e.data.LoginedUserName+";expires="+date.toGMTString()+";"
+            document.cookie = "AvatarUrl="+e.data.AvatarUrl+";expires="+date.toGMTString()+";"
+            document.cookie = "ClientIP="+e.data.ClientIP+";expires="+date.toGMTString()+";"
+            document.cookie = "LoginedUser="+e.data.LoginedUser+";expires="+date.toGMTString()+";"
+            document.cookie = "LoginedUserAvatar="+e.data.LoginedUserAvatar+";expires="+date.toGMTString()+";"
+            document.cookie = "LoginedUserWeb="+e.data.LoginedUserWeb+";expires="+date.toGMTString()+";"
+            document.cookie = "UserCD="+e.data.UserCD+";expires="+date.toGMTString()+";"
+            document.cookie = "UserRole="+e.data.UserRole+";expires="+date.toGMTString()+";"
            }else{
                this.$message.error('账号或密码错误');
            }

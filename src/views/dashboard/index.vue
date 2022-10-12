@@ -5,7 +5,7 @@
         <svg-icon width="15" height="15" icon-class="four" />
         <span class="dashboard-left-headlab">{{ labs[0].name }}</span>
       </div>
-      <el-menu default-active="0" class="el-menu-vertical-demo">
+      <el-menu :default-active="leftNum" class="el-menu-vertical-demo">
         <el-menu-item
           v-for="(labchildren, p) in labs[0].children"
           :key="p"
@@ -719,6 +719,7 @@ export default {
       memberSelect:[],
       memberOpution:[],
       copyMemberOpution:[],
+      leftNum:'',
       databaseoptions: [
         {
           value: '有',
@@ -1555,6 +1556,10 @@ export default {
      }
   },
  async created() {
+  if(this.$route.query.indexNum){
+      this.leftType = this.$route.query.indexType
+      this.leftNum =this.$route.query.indexNum
+    } 
    await this.getCookie();
    await this.getTableData()
    await this.getIndexNum()

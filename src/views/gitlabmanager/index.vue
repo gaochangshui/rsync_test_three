@@ -1331,13 +1331,32 @@ export default {
         });
     },
     review(val) {
-      if (this.operationFlg) {
-        this.reviewDrawer = true;
-        this.getBreach(val.id);
-        this.pjId = val.id;
-        val.openFlag = false;
-       this.projectquery('')
-      }
+      // if (this.operationFlg) {
+      //   this.reviewDrawer = true;
+      //   this.getBreach(val.id);
+      //   this.pjId = val.id;
+      //   val.openFlag = false;
+      //  this.projectquery('')
+      // }
+      ElMessageBox.confirm(
+    '请到项目的菜单中申请评审，是否跳转到项目页面?',
+    '提示',
+    {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      this.$router.push({
+        name: '项目',
+        query:{
+          indexType:3,
+          indexNum:'1'
+        }
+      });
+    }).catch(() => {
+    })
     },
    async SyncWarehouse(val) {
       this.addressinput = '';
