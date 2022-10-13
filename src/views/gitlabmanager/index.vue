@@ -1622,6 +1622,9 @@ export default {
 </script>
 
 <style lang="less">
+.el-menu-item:hover{
+  background-color: #E1E2E5 !important;
+}
 .membericon0 {
   width: 20px;
   height: 20px;

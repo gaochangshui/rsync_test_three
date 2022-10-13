@@ -45,7 +45,7 @@ export default {
   width: 10px;
   height: 10em;
 }
-.code,.project{
+.code,.project,.statistical{
   position:absolute;
   top:24px;
   left:23px;
