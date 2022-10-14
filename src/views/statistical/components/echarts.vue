@@ -1,5 +1,5 @@
 <template>
-    <div style="height:30vh">
+    <div style="height:30vh; margin-top: 10px;">
         <div id="projectEcharts" v-show="statisticalType==='project'"></div>
         <div id="memberEcharts" v-show="statisticalType==='member'"></div>
     </div>

@@ -33,7 +33,7 @@
             <Echarts :statisticalType="headselect.type"></Echarts>
         </div>
         <div class="tableBox">
-          <InforTable></InforTable>
+          <InforTable :statisticalType="headselect.type"></InforTable>
         </div>
     </div>
     </div>
