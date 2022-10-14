@@ -38,12 +38,13 @@ const routes = [
       //   name: '资源包管理',
       //   component: () => import('@/views/package/index.vue'),
       //   meta: { title: '资源包管理', icon: 'package' },
-      },{
-        path: 'statistical',
-        name: '统计',
-        component: () => import('@/views/statistical/index.vue'),
-        meta: { title: '代码仓库、评审、配置', icon: 'statistical',name:'统计' }
       },
+      // {
+      //   path: 'statistical',
+      //   name: '统计',
+      //   component: () => import('@/views/statistical/index.vue'),
+      //   meta: { title: '代码仓库、评审、配置', icon: 'statistical',name:'统计' }
+      // },
       {
         path: 'Scheduled',
         component: () => import('@/views/mandaysreport/Scheduled.vue'),

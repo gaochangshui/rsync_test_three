@@ -42,14 +42,22 @@
         <div class="gitlabmanager-right-search-left">{{ topTitle }}</div>
         <div
           class="gitlabmanager-right-search-right"
-          v-show="topTitle === '所有仓库' || topTitle === '我参与的'"
         >
+        <el-button type="primary"
+           style="font-size:16px;
+           height:40px;
+           margin-right: 18px;"
+           @click="getOptions">
+            <span style="margin-right:5px;font-size:26px">+</span>
+            新建仓库
+          </el-button>
           <el-input
             v-model="input"
             placeholder="搜索分组、仓库名称和描述"
             size="large"
             style="width: 300px; margin-bottom: 12px"
             maxlength="100"
+            v-show="topTitle === '所有仓库' || topTitle === '我参与的'"
             @keyup.enter="selectGitLab"
           >
             <template #suffix>
@@ -87,15 +95,6 @@
               </svg>
             </template>
           </el-input>
-          <el-button type="primary"
-           style="font-size:16px;
-           height:40px;
-           margin-left: 28px;"
-           v-show="topTitle === '所有仓库' "
-           @click="getOptions">
-            <span style="margin-right:5px;font-size:26px">+</span>
-            新建仓库
-          </el-button>
         </div>
       </div>
       <div class="formDialog" v-loading="formloading">
