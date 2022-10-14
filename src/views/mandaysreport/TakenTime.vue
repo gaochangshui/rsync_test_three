@@ -69,21 +69,35 @@
             size="large"
             >查询</el-button
           >
-          <el-tooltip
+          <el-popconfirm
+            confirm-button-text="下载全部"
+            cancel-button-text="下载本页"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            title="请选择下载模式"
+            cancel-button-type="primary"
+            @cancel="exportTable()"
+            @confirm="allExportTable()"
+          >
+            <template #reference>
+              <!-- <el-tooltip
             class="item"
             effect="light"
             content="只下载页面上显示的数据"
             placement="top"
             v-if="showDownload"
-          >
+          > -->
             <el-button
               type="primary"
               :loading="downloadLoading"
-              @click="exportTable()"
+              v-if="showDownload"
             >
               <el-icon><Download /></el-icon>
             </el-button>
-          </el-tooltip>
+            <!-- </el-tooltip> -->
+            </template>
+          </el-popconfirm>
+          
 </el-form-item>
       </div>
      </el-form>
@@ -400,12 +414,13 @@ import { ElMessage } from "element-plus";
 import { exportTable2Excel } from "@/utils/excel";
 import toDecimal from "@/utils/index";
 import { defineComponent, ref, onMounted } from "vue";
-import { Download } from "@element-plus/icons";
+import { Download , InfoFilled } from "@element-plus/icons";
 import noData from "@/assets/images/noData.png"
 import { ElLoading } from 'element-plus'
 export default defineComponent({
   components: {
-    Download
+    Download,
+    InfoFilled
   },
   setup() {
     const projectResult = ref([]);
@@ -428,6 +443,7 @@ export default defineComponent({
     const tableId = ref(0);
     const tableName = ref("");
     const loading = ref(false);
+    const allExportFlag = ref(false);
     const route = useRoute();
     const employeeFilter = (val:any,item:any)=>{
       return val.text.indexOf(item.trim())!==-1  
@@ -466,6 +482,11 @@ export default defineComponent({
         projectResult.value = [];
       }
     };
+    const allExportTable = async ()=>{
+      allExportFlag.value=true
+       handleSizeChange(total.value)
+      // handleSizeChange(100)
+    }
     const exportTable = () => {
       if (tableId.value !== 0) {
         downloadLoading.value = true;
@@ -488,7 +509,6 @@ export default defineComponent({
       };
       getTakenHours(params).then((res) => {
         //showDownload.value = false;
-        loading.close()
         // if (res.data.HoursTotal === 0) {
         //   ElMessage({
         //     type: "warning",
@@ -548,6 +568,20 @@ export default defineComponent({
             ManHours: res.man_hours,
           };
         });
+        if(allExportFlag.value){
+          setTimeout(() => {
+          exportTable()
+          handleSizeChange(100)
+          loading.close()
+        }, 1000);
+          allExportFlag.value=false
+        }else{
+          loading.close()
+        }
+        // setTimeout(() => {
+        //   exportTable()
+        //   handleSizeChange(100)
+        // }, 1000);
       }).catch(()=>{
         loading.close()
       });
@@ -620,6 +654,7 @@ export default defineComponent({
       handleSizeChange,
       exportTable,
       changeTab,
+      allExportTable,
       // tableCellClass,
       props: { multiple: true },
       links,
