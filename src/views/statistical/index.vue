@@ -30,7 +30,7 @@
         </div>
       </div>
         <div class="echartsBox">
-            <Echarts></Echarts>
+            <Echarts :statisticalType="headselect.type"></Echarts>
         </div>
         <div class="tableBox">
           <InforTable></InforTable>
