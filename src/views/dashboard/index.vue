@@ -1261,7 +1261,7 @@ export default {
         this.$message.error('您还有未填写完成时间或评审信息');
         return
       }
-      let maillArr=this.memberOpution.filter((item)=>{
+      let maillArr=this.copyMemberOpution.filter((item)=>{
         return this.memberSelect.indexOf(item.username)!==-1 
       })
       var maillStr=[]

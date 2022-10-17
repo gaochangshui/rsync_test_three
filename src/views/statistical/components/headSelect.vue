@@ -184,7 +184,7 @@ export default defineComponent({
         })
         memberOptions.value=arr
       }else{
-        memberOptions=copyMemberOputio
+        memberOptions.value=copyMemberOputio.value
       }
     };
         getGroupOptions();
