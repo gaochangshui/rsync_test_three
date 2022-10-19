@@ -1,5 +1,5 @@
 <template>
-    <div style=" margin-top: 20px;">
+    <div style=" margin-top: 20px;height: 300px;">
         <div id="projectEcharts" v-show="statisticalType==='project' && warehouseShow"></div>
         <div id="memberEcharts" v-show="statisticalType==='member' && memberShow"></div> 
     </div>
@@ -8,6 +8,7 @@
 import { defineComponent, ref , onMounted,watch } from "vue";
 import * as echarts from 'echarts'
 import { log } from "console";
+import { auto } from "@popperjs/core";
 export default defineComponent({
     name:'echarts',
     props:{
@@ -67,7 +68,7 @@ export default defineComponent({
   grid: {
     left: '3%',
     right: '4%',
-    bottom: '3%',
+    bottom: '17%',
     containLabel: true
   },
   toolbox: {
@@ -75,10 +76,21 @@ export default defineComponent({
       saveAsImage: {}
     }
   },
+  dataZoom: [
+  {
+            //默认为滚动条型数据区域缩放组件
+            show: true,
+            start: 0,
+            end: 60
+        },
+  ],
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: props.warehouseList.xList
+    data: props.warehouseList.xList,
+    axisLabel: {//interval设置成 0 强制显示所有标签     
+
+ },
   },
   yAxis: {
     type: 'value'
@@ -113,7 +125,7 @@ export default defineComponent({
   grid: {
     left: '3%',
     right: '4%',
-    bottom: '3%',
+    bottom: '17%',
     containLabel: true
   },
   toolbox: {
@@ -129,6 +141,14 @@ export default defineComponent({
   yAxis: {
     type: 'value'
   },
+  dataZoom: [
+  {
+            //默认为滚动条型数据区域缩放组件
+            show: true,
+            start: 0,
+            end: 60
+        },
+  ],
   series: props.memberList.yList
         })
       }

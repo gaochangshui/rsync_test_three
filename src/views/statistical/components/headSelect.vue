@@ -42,7 +42,7 @@
                     />
                 </el-select>
             </div>    
-            <el-button type="primary" @click="warehouseSelect()">查询</el-button>
+            <el-button type="primary" @click="contentSelect('p')">查询</el-button>
         </div>
         <div v-show="statisticalType==='member'" class="memberHead">
             <div>
@@ -66,7 +66,7 @@
                     />
                 </el-select>
             </div>
-            <el-button type="primary" @click="memberSelect()">查询</el-button>  
+            <el-button type="primary" @click="contentSelect('u')">查询</el-button>  
         </div>
     </div>
 </template>
@@ -120,11 +120,13 @@ export default defineComponent({
                 warehouseValue.value=[]
             })
         };
-        const warehouseSelect = ()=>{
-            cxt.emit('warehouseSelect',warehouseValue.value)
-        };
-        const memberSelect = ()=>{
-            cxt.emit('memberSelect',memberValue.value)
+        const contentSelect = (val)=>{
+            if(props.statisticalType==='project'){
+                cxt.emit('contentSelect',warehouseValue.value,val)
+            }else{
+                cxt.emit('contentSelect',memberValue.value,val)
+            }
+            
         };
         const  memberFilter =(val)=>{
       if(val){
@@ -159,8 +161,7 @@ export default defineComponent({
             memberOptions,
             getprojectOptions,
             getWarehouseOptions,
-            warehouseSelect,
-            memberSelect,
+            contentSelect,
             memberFilter,
             props1
         }

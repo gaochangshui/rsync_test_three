@@ -30,9 +30,27 @@
             :statisticalType="headselect.type" 
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
-            @warehouseSelect="warehouseSelect" 
-            @memberSelect="memberSelect"></HeadSelect>
+            @contentSelect="contentSelect"></HeadSelect>
         </div>
+      </div>
+      <div>
+        <el-select v-model="selectType" style="float:right;margin-right:20px">
+          <el-option
+          value="commit次数"
+          label="commit次数"
+          >
+          </el-option>
+          <el-option
+          value="添加行数"
+          label="添加行数"
+          >
+          </el-option>
+          <el-option
+          value="删除行数"
+          label="删除行数"
+          >
+          </el-option>
+        </el-select>
       </div>
         <div class="echartsBox">
             <Echarts 
@@ -47,17 +65,19 @@
         </div>
         <div class="cardBox">
           <el-space wrap v-show="headselect.type==='project'">
-            <div v-for="o in 10" :key="o">
+            <div v-for="(item,index) in warehouseCardList" :key="item.id">
               <WarehouseCard 
-              :echartsId="o"
-              :warehouseShow="warehouseShow"></WarehouseCard>
+              :echartsId="index+1"
+              :warehouseShow="warehouseShow"
+              :warehouseCardData="item"></WarehouseCard>
             </div>
           </el-space>   
           <el-space wrap v-show="headselect.type==='member'">
-            <div v-for="o in 10" :key="o">
+            <div v-for="(item,index) in memberCardList" :key="index">
               <MemberCard 
-              :echartsId="o"
-              :memberShow="memberShow"></MemberCard>
+              :echartsId="index+1"
+              :memberShow="memberShow"
+              :memberCardData="item"></MemberCard>
             </div>
           </el-space>   
         </div>
@@ -81,10 +101,17 @@ export default defineComponent({
 },
   name: 'Statistical',
   setup(){
+    const selectType=ref('commit次数')
     const warehouseShow=ref(false);
     const memberShow=ref(false);
     const name = ref('statistical');
     const topTitle = ref('仓库统计');
+    let warehouseData=[];
+    let warehouseCardData=[];
+    let memberData=[];
+    let memberCardData=[];
+    const warehouseCardList=ref([])
+    const memberCardList=ref([])
     const headselect=ref({
       type:'project',
     });
@@ -122,94 +149,137 @@ export default defineComponent({
         headselect.value.type='member'
       }
       };
-      const memberSelect =(val)=>{
-        axios.get('/actionapi/GitlabCodeAnalysis/GetDetailMember',{
+      const dataSort = (val)=>{
+        if(selectType.value==='commit次数'){
+          val.sort(function (a, b) {
+          return b.cntTotal - a.cntTotal;
+        });
+        }else if(selectType.value==='添加行数'){
+          val.sort(function (a, b) {
+          return b.addTotal - a.addTotal;
+        });
+        }else{
+          val.sort(function (a, b) {
+          return b.delTotal - a.delTotal;
+        });
+        }
+        return val
+      }
+      const dataProcessing = (val,val2,val3,val4)=>{
+        let listdata=bigListProcessing(val,val3)
+        let cardlistdata=cardListProcessing(val2,val3)
+        console.log(listdata,1);
+        console.log(cardlistdata,2);
+        if(val4==='p'){
+          warehouseList.value.xList=listdata.val2;
+          warehouseList.value.yList=listdata.yArr;
+          warehouseList.value.nameList=listdata.nameArr;
+          warehouseCardList.value=cardlistdata
+          warehouseShow.value=true
+          console.log(memberShow.value);
+        }else{
+          memberList.value.xList=listdata.val2;
+          memberList.value.yList=listdata.yArr;
+          memberList.value.nameList=listdata.nameArr;
+          memberCardList.value=cardlistdata
+          memberShow.value=true
+        }
+      }
+      const bigListProcessing = (val,val2)=>{
+        let nameArr=[]
+        let yArr=[]
+        for(let i=0;i<val.length;i++){
+          let ojb = {}
+          ojb.name=val[i].name
+          ojb.type=val[i].type
+          ojb.stack='Total'+i
+          if(selectType.value==='commit次数'){
+          ojb.data=val[i].countData
+        }else if(selectType.value==='添加行数'){
+          ojb.data=val[i].additionsData
+        }else{
+          ojb.data=val[i].deletionsData
+        }
+        yArr.push(ojb)
+        nameArr.push(val[i].name)
+        }
+        return {yArr,nameArr,val2}
+      }
+      const cardListProcessing = (val,val2)=>{
+        let cardArr=[]
+        let allcardlist = dataSort(val)
+        for(let k = 0;k<allcardlist.length;k++){
+          let cardOjb = {}
+          cardOjb.date=val2
+          cardOjb.name=allcardlist[k].name
+          cardOjb.id=allcardlist[k].id
+          cardOjb.url=allcardlist[k].url
+          cardOjb.count=allcardlist[k].cntTotal
+          cardOjb.add=allcardlist[k].addTotal
+          cardOjb.del=allcardlist[k].delTotal
+          if(selectType.value==='commit次数'){
+            cardOjb.data=allcardlist[k].countData
+        }else if(selectType.value==='添加行数'){
+          cardOjb.data=allcardlist[k].additionsData
+        }else{
+          cardOjb.data=allcardlist[k].deletionsData
+        }
+        cardArr.push(cardOjb)
+        }
+        return cardArr
+      }
+      const contentSelect =(val,val2)=>{
+        axios.get('/actionapi/GitlabCodeAnalysis/GetGraphData',{
           params:{
-            members:val.join(),
+            idList:val.join(),
+            flag:val2
           }
         }).then((e)=>{
-          if(e.data.detailData.length!==0){
-          let nameArr = []
-          let yArr=[]
-          let changeArr=[]
-          memberList.value.xList=e.data.graphData.date
-          for(let i =0;i<e.data.graphData.data.length; i++){
-            let ojb={}
-            let changeOjb={}
-            nameArr.push(e.data.graphData.data[i].name)
-            ojb.name=e.data.graphData.data[i].name
-            ojb.type=e.data.graphData.data[i].type
-            ojb.stack=e.data.graphData.data[i].totalTitle+i
-            ojb.data=e.data.graphData.data[i].totalData
-            yArr.push(ojb)
-            changeOjb.add=e.data.graphData.data[i].additionsData
-            changeOjb.del=e.data.graphData.data[i].deletionsData
-            changeArr.push(changeOjb)
-          }
-          memberList.value.nameList=nameArr
-          memberList.value.yList=yArr
-          memberChangeList.value=changeArr
-          memberShow.value=true
+          if(e.data.dataUser.length!==0){
+            if(val2==='p'){
+              warehouseData=e.data.dataProject
+              warehouseCardData=e.data.dataUser
+              dataProcessing(warehouseData,warehouseCardData,e.data.date,val2)
+            }else{
+              memberCardData=e.data.dataProject
+              memberData=e.data.dataUser
+              dataProcessing(memberData,memberCardData,e.data.date,val2)
+            }
         }else{
-          memberShow.value=false
+          if (val2==='p') {
+            
+          }else{
+            memberShow.value=false
+          }
+          
           ElMessage.error('查询数据为空')
         }
         })
       };
-      const warehouseSelect = (val)=>{
-        axios.get('/actionapi/GitlabCodeAnalysis/GetDetailWarehouse',{
-          params:{
-            idList:val.join(),
-          }
-        }).then((e)=>{
-          if(e.data.detailData.length!==0){
-            let nameArr = []
-          let yArr=[]
-          let changeArr=[]
-          warehouseList.value.xList=e.data.graphData.date
-          for(let i =0;i<e.data.graphData.data.length; i++){
-            let ojb={}
-            let changeOjb={}
-            nameArr.push(e.data.graphData.data[i].name)
-            ojb.name=e.data.graphData.data[i].name
-            ojb.type=e.data.graphData.data[i].type
-            ojb.stack=e.data.graphData.data[i].totalTitle+i
-            ojb.data=e.data.graphData.data[i].totalData
-            yArr.push(ojb)
-            changeOjb.add=e.data.graphData.data[i].additionsData
-            changeOjb.del=e.data.graphData.data[i].deletionsData
-            changeArr.push(changeOjb)
-          }
-          warehouseList.value.nameList=nameArr
-          warehouseList.value.yList=yArr
-          warehouseChangeList.value=changeArr
-          warehouseShow.value=true
-          }else{
-            warehouseShow.value=false
-            ElMessage.error('查询数据为空')
-          }
-          
-        })
-      }
       return {
         name,
         labs,
         topTitle,
         headselect,
+        selectType,
         warehouseList,
         warehouseChangeList,
         memberChangeList,
         warehouseShow,
         memberList,
         memberShow,
+        warehouseCardList,
+        memberCardList,
         getTitle,
-        warehouseSelect,
-        memberSelect
+        contentSelect,
       }
   }
 });
 </script>
 <style lang="less" scoped>
+.echartsBox{
+  margin-top:30px ;
+}
 .el-menu-item:hover{
   background-color: #E1E2E5 !important;
 }
@@ -277,7 +347,6 @@ export default defineComponent({
   }
 }
 .cardBox{
-  margin-top: 20px;
   margin-left: 42px;
 }
 </style>

@@ -1,10 +1,19 @@
 <template>
     <div v-show="memberShow">
         <el-card class="memberbox-card" shadow="hover">
-                <span class="memberbox-card-name" @click="skipMember">我是名字</span>
+                <span class="memberbox-card-name" @click="skipMember">{{memberCardData.name}}</span>
                 <span style="float:right;color: gray;">#{{echartsId}}</span>
              <div style="margin-top:10px">
-                <span>提交次数:<span class="memberbox-card-commit">10</span>增加行:<span class="memberbox-card-add">100</span>删除行:<span class="memberbox-card-del">50</span></span>
+                <span>提交次数:
+                    <span class="box-card-commit">
+                        {{memberCardData.count}}
+                    </span>增加行:
+                    <span class="box-card-add">
+                        {{memberCardData.add}}
+                    </span>删除行:
+                    <span class="box-card-del">
+                        {{memberCardData.del}}
+                    </span></span>
              </div>
              <div :id="'memberCardEcharts'+echartsId"></div>        
         </el-card>
@@ -17,7 +26,8 @@ export default defineComponent({
     name:'memberCard',
     props:{
         echartsId:Number,
-        memberShow:Boolean
+        memberShow:Boolean,
+        memberCardData:Object
     },
     setup(props){
         const skipMember = ()=>{
@@ -34,14 +44,14 @@ export default defineComponent({
                 xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: props.memberCardData.date
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: props.memberCardData.data,
       type: 'line',
       areaStyle: {}
     }

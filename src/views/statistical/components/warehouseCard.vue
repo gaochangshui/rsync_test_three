@@ -2,12 +2,21 @@
     <div v-show="warehouseShow">
         <el-card class="box-card" shadow="hover">
             <div>
-                <img src="	http://172.17.5.146/uploads/-/system/user/avatar/9/avatar.png" class="box-card-img" />
-                <span class="box-card-name" @click="skipMember">我是名字</span>
+                <img :src="warehouseCardData.url" class="box-card-img" />
+                <span class="box-card-name" @click="skipMember">{{warehouseCardData.name}}</span>
                 <span style="float:right;color: gray;">#{{echartsId}}</span>
             </div>
              <div style="margin-top:10px">
-                <span>提交次数:<span class="box-card-commit">10</span>增加行:<span class="box-card-add">100</span>删除行:<span class="box-card-del">50</span></span>
+                <span>提交次数:
+                    <span class="box-card-commit">
+                        {{warehouseCardData.count}}
+                    </span>增加行:
+                    <span class="box-card-add">
+                        {{warehouseCardData.add}}
+                    </span>删除行:
+                    <span class="box-card-del">
+                        {{warehouseCardData.del}}
+                    </span></span>
              </div>
              <div :id="'warehouseCardEcharts'+echartsId"></div>        
         </el-card>
@@ -20,7 +29,8 @@ export default defineComponent({
     name:'warehouseCard',
     props:{
         echartsId:Number,
-        warehouseShow:Boolean
+        warehouseShow:Boolean,
+        warehouseCardData:Object
     },
     setup(props){
         const skipMember = ()=>{
@@ -37,14 +47,14 @@ export default defineComponent({
                 xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: props.warehouseCardData.date
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: props.warehouseCardData.data,
       type: 'line',
       areaStyle: {
 //         color: {
