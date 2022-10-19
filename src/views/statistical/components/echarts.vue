@@ -1,7 +1,7 @@
 <template>
     <div style=" margin-top: 20px;">
         <div id="projectEcharts" v-show="statisticalType==='project' && warehouseShow"></div>
-        <div id="memberEcharts" v-show="statisticalType==='member' && memberShow"></div>
+        <div id="memberEcharts" v-show="statisticalType==='member' && memberShow"></div> 
     </div>
 </template>
 <script>
@@ -46,8 +46,6 @@ export default defineComponent({
     trigger: 'item',
     showContent:true,
     formatter: function (params) {
-      console.log(params,1);
-      console.log(props.warehouseChangeList);
 		let str=params.seriesName+"<br/>";
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+

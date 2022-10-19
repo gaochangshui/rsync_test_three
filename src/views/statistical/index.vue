@@ -46,7 +46,13 @@
             ></Echarts>
         </div>
         <div class="cardBox">
-
+          <el-space wrap >
+            <div v-for="o in 10" :key="o">
+              <WarehouseCard 
+              :echartsId="o"
+              :warehouseShow="warehouseShow"></WarehouseCard>
+            </div>
+          </el-space>   
         </div>
     </div>
     </div>
@@ -56,11 +62,13 @@ import axios from '@/http'
 import { defineComponent, ref } from "vue";
 import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
+import WarehouseCard from './components/warehouseCard.vue';
 import { ElMessage } from 'element-plus'
 export default defineComponent({
   components: {
     Echarts,
     HeadSelect,
+    WarehouseCard
 },
   name: 'Statistical',
   setup(){
@@ -232,6 +240,7 @@ export default defineComponent({
   }
   &-right {
     padding: 20px 0;
+    overflow: auto;
     width: calc(100vw - 300px);
     &-headBox {
       display: flex;
@@ -257,5 +266,9 @@ export default defineComponent({
       padding-left: 15px;
     }
   }
+}
+.cardBox{
+  margin-top: 5px;
+  margin-left: 42px;
 }
 </style>
