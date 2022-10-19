@@ -46,11 +46,18 @@
             ></Echarts>
         </div>
         <div class="cardBox">
-          <el-space wrap >
+          <el-space wrap v-show="headselect.type==='project'">
             <div v-for="o in 10" :key="o">
               <WarehouseCard 
               :echartsId="o"
               :warehouseShow="warehouseShow"></WarehouseCard>
+            </div>
+          </el-space>   
+          <el-space wrap v-show="headselect.type==='member'">
+            <div v-for="o in 10" :key="o">
+              <MemberCard 
+              :echartsId="o"
+              :memberShow="memberShow"></MemberCard>
             </div>
           </el-space>   
         </div>
@@ -63,12 +70,14 @@ import { defineComponent, ref } from "vue";
 import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
 import WarehouseCard from './components/warehouseCard.vue';
+import MemberCard from './components/memberCard.vue';
 import { ElMessage } from 'element-plus'
 export default defineComponent({
   components: {
     Echarts,
     HeadSelect,
-    WarehouseCard
+    WarehouseCard,
+    MemberCard
 },
   name: 'Statistical',
   setup(){
@@ -268,7 +277,7 @@ export default defineComponent({
   }
 }
 .cardBox{
-  margin-top: 5px;
+  margin-top: 20px;
   margin-left: 42px;
 }
 </style>

@@ -1,15 +1,12 @@
 <template>
-    <div v-show="warehouseShow">
-        <el-card class="box-card" shadow="hover">
-            <div>
-                <img src="	http://172.17.5.146/uploads/-/system/user/avatar/9/avatar.png" class="box-card-img" />
-                <span class="box-card-name" @click="skipMember">我是名字</span>
+    <div v-show="memberShow">
+        <el-card class="memberbox-card" shadow="hover">
+                <span class="memberbox-card-name" @click="skipMember">我是名字</span>
                 <span style="float:right;color: gray;">#{{echartsId}}</span>
-            </div>
              <div style="margin-top:10px">
-                <span>提交次数:<span class="box-card-commit">10</span>增加行:<span class="box-card-add">100</span>删除行:<span class="box-card-del">50</span></span>
+                <span>提交次数:<span class="memberbox-card-commit">10</span>增加行:<span class="memberbox-card-add">100</span>删除行:<span class="memberbox-card-del">50</span></span>
              </div>
-             <div :id="'warehouseCardEcharts'+echartsId"></div>        
+             <div :id="'memberCardEcharts'+echartsId"></div>        
         </el-card>
     </div>
 </template>
@@ -17,22 +14,22 @@
 import { defineComponent,ref,onMounted} from "vue";
 import * as echarts from 'echarts'
 export default defineComponent({
-    name:'warehouseCard',
+    name:'memberCard',
     props:{
         echartsId:Number,
-        warehouseShow:Boolean
+        memberShow:Boolean
     },
     setup(props){
         const skipMember = ()=>{
            console.log(111) 
         }
         const drawLine=()=>{
-        let warehouseCardEcharts=echarts.init(document.getElementById('warehouseCardEcharts'+props.echartsId));
-        warehouseCardEcharts.resize({
+        let memberCardEcharts=echarts.init(document.getElementById('memberCardEcharts'+props.echartsId));
+        memberCardEcharts.resize({
                 width: 480,
                 height: 250
             });   
-            warehouseCardEcharts.setOption({
+            memberCardEcharts.setOption({
                 color:["orange"],
                 xAxis: {
     type: 'category',
@@ -46,21 +43,7 @@ export default defineComponent({
     {
       data: [820, 932, 901, 934, 1290, 1330, 1320],
       type: 'line',
-      areaStyle: {
-//         color: {
-//     type: 'linear',
-//     x: 0,
-//     y: 0,
-//     x2: 0,
-//     y2: 1,
-//     colorStops: [{
-//       offset: 0, color: 'rgba(58,132,255, 0.5)'    // 0% 处的颜色
-//     }, {
-//       offset: 1, color: 'rgba(58,132,255, 0)' //   100% 处的颜色
-//     }],
-//     global: false // 缺省为 false
-//   }
-      }
+      areaStyle: {}
     }
   ]
         })  
@@ -76,7 +59,7 @@ export default defineComponent({
 })
 </script>
 <style lang="less" scopeds>
-.box-card{
+.memberbox-card{
     width: 500px;
     &-img{
         width: 50px;
@@ -84,9 +67,6 @@ export default defineComponent({
     }
     &-name{
         font-size: 20px;
-        position: relative;
-        left: 10px;
-        top: -16px;
     }
     &-name:hover{
         color: blue;
