@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-show="statisticalType==='project'" class="projectHead">
-            <div>
-                <span>群组：</span>
+        <div v-show="statisticalType==='project'" class="projectHead" >
+            <div style="display:flex">
+                <span style="width:48px;margin-top: 5px;">群组：</span>
                 <el-select v-model="groupValue" class="m-2" placeholder="Select" style="width:260px" @change="getprojectOptions(groupValue)">
                     <el-option
                     v-for="item in groupOptions"
@@ -12,18 +12,19 @@
                     />
                 </el-select>
             </div>  
-            <div>
-                <span>项目：</span>
+            <div style="display:flex">
+                <span style="width:48px;margin-top: 5px;">项目：</span>
                 <el-cascader :options="projectOptions" 
                 :props="props1" 
                 clearable
                 filterable
                 v-model="projectValue"
+                style="width:180px"
                 @change="getWarehouseOptions()"
                  />
             </div> 
-            <div>
-                <span>仓库：</span>
+            <div style="display:flex">
+                <span style="width:48px;margin-top: 5px;">仓库：</span>
                 <el-select v-model="warehouseValue"
                  multiple 
                  collapse-tags 
@@ -40,22 +41,8 @@
                     :value="item.id"
                     />
                 </el-select>
-            </div>  
-            <div>
-                <span>日期：</span>
-                <el-date-picker
-                    v-model="dateValue1"
-                    type="daterange"
-                    :disabled-date="disabledDate"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    style="width:230px"
-                    value-format="YYYY-MM-DD"
-                />
-            </div>  
+            </div>    
             <el-button type="primary" @click="warehouseSelect()">查询</el-button>
-            <el-button type="primary" :disabled="!warehouseShow" @click="downLoad()">下载</el-button>
         </div>
         <div v-show="statisticalType==='member'" class="memberHead">
             <div>
@@ -79,46 +66,23 @@
                     />
                 </el-select>
             </div>
-            <div>
-                <span>日期：</span>
-                <el-date-picker
-                    v-model="dateValue2"
-                    type="daterange"
-                    range-separator="To"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    :size="size"
-                    :disabled-date="disabledDate"
-                    value-format="YYYY-MM-DD"
-                />
-            </div>
-            <el-button type="primary" @click="memberSelect()">查询</el-button>
-            <el-button type="primary" :disabled="!memberShow"  @click="downLoad()">下载</el-button>   
+            <el-button type="primary" @click="memberSelect()">查询</el-button>  
         </div>
     </div>
 </template>
 <script>
-import { defineComponent, ref , computed } from "vue";
+import { defineComponent, ref  } from "vue";
 import axios from '@/http';
 import { exportTable2Excel } from "@/utils/excel";
 export default defineComponent({
     name:'headSelect',
-    props:{statisticalType:String,
-        warehouseShow:Boolean,
-        memberShow:Boolean},
+    props:{statisticalType:String,},
     setup(props,cxt){
         const groupValue=ref(null);
         const allprojectValue=ref(null);
         const projectValue=ref(null);
         const warehouseValue=ref(null);
         const memberValue=ref(null);
-        const dateValue1=ref(null);
-        const dateValue2=ref(null);
-        const disabledDate = (time)=> {
-        var timeNow = Date.now();
-        var before = timeNow - 24 * 60 * 60 * 1000;
-        return time.getTime() > before;
-      }
         const props1=ref({
         checkStrictly: true,
       },);
@@ -126,15 +90,7 @@ export default defineComponent({
         const projectOptions=ref([]);
         const warehouseOptions=ref([]);
         const memberOptions=ref([]);
-        const copyMemberOputio=ref([])
-        const downLoad = ()=>{
-            if(props.statisticalType==='project'){
-                exportTable2Excel('infortabla1' + "", '仓库统计');
-            }else{
-                exportTable2Excel('infortabla2' + "", '成员统计');
-            }
-            
-        }
+        const copyMemberOputio=ref([]);
         const getMemberOptions = ()=>{
             axios.get('/actionapi/GitlabCodeAnalysis/GetMembers'
             ).then((e)=>{
@@ -165,10 +121,10 @@ export default defineComponent({
             })
         };
         const warehouseSelect = ()=>{
-            cxt.emit('warehouseSelect',warehouseValue.value,dateValue1.value)
+            cxt.emit('warehouseSelect',warehouseValue.value)
         };
         const memberSelect = ()=>{
-            cxt.emit('memberSelect',memberValue.value,dateValue2.value)
+            cxt.emit('memberSelect',memberValue.value)
         };
         const  memberFilter =(val)=>{
       if(val){
@@ -201,15 +157,11 @@ export default defineComponent({
             warehouseOptions,
             memberValue,
             memberOptions,
-            dateValue1,
-            dateValue2,
             getprojectOptions,
             getWarehouseOptions,
             warehouseSelect,
             memberSelect,
             memberFilter,
-            downLoad,
-            disabledDate,
             props1
         }
     }

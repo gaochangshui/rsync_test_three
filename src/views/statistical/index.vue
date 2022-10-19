@@ -39,21 +39,14 @@
             :statisticalType="headselect.type" 
             :warehouseList="warehouseList" 
             :memberList="memberList"
-            :warehouseTable="warehouseTable"
             :warehouseChangeList="warehouseChangeList"
             :memberChangeList="memberChangeList"
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
             ></Echarts>
         </div>
-        <div class="tableBox">
-          <InforTable 
-          :statisticalType="headselect.type" 
-          :memberTable="memberTable" 
-          :warehouseTable="warehouseTable"
-          :warehouseShow="warehouseShow"
-          :memberShow="memberShow"
-          ></InforTable>
+        <div class="cardBox">
+
         </div>
     </div>
     </div>
@@ -63,13 +56,11 @@ import axios from '@/http'
 import { defineComponent, ref } from "vue";
 import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
-import InforTable from "./components/inforTable.vue";
 import { ElMessage } from 'element-plus'
 export default defineComponent({
   components: {
     Echarts,
     HeadSelect,
-    InforTable
 },
   name: 'Statistical',
   setup(){
@@ -86,14 +77,12 @@ export default defineComponent({
       yList:[]
     });
     const warehouseChangeList =ref([]);
-    const warehouseTable = ref([]);
     const memberList = ref({
       xList:[],
       nameList:[],
       yList:[]
     });
     const memberChangeList =ref([])
-    const memberTable = ref([])
     const labs = ref( [
         {
           name: '统计',
@@ -116,12 +105,10 @@ export default defineComponent({
         headselect.value.type='member'
       }
       };
-      const memberSelect =(val,val2)=>{
+      const memberSelect =(val)=>{
         axios.get('/actionapi/GitlabCodeAnalysis/GetDetailMember',{
           params:{
             members:val.join(),
-            startDate:val2?val2[0]:'',
-            endDate:val2?val2[1]:''
           }
         }).then((e)=>{
           if(e.data.detailData.length!==0){
@@ -144,7 +131,6 @@ export default defineComponent({
           }
           memberList.value.nameList=nameArr
           memberList.value.yList=yArr
-          memberTable.value=e.data.detailData
           memberChangeList.value=changeArr
           memberShow.value=true
         }else{
@@ -153,12 +139,10 @@ export default defineComponent({
         }
         })
       };
-      const warehouseSelect = (val,val2)=>{
+      const warehouseSelect = (val)=>{
         axios.get('/actionapi/GitlabCodeAnalysis/GetDetailWarehouse',{
           params:{
             idList:val.join(),
-            startDate:val2?val2[0]:'',
-            endDate:val2?val2[1]:''
           }
         }).then((e)=>{
           if(e.data.detailData.length!==0){
@@ -181,7 +165,6 @@ export default defineComponent({
           }
           warehouseList.value.nameList=nameArr
           warehouseList.value.yList=yArr
-          warehouseTable.value=e.data.detailData
           warehouseChangeList.value=changeArr
           warehouseShow.value=true
           }else{
@@ -197,12 +180,10 @@ export default defineComponent({
         topTitle,
         headselect,
         warehouseList,
-        warehouseTable,
         warehouseChangeList,
         memberChangeList,
         warehouseShow,
         memberList,
-        memberTable,
         memberShow,
         getTitle,
         warehouseSelect,
