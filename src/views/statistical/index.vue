@@ -8,7 +8,7 @@
         </span>
       </div>
       
-      <el-menu default-active="0" class="el-menu-vertical-demo">
+      <el-menu :default-active="leftListIndex" class="el-menu-vertical-demo">
         <el-menu-item
           v-for="(labchildren, p) in labs[0].children"
           :key="p"
@@ -73,6 +73,7 @@
           <el-space wrap v-show="headselect.type==='project'">
             <div v-for="(item,index) in warehouseCardList" :key="item.id">
               <WarehouseCard 
+              @contentSelect="contentSelect"
               :echartsId="index+1"
               :warehouseShow="warehouseShow"
               :warehouseCardData="item"></WarehouseCard>
@@ -110,6 +111,7 @@ export default defineComponent({
     const selectType=ref('commit次数')
     const warehouseShow=ref(false);
     const memberShow=ref(false);
+    const leftListIndex=ref('0')
     const name = ref('statistical');
     const topTitle = ref('仓库统计');
     let warehouseData=[];
@@ -244,13 +246,17 @@ export default defineComponent({
         }
         return cardArr
       }
-      const contentSelect =(val,val2)=>{
+      const contentSelect =(val,val2,val3)=>{
         axios.get('/actionapi/GitlabCodeAnalysis/GetGraphData',{
           params:{
             idList:val.join(),
             flag:val2
           }
         }).then((e)=>{
+          if(val3===1){
+            leftListIndex.value=String(val3)
+            headselect.value.type='member'
+          }
           if(e.data.dataUser.length!==0){
             selectType.value='commit次数'
             if(val2==='p'){
@@ -312,6 +318,7 @@ export default defineComponent({
         memberCardList,
         warehouseTooltip,
         memberTooltip,
+        leftListIndex,
         getTitle,
         contentSelect,
       }

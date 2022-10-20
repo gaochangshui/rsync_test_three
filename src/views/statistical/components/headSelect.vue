@@ -122,9 +122,9 @@ export default defineComponent({
         };
         const contentSelect = (val)=>{
             if(props.statisticalType==='project'){
-                cxt.emit('contentSelect',warehouseValue.value,val)
+                cxt.emit('contentSelect',warehouseValue.value,val,0)
             }else{
-                cxt.emit('contentSelect',memberValue.value,val)
+                cxt.emit('contentSelect',memberValue.value,val,0)
             }
             
         };

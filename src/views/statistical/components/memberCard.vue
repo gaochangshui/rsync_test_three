@@ -31,7 +31,7 @@ export default defineComponent({
     },
     setup(props){
         const skipMember = ()=>{
-           console.log(111) 
+            window.open(props.memberCardData.url); 
         }
         const drawLine=()=>{
         let memberCardEcharts=echarts.init(document.getElementById('memberCardEcharts'+props.echartsId));

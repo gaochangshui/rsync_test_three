@@ -32,9 +32,10 @@ export default defineComponent({
         warehouseShow:Boolean,
         warehouseCardData:Object
     },
-    setup(props){
+    setup(props,cxt){
         const skipMember = ()=>{
-           console.log(111) 
+            console.log(props.warehouseCardData.id);
+            cxt.emit('contentSelect',[props.warehouseCardData.id],'u',1) 
         }
         const drawLine=()=>{
         let warehouseCardEcharts=echarts.init(document.getElementById('warehouseCardEcharts'+props.echartsId));
