@@ -76,7 +76,7 @@ import axios from '@/http';
 import { exportTable2Excel } from "@/utils/excel";
 export default defineComponent({
     name:'headSelect',
-    props:{statisticalType:String,},
+    props:{statisticalType:String},
     setup(props,cxt){
         const groupValue=ref(null);
         const allprojectValue=ref(null);
@@ -149,7 +149,6 @@ export default defineComponent({
         setTimeout(() => {
             getMemberOptions();
         }, 1000);
-        
         return{
             groupValue,
             projectValue,

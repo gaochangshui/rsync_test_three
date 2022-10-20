@@ -98,7 +98,7 @@ import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
 import WarehouseCard from './components/warehouseCard.vue';
 import MemberCard from './components/memberCard.vue';
-import { ElMessage } from 'element-plus'
+import { ElMessage , ElLoading } from 'element-plus'
 export default defineComponent({
   components: {
     Echarts,
@@ -247,6 +247,10 @@ export default defineComponent({
         return cardArr
       }
       const contentSelect =(val,val2,val3)=>{
+        const loading=ElLoading.service({
+              lock: true,
+              text: '数据查询中，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
         axios.get('/actionapi/GitlabCodeAnalysis/GetGraphData',{
           params:{
             idList:val.join(),
@@ -277,6 +281,7 @@ export default defineComponent({
           
           ElMessage.error('查询数据为空')
         }
+        loading.close()
         })
       };
       watch(selectType,()=>{
