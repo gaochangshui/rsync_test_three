@@ -34,7 +34,10 @@
         </div>
       </div>
       <div>
-        <el-select v-model="selectType" style="float:right;margin-right:20px">
+        <el-select 
+        v-model="selectType" 
+        style="float:right;margin-right:20px"
+        v-show="(warehouseShow && headselect.type==='project')||(headselect.type==='member' && memberShow)">
           <el-option
           value="commit次数"
           label="commit次数"
@@ -86,7 +89,7 @@
 </template>
 <script>
 import axios from '@/http'
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref , watch , reactive} from "vue";
 import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
 import WarehouseCard from './components/warehouseCard.vue';
@@ -236,6 +239,7 @@ export default defineComponent({
           }
         }).then((e)=>{
           if(e.data.dataUser.length!==0){
+            selectType.value='commit次数'
             if(val2==='p'){
               warehouseData=e.data.dataProject
               warehouseCardData=e.data.dataUser
@@ -256,6 +260,29 @@ export default defineComponent({
         }
         })
       };
+      watch(selectType,()=>{
+          if(headselect.value.type==='project'){
+            let changBigList=bigListProcessing(warehouseData,warehouseList.value.xList)
+            warehouseList.value.xList=changBigList.val2;
+          warehouseList.value.yList=changBigList.yArr;
+          warehouseList.value.nameList=changBigList.nameArr;
+          warehouseCardList.value=[]
+          setTimeout(()=>{
+            let changCardList=cardListProcessing(warehouseCardData,warehouseList.value.xList)
+          warehouseCardList.value=changCardList
+            },100);
+          }else{
+            let changBigList=bigListProcessing(memberData,memberList.value.xList)
+            memberList.value.xList=changBigList.val2;
+            memberList.value.yList=changBigList.yArr;
+            memberList.value.nameList=changBigList.nameArr;
+            memberCardList.value=[]
+          setTimeout(()=>{
+            let changCardList=cardListProcessing(memberCardData,memberList.value.xList)
+            memberCardList.value=changCardList
+            },100);
+          }
+        })
       return {
         name,
         labs,

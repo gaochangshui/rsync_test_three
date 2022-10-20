@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-import { defineComponent,ref,onMounted} from "vue";
+import { defineComponent,ref,onMounted,watch} from "vue";
 import * as echarts from 'echarts'
 export default defineComponent({
     name:'warehouseCard',
@@ -75,6 +75,13 @@ export default defineComponent({
   ]
         })  
     }
+        watch(props.warehouseCardData, () => {
+            console.log(111);
+      echarts.init(document.getElementById('warehouseCardEcharts'+props.echartsId)).dispose();
+      drawLine()
+    },
+    { deep: true });
+    
         onMounted(()=>{
             drawLine()
         })
