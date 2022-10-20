@@ -73,7 +73,6 @@
 <script>
 import { defineComponent, ref  } from "vue";
 import axios from '@/http';
-import { exportTable2Excel } from "@/utils/excel";
 export default defineComponent({
     name:'headSelect',
     props:{statisticalType:String},
@@ -145,6 +144,22 @@ export default defineComponent({
         memberOptions.value=copyMemberOputio.value
       }
     };
+    const getInitPicture = ()=>{
+        var allCookie = document.cookie;
+      var aryCookie = allCookie.split(';');
+      for (let i in aryCookie) {
+        let getUserid = aryCookie[i].split('=');
+        if (getUserid[0].trim() === 'LoginedUser') {
+          var usercd = getUserid[1].trim();
+        }
+      }
+      memberValue.value=[usercd]
+      setInterval
+      setTimeout(()=>{
+        contentSelect('u')
+            },100);
+    }
+    getInitPicture()
         getGroupOptions();
         setTimeout(() => {
             getMemberOptions();

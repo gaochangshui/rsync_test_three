@@ -123,7 +123,7 @@ export default defineComponent({
     const warehouseCardList=ref([])
     const memberCardList=ref([])
     const headselect=ref({
-      type:'project',
+      type:'member',
     });
     const warehouseList = ref({
       xList:[],
@@ -141,11 +141,11 @@ export default defineComponent({
         {
           name: '统计',
           children: [
-            {
-              name: '仓库统计',
+          {
+              name: '成员统计',
             },
             {
-              name: '成员统计',
+              name: '仓库统计',
             }
           ]
         }
@@ -258,7 +258,7 @@ export default defineComponent({
           }
         }).then((e)=>{
           if(val3===1){
-            leftListIndex.value=String(val3)
+            leftListIndex.value=String(0)
             headselect.value.type='member'
           }
           if(e.data.dataUser.length!==0){
