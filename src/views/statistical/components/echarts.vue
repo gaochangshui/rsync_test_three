@@ -49,6 +49,7 @@ export default defineComponent({
     showContent:true,
     formatter: function (params) {
 		let str=params.seriesName+"<br/>";
+    let time = params.name+"<br/>"
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
         '</span>' +  "commit次数: " + (props.warehouseTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
@@ -59,11 +60,11 @@ export default defineComponent({
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
         '</span>' +  "删除行: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
         if(props.selectType==='commit次数'){
-          str=str+add+del;
+          str=str+time+add+del;
         }else if(props.selectType==='添加行数'){
-          str=str+all+del;
+          str=str+time+all+del;
         }else{
-          str=str+all+add;
+          str=str+time+all+add;
         }
         return str;
 		}
@@ -112,6 +113,7 @@ export default defineComponent({
     showContent:true,
     formatter: function (params) {
       let str=params.seriesName+"<br/>";
+      let time = params.name+"<br/>"
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
         '</span>' + "commit次数 : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
@@ -122,11 +124,11 @@ export default defineComponent({
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
         '</span>' +  "删除行: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
         if(props.selectType==='commit次数'){
-          str=str+add+del;
+          str=str+time+add+del;
         }else if(props.selectType==='添加行数'){
-          str=str+all+del;
+          str=str+time+all+del;
         }else{
-          str=str+all+add;
+          str=str+time+all+add;
         }
         return str;
 		}
