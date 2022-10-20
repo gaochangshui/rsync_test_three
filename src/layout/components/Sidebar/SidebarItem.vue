@@ -7,7 +7,7 @@
         placement="right"
         show-after="1000"
       >
-      <el-menu-item :index="'/'+basePath" v-show="item.name!=='查看仓库'&&item.name!=='虚拟机'">
+      <el-menu-item :index="'/'+basePath" v-show="item.name!=='查看仓库'&&item.name!=='虚拟机'&&item.name!=='统计'">
       <svg-icon :icon-class="item.meta?.icon" />
       <span :class="item.meta?.icon">{{item.meta?.name}}</span>
       <!-- <template #title>{{item.meta?.title}}</template> -->
@@ -45,7 +45,7 @@ export default {
   width: 10px;
   height: 10em;
 }
-.code,.project,.statistical{
+.code,.project{
   position:absolute;
   top:24px;
   left:23px;

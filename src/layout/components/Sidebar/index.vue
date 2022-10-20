@@ -61,6 +61,20 @@
           </el-menu-item>
       </el-tooltip>         
         </div>
+        <div>
+          <el-tooltip
+        class="box-item"
+        effect="light"
+        :content="routes[4].meta?.title"
+        placement="right"
+        show-after="1000"
+      >
+      <el-menu-item :index="'/'+routes[4].path" >
+      <svg-icon :icon-class="routes[4].meta?.icon" />
+      <span style="position:absolute;top:24px;left:23px;font-size: 12px;">{{routes[4].meta?.name}}</span>
+    </el-menu-item>
+      </el-tooltip>    
+        </div>
       </el-menu>
     </el-scrollbar>
   </div>

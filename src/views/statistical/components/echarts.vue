@@ -114,7 +114,7 @@ export default defineComponent({
       let str=params.seriesName+"<br/>";
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "总修改行 : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "commit次数 : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
         '</span>' + "添加行: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
