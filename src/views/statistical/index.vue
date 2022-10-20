@@ -58,8 +58,11 @@
         <div class="echartsBox">
             <Echarts 
             :statisticalType="headselect.type" 
+            :selectType="selectType"
             :warehouseList="warehouseList" 
             :memberList="memberList"
+            :memberTooltip="memberTooltip"
+            :warehouseTooltip="warehouseTooltip"
             :warehouseChangeList="warehouseChangeList"
             :memberChangeList="memberChangeList"
             :warehouseShow="warehouseShow"
@@ -113,6 +116,8 @@ export default defineComponent({
     let warehouseCardData=[];
     let memberData=[];
     let memberCardData=[];
+    const warehouseTooltip=ref([])
+    const memberTooltip=ref([])
     const warehouseCardList=ref([])
     const memberCardList=ref([])
     const headselect=ref({
@@ -177,22 +182,29 @@ export default defineComponent({
           warehouseList.value.xList=listdata.val2;
           warehouseList.value.yList=listdata.yArr;
           warehouseList.value.nameList=listdata.nameArr;
-          warehouseCardList.value=cardlistdata
+          warehouseCardList.value=cardlistdata;
+          warehouseTooltip.value=listdata.tooltipArr
           warehouseShow.value=true
           console.log(memberShow.value);
         }else{
           memberList.value.xList=listdata.val2;
           memberList.value.yList=listdata.yArr;
           memberList.value.nameList=listdata.nameArr;
-          memberCardList.value=cardlistdata
+          memberTooltip.value=listdata.tooltipArr;
+          memberCardList.value=cardlistdata;
           memberShow.value=true
         }
       }
       const bigListProcessing = (val,val2)=>{
         let nameArr=[]
         let yArr=[]
+        let tooltipArr=[]
         for(let i=0;i<val.length;i++){
           let ojb = {}
+          let tooltipOjb={}
+          tooltipOjb.cntTooltip=val[i].countData
+          tooltipOjb.addTooltip=val[i].additionsData
+          tooltipOjb.delTooltip=val[i].deletionsData
           ojb.name=val[i].name
           ojb.type=val[i].type
           ojb.stack='Total'+i
@@ -204,9 +216,10 @@ export default defineComponent({
           ojb.data=val[i].deletionsData
         }
         yArr.push(ojb)
+        tooltipArr.push(tooltipOjb)
         nameArr.push(val[i].name)
         }
-        return {yArr,nameArr,val2}
+        return {yArr,nameArr,val2,tooltipArr}
       }
       const cardListProcessing = (val,val2)=>{
         let cardArr=[]
@@ -297,6 +310,8 @@ export default defineComponent({
         memberShow,
         warehouseCardList,
         memberCardList,
+        warehouseTooltip,
+        memberTooltip,
         getTitle,
         contentSelect,
       }

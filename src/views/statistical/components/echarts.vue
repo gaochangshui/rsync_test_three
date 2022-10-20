@@ -7,18 +7,19 @@
 <script>
 import { defineComponent, ref , onMounted,watch } from "vue";
 import * as echarts from 'echarts'
-import { log } from "console";
-import { auto } from "@popperjs/core";
 export default defineComponent({
     name:'echarts',
     props:{
       statisticalType:String,
+      selectType:String,
       warehouseList:Object,
       memberList:Object,
       warehouseShow:Boolean,
       memberShow:Boolean,
       warehouseChangeList:Array,
-      memberChangeList:Array},
+      memberChangeList:Array,
+      warehouseTooltip:Array,
+      memberTooltip:Array},
     setup(props){
       const drawLine=()=>{
         let projectEcharts=echarts.init(document.getElementById('projectEcharts'));
@@ -50,14 +51,20 @@ export default defineComponent({
 		let str=params.seriesName+"<br/>";
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "总修改行 : " + (params.data)+'</p><br/>';
+        '</span>' +  "commit次数: " + (props.warehouseTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "添加行: " + (props.warehouseChangeList[params.seriesIndex].add[params.dataIndex])+'</p><br/>';
+        '</span>' + "添加行: " + (props.warehouseTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "删除行: " + (props.warehouseChangeList[params.seriesIndex].del[params.dataIndex])+'</p>';
-		str=str+all+add+del;
+        '</span>' +  "删除行: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        if(props.selectType==='commit次数'){
+          str=str+add+del;
+        }else if(props.selectType==='添加行数'){
+          str=str+all+del;
+        }else{
+          str=str+all+add;
+        }
         return str;
 		}
 		
@@ -107,14 +114,20 @@ export default defineComponent({
       let str=params.seriesName+"<br/>";
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "总修改行 : " + (params.data)+'</p><br/>';
+        '</span>' + "总修改行 : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "添加行: " + (props.memberChangeList[params.seriesIndex].add[params.dataIndex])+'</p><br/>';
+        '</span>' + "添加行: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "删除行: " + (props.memberChangeList[params.seriesIndex].del[params.dataIndex])+'</p>';
-		str=str+all+add+del;
+        '</span>' +  "删除行: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        if(props.selectType==='commit次数'){
+          str=str+add+del;
+        }else if(props.selectType==='添加行数'){
+          str=str+all+del;
+        }else{
+          str=str+all+add;
+        }
         return str;
 		}
 		
