@@ -2,45 +2,18 @@
     <div>
         <div v-show="statisticalType==='project'" class="projectHead" >
             <div style="display:flex">
-                <span style="width:48px;margin-top: 5px;">群组：</span>
-                <el-select v-model="groupValue" class="m-2" placeholder="Select" style="width:260px" @change="getprojectOptions(groupValue)">
-                    <el-option
-                    v-for="item in groupOptions"
-                    :key="item.id"
-                    :label="item.nameView+'('+ item.name+')'"
-                    :value="item.id"
+                <span style="width:48px;margin-top: 8px;">仓库：</span>
+                <el-cascader
+                        v-model="warehouseValue"
+                        :options="warehouseOptions"
+                        :props="props1"
+                        collapse-tags
+                        collapse-tags-tooltip
+                        clearable
+                        filterable
+                        style="width:550px"
+                        size="large"
                     />
-                </el-select>
-            </div>  
-            <div style="display:flex">
-                <span style="width:48px;margin-top: 5px;">项目：</span>
-                <el-cascader :options="projectOptions" 
-                :props="props1" 
-                clearable
-                filterable
-                v-model="projectValue"
-                style="width:180px"
-                @change="getWarehouseOptions()"
-                 />
-            </div> 
-            <div style="display:flex">
-                <span style="width:48px;margin-top: 5px;">仓库：</span>
-                <el-select v-model="warehouseValue"
-                 multiple 
-                 collapse-tags 
-                 collapse-tags-tooltip
-                 filterable 
-                 class="m-2" 
-                 size="default"
-                 style="width:300px"
-                 placeholder="Select">
-                    <el-option
-                    v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                    />
-                </el-select>
             </div>    
             <el-button type="primary" @click="contentSelect('p')">查询</el-button>
         </div>
@@ -71,19 +44,19 @@
     </div>
 </template>
 <script>
-import { defineComponent, ref  } from "vue";
+import { defineComponent, ref ,onMounted  } from "vue";
 import axios from '@/http';
 export default defineComponent({
     name:'headSelect',
     props:{statisticalType:String},
     setup(props,cxt){
         const groupValue=ref(null);
-        const allprojectValue=ref(null);
         const projectValue=ref(null);
-        const warehouseValue=ref(null);
+        const warehouseValue=ref([]);
         const memberValue=ref(null);
         const props1=ref({
-        checkStrictly: true,
+        multiple: true,
+        value:'value'
       },);
         const groupOptions=ref([]);  
         const projectOptions=ref([]);
@@ -97,25 +70,14 @@ export default defineComponent({
                 copyMemberOputio.value=e.data
             })
         }
-        const getGroupOptions = ()=>{
-            axios.get('/actionapi/projects/GetLocationGroup'
-            ).then((e)=>{
-                groupOptions.value=e.data.location;
-                allprojectValue.value=JSON.parse(e.data.group)
-            })
-        }
-        const getprojectOptions = (val)=>{
-            projectOptions.value=allprojectValue.value.filter((item)=>{
-                return Number(item.value)===val
-            })[0].children
-        };
         const getWarehouseOptions = ()=>{
-            axios.get('/actionapi/GitlabCodeAnalysis/GetWareHouse',{
+            axios.get('/actionapi/projects/GetLocationGroup',{
                 params:{
-                    namespace_id:projectValue.value[projectValue.value.length-1]
+                    flag:'pj'
                 }
             }).then((e)=>{
-                warehouseOptions.value=e.data
+                warehouseOptions.value=JSON.parse(e.data.group)
+                console.log(warehouseOptions.value);
                 warehouseValue.value=[]
             })
         };
@@ -159,8 +121,10 @@ export default defineComponent({
         contentSelect('u')
             },100);
     }
-    getInitPicture()
-        getGroupOptions();
+    onMounted(()=>{
+        getInitPicture()
+        getWarehouseOptions();
+    })
         setTimeout(() => {
             getMemberOptions();
         }, 1000);
@@ -173,7 +137,6 @@ export default defineComponent({
             warehouseOptions,
             memberValue,
             memberOptions,
-            getprojectOptions,
             getWarehouseOptions,
             contentSelect,
             memberFilter,
