@@ -60,7 +60,14 @@ axios.interceptors.response.use((response) => {
   }
   return response;
 }, error => {
-  // 错误提醒
+  if (error.response) {
+    switch (error.response.status) {
+        case 401:
+            // 返回 401 清除 token 信息并跳转到登录页面
+            router.replace({ name: 'login' });
+            localStorage.clear('token');
+    }
+}
   ElMessage({
     type: 'error',
     showClose: true,
