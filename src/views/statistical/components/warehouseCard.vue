@@ -45,7 +45,6 @@ export default defineComponent({
     setup(props, cxt) {
         const dialogTableVisible=ref(false)
         const skipMember = () => {
-            console.log(props.warehouseCardData.id);
             cxt.emit("contentSelect", [props.warehouseCardData.id], "u", 1);
         };
         const drawLine = () => {
@@ -77,7 +76,6 @@ export default defineComponent({
             dialogTableVisible.value=true
         };
         watch(props.warehouseCardData, () => {
-            console.log(111);
             echarts.init(document.getElementById("warehouseCardEcharts" + props.echartsId)).dispose();
             drawLine();
         }, { deep: true });

@@ -77,17 +77,14 @@ export default defineComponent({
                 }
             }).then((e)=>{
                 warehouseOptions.value=JSON.parse(e.data.group)
-                console.log(warehouseOptions.value);
                 warehouseValue.value=[]
             })
         };
         const contentSelect = (val)=>{
             
             warehouseValue.value=warehouseValue.value.map((item)=>{
-                console.log(item.length); 
                 return item[item.length-1]
             })
-            console.log(warehouseValue.value,11);
             if(props.statisticalType==='project'){
                 
                 cxt.emit('contentSelect',warehouseValue.value,val,0)

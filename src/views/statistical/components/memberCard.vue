@@ -72,7 +72,6 @@ export default defineComponent({
         })  
     }
     watch(props.memberCardData, () => {
-            console.log(111);
       echarts.init(document.getElementById('memberCardEcharts'+props.echartsId)).dispose();
       drawLine()
     },

@@ -180,8 +180,6 @@ export default defineComponent({
       const dataProcessing = (val,val2,val3,val4)=>{
         let listdata=bigListProcessing(val,val3)
         let cardlistdata=cardListProcessing(val2,val3)
-        console.log(listdata,1);
-        console.log(cardlistdata,2);
         if(val4==='p'){
           warehouseList.value.xList=listdata.val2;
           warehouseList.value.yList=listdata.yArr;
@@ -189,7 +187,6 @@ export default defineComponent({
           warehouseCardList.value=cardlistdata;
           warehouseTooltip.value=listdata.tooltipArr
           warehouseShow.value=true
-          console.log(memberShow.value);
         }else{
           memberList.value.xList=listdata.val2;
           memberList.value.yList=listdata.yArr;
@@ -253,11 +250,9 @@ export default defineComponent({
               lock: true,
               text: '数据查询中，请稍候',
               background: 'rgba(0, 0, 0, 0.7)',})
-        axios.get('/actionapi/GitlabCodeAnalysis/GetGraphData',{
-          params:{
-            idList:val.join(),
+        axios.post('/actionapi/GitlabCodeAnalysis/GetGraphData',{
+            idList:val,
             flag:val2
-          }
         }).then((e)=>{
           if(val3===1){
             leftListIndex.value=String(0)

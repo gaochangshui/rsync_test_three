@@ -13,9 +13,7 @@ export default defineComponent({
     echartsId: Number
   },
   setup(props) {
-    console.log(props.warehouseCardData);
     const drawLine = () => {
-        console.log(1);
       let messageEcharts = echarts.init(
         document.getElementById("messageEcharts"+props.echartsId)
       );
@@ -63,7 +61,6 @@ export default defineComponent({
       });
     };
     watch(props.warehouseCardData.name, () => {
-        console.log(2);
       echarts.init(document.getElementById("messageEcharts")).dispose();
       setTimeout(() => {
         drawLine();
