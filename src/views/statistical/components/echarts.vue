@@ -55,13 +55,13 @@ export default defineComponent({
         '</span>' +  "commit次数: " + (props.warehouseTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "添加行: " + (props.warehouseTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "additions: " + (props.warehouseTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "删除行: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
-        if(props.selectType==='commit次数'){
+        '</span>' +  "deletions: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        if(props.selectType==='Commits'){
           str=str+time+add+del;
-        }else if(props.selectType==='添加行数'){
+        }else if(props.selectType==='additions'){
           str=str+time+all+del;
         }else{
           str=str+time+all+add;
@@ -116,16 +116,16 @@ export default defineComponent({
       let time = params.name+"<br/>"
 		let all='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "commit次数 : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "Commits : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "添加行: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "additions: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "删除行: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
-        if(props.selectType==='commit次数'){
+        '</span>' +  "deletions: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        if(props.selectType==='Commits'){
           str=str+time+add+del;
-        }else if(props.selectType==='添加行数'){
+        }else if(props.selectType==='additions'){
           str=str+time+all+del;
         }else{
           str=str+time+all+add;

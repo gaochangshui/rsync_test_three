@@ -93,11 +93,11 @@ export default defineComponent({
         margin-right: 5px;
     }
     &-add{
-        color: red;
+        color: green;
         margin-right: 5px;
     }
     &-del{
-        color: green;
+        color: red;
     }
 }
 </style>

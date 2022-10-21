@@ -26,34 +26,34 @@
       <div class="statistical-right-headBox">
         <div class="statistical-right-headBox-title">{{topTitle}}</div>
         <div class="statistical-right-headBox-headSelect">
+          <div>
+        <el-select 
+        v-model="selectType" 
+        style="float:right;margin-right:20px"
+        v-show="(warehouseShow && headselect.type==='project')||(headselect.type==='member' && memberShow)">
+          <el-option
+          value="Commits"
+          label="Commits"
+          >
+          </el-option>
+          <el-option
+          value="additions"
+          label="additions"
+          >
+          </el-option>
+          <el-option
+          value="deletions"
+          label="deletions"
+          >
+          </el-option>
+        </el-select>
+      </div>
             <HeadSelect 
             :statisticalType="headselect.type" 
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
             @contentSelect="contentSelect"></HeadSelect>
         </div>
-      </div>
-      <div>
-        <el-select 
-        v-model="selectType" 
-        style="float:right;margin-right:20px"
-        v-show="(warehouseShow && headselect.type==='project')||(headselect.type==='member' && memberShow)">
-          <el-option
-          value="commit次数"
-          label="commit次数"
-          >
-          </el-option>
-          <el-option
-          value="添加行数"
-          label="添加行数"
-          >
-          </el-option>
-          <el-option
-          value="删除行数"
-          label="删除行数"
-          >
-          </el-option>
-        </el-select>
       </div>
         <div class="echartsBox">
             <Echarts 
@@ -108,7 +108,7 @@ export default defineComponent({
 },
   name: 'Statistical',
   setup(){
-    const selectType=ref('commit次数')
+    const selectType=ref('Commits')
     const warehouseShow=ref(false);
     const memberShow=ref(false);
     const leftListIndex=ref('0')
@@ -160,11 +160,11 @@ export default defineComponent({
       }
       };
       const dataSort = (val)=>{
-        if(selectType.value==='commit次数'){
+        if(selectType.value==='Commits'){
           val.sort(function (a, b) {
           return b.cntTotal - a.cntTotal;
         });
-        }else if(selectType.value==='添加行数'){
+        }else if(selectType.value==='additions'){
           val.sort(function (a, b) {
           return b.addTotal - a.addTotal;
         });
@@ -210,9 +210,9 @@ export default defineComponent({
           ojb.name=val[i].name
           ojb.type=val[i].type
           ojb.stack='Total'+i
-          if(selectType.value==='commit次数'){
+          if(selectType.value==='Commits'){
           ojb.data=val[i].countData
-        }else if(selectType.value==='添加行数'){
+        }else if(selectType.value==='additions'){
           ojb.data=val[i].additionsData
         }else{
           ojb.data=val[i].deletionsData
@@ -235,9 +235,9 @@ export default defineComponent({
           cardOjb.count=allcardlist[k].cntTotal
           cardOjb.add=allcardlist[k].addTotal
           cardOjb.del=allcardlist[k].delTotal
-          if(selectType.value==='commit次数'){
+          if(selectType.value==='Commits'){
             cardOjb.data=allcardlist[k].countData
-        }else if(selectType.value==='添加行数'){
+        }else if(selectType.value==='additions'){
           cardOjb.data=allcardlist[k].additionsData
         }else{
           cardOjb.data=allcardlist[k].deletionsData
@@ -262,7 +262,7 @@ export default defineComponent({
             headselect.value.type='member'
           }
           if(e.data.dataUser.length!==0){
-            selectType.value='commit次数'
+            selectType.value='Commits'
             if(val2==='p'){
               warehouseData=e.data.dataProject
               warehouseCardData=e.data.dataUser
@@ -387,6 +387,10 @@ export default defineComponent({
         color: #4b4b4b;
         margin-bottom: 24px;
         padding-left: 15px;
+      }
+      &-headSelect div{
+        float: right;
+        margin-left: 5px;
       }
     }
     &-table {
