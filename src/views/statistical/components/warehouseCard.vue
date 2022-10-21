@@ -18,79 +18,79 @@
                         {{warehouseCardData.del}}
                     </span></span>
              </div>
-             <div :id="'warehouseCardEcharts'+echartsId"></div>        
+             <div :id="'warehouseCardEcharts'+echartsId" @click="openDialog" style="cursor: pointer;"></div>        
         </el-card>
+        <el-dialog v-model="dialogTableVisible" :width="920" :title="warehouseCardData.name+' : '+selectType">
+            <MassageEcharts :warehouseCardData="warehouseCardData"
+            :echartsId="echartsId"></MassageEcharts>
+        </el-dialog>
+
     </div>
 </template>
 <script>
 import { defineComponent,ref,onMounted,watch} from "vue";
 import * as echarts from 'echarts'
+import MassageEcharts from "./massageEcharts.vue";
 export default defineComponent({
-    name:'warehouseCard',
-    props:{
-        echartsId:Number,
-        warehouseShow:Boolean,
-        warehouseCardData:Object
+    name: "warehouseCard",
+    computed:{
+        MassageEcharts
     },
-    setup(props,cxt){
-        const skipMember = ()=>{
+    props: {
+        echartsId: Number,
+        warehouseShow: Boolean,
+        warehouseCardData: Object,
+        selectType:String
+    },
+    setup(props, cxt) {
+        const dialogTableVisible=ref(false)
+        const skipMember = () => {
             console.log(props.warehouseCardData.id);
-            cxt.emit('contentSelect',[props.warehouseCardData.id],'u',1) 
-        }
-        const drawLine=()=>{
-        let warehouseCardEcharts=echarts.init(document.getElementById('warehouseCardEcharts'+props.echartsId));
-        warehouseCardEcharts.resize({
+            cxt.emit("contentSelect", [props.warehouseCardData.id], "u", 1);
+        };
+        const drawLine = () => {
+            let warehouseCardEcharts = echarts.init(document.getElementById("warehouseCardEcharts" + props.echartsId));
+            warehouseCardEcharts.resize({
                 width: 480,
                 height: 250
-            });   
+            });
             warehouseCardEcharts.setOption({
-                color:["orange"],
+                color: ["orange"],
                 xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    data: props.warehouseCardData.date
-  },
-  yAxis: {
-    type: 'value'
-  },
-  series: [
-    {
-      data: props.warehouseCardData.data,
-      type: 'line',
-      areaStyle: {
-//         color: {
-//     type: 'linear',
-//     x: 0,
-//     y: 0,
-//     x2: 0,
-//     y2: 1,
-//     colorStops: [{
-//       offset: 0, color: 'rgba(58,132,255, 0.5)'    // 0% 处的颜色
-//     }, {
-//       offset: 1, color: 'rgba(58,132,255, 0)' //   100% 处的颜色
-//     }],
-//     global: false // 缺省为 false
-//   }
-      }
-    }
-  ]
-        })  
-    }
+                    type: "category",
+                    boundaryGap: false,
+                    data: props.warehouseCardData.date
+                },
+                yAxis: {
+                    type: "value"
+                },
+                series: [
+                    {
+                        data: props.warehouseCardData.data,
+                        type: "line",
+                        areaStyle: {}
+                    }
+                ]
+            });
+        };
+        const openDialog = () => {
+            dialogTableVisible.value=true
+        };
         watch(props.warehouseCardData, () => {
             console.log(111);
-      echarts.init(document.getElementById('warehouseCardEcharts'+props.echartsId)).dispose();
-      drawLine()
-    },
-    { deep: true });
-    
-        onMounted(()=>{
-            drawLine()
-        })
+            echarts.init(document.getElementById("warehouseCardEcharts" + props.echartsId)).dispose();
+            drawLine();
+        }, { deep: true });
+        onMounted(() => {
+            drawLine();
+        });
         return {
-            skipMember
-        }
-    }
-
+            skipMember,
+            openDialog,
+            dialogTableVisible
+        };
+    },
+    components: { MassageEcharts }
 })
 </script>
 <style lang="less" scopeds>

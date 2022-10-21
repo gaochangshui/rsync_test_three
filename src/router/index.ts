@@ -43,7 +43,7 @@ const routes = [
         path: 'statistical',
         name: '统计',
         component: () => import('@/views/statistical/index.vue'),
-        meta: { title: '代码仓库、评审、配置', icon: 'statistical',name:'统计' }
+        meta: { title: '成员、仓库统计', icon: 'statistical',name:'统计' }
       },
       {
         path: 'Scheduled',

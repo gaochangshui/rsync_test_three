@@ -75,6 +75,7 @@
               <WarehouseCard 
               @contentSelect="contentSelect"
               :echartsId="index+1"
+              :selectType="selectType"
               :warehouseShow="warehouseShow"
               :warehouseCardData="item"></WarehouseCard>
             </div>
@@ -83,6 +84,7 @@
             <div v-for="(item,index) in memberCardList" :key="index">
               <MemberCard 
               :echartsId="index+1"
+              :selectType="selectType"
               :memberShow="memberShow"
               :memberCardData="item"></MemberCard>
             </div>
@@ -113,7 +115,7 @@ export default defineComponent({
     const memberShow=ref(false);
     const leftListIndex=ref('0')
     const name = ref('statistical');
-    const topTitle = ref('仓库统计');
+    const topTitle = ref('成员统计');
     let warehouseData=[];
     let warehouseCardData=[];
     let memberData=[];

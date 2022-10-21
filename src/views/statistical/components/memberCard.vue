@@ -15,21 +15,37 @@
                         {{memberCardData.del}}
                     </span></span>
              </div>
-             <div :id="'memberCardEcharts'+echartsId"></div>        
+             <div style="cursor: pointer;width:480px;height: 250px;">
+                <div :id="'memberCardEcharts'+echartsId" @click="openDialog" ></div>
+             </div>
+                     
         </el-card>
+        <el-dialog v-model="dialogTableVisible" :width="920" :title="memberCardData.name+' : '+selectType">
+            <MassageEcharts :warehouseCardData="memberCardData"
+            :echartsId="echartsId"></MassageEcharts>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { defineComponent,ref,onMounted,watch} from "vue";
+import MassageEcharts from './massageEcharts.vue'
 import * as echarts from 'echarts'
 export default defineComponent({
     name:'memberCard',
+    components:{
+        MassageEcharts
+    },
     props:{
         echartsId:Number,
         memberShow:Boolean,
-        memberCardData:Object
+        memberCardData:Object,
+        selectType:String
     },
     setup(props){
+        const dialogTableVisible=ref(false)
+        const openDialog=()=>{
+            dialogTableVisible.value=true
+        }
         const skipMember = ()=>{
             window.open(props.memberCardData.url); 
         }
@@ -68,7 +84,9 @@ export default defineComponent({
             drawLine()
         })
         return {
-            skipMember
+            skipMember,
+            openDialog,
+            dialogTableVisible
         }
     }
 
