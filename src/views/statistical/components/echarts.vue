@@ -71,7 +71,10 @@ export default defineComponent({
 		
 	},
   legend: {
-    data:props.warehouseList.nameList
+    data:props.warehouseList.nameList,
+    type: 'scroll', //分页类型
+orient: 'horizontal',
+padding:[0,50,0,0], 
   },
   grid: {
     left: '3%',
