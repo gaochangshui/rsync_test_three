@@ -1,7 +1,7 @@
 <template>
     <div v-show="memberShow">
         <el-card class="memberbox-card" shadow="hover">
-                <span class="memberbox-card-name" @click="skipMember">{{memberCardData.name}}</span>
+                <span class="memberbox-card-name" >{{memberCardData.name}}</span>
                 <span style="float:right;color: gray;">#{{echartsId}}</span>
              <div style="margin-top:10px">
                 <span>提交次数:
@@ -46,9 +46,6 @@ export default defineComponent({
         const openDialog=()=>{
             dialogTableVisible.value=true
         }
-        const skipMember = ()=>{
-            window.open(props.memberCardData.url); 
-        }
         const drawLine=()=>{
         let memberCardEcharts=echarts.init(document.getElementById('memberCardEcharts'+props.echartsId));
         memberCardEcharts.resize({
@@ -84,7 +81,6 @@ export default defineComponent({
             drawLine()
         })
         return {
-            skipMember,
             openDialog,
             dialogTableVisible
         }
@@ -101,10 +97,6 @@ export default defineComponent({
     }
     &-name{
         font-size: 20px;
-    }
-    &-name:hover{
-        color: blue;
-        cursor: pointer;
     }
     &-commit{
         color: orange;
