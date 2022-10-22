@@ -91,8 +91,8 @@ padding:[0,50,0,0],
   {
             //默认为滚动条型数据区域缩放组件
             show: true,
-            start: 0,
-            end: 60
+            start: 60,
+            end: 100
         },
   ],
   xAxis: {
@@ -163,8 +163,8 @@ padding:[0,50,0,0],
   {
             //默认为滚动条型数据区域缩放组件
             show: true,
-            start: 0,
-            end: 60
+            start: 60,
+            end: 100
         },
   ],
   series: props.memberList.yList

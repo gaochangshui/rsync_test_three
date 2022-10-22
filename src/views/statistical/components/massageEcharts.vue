@@ -37,8 +37,8 @@ export default defineComponent({
           {
             //默认为滚动条型数据区域缩放组件
             show: true,
-            start: 0,
-            end: 60,
+            start: 60,
+            end: 100,
           },
         ],
         xAxis: {
