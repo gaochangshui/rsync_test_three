@@ -29,7 +29,8 @@
           <div>
         <el-select 
         v-model="selectType" 
-        style="float:right;margin-right:20px"
+        style="float:right;margin-right:20px;width:150px"
+        size="large"
         v-show="(warehouseShow && headselect.type==='project')||(headselect.type==='member' && memberShow)">
           <el-option
           value="Commits"
@@ -52,6 +53,7 @@
             :statisticalType="headselect.type" 
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
+            :changeName="changeName"
             @contentSelect="contentSelect"></HeadSelect>
         </div>
       </div>
@@ -139,6 +141,7 @@ export default defineComponent({
       yList:[]
     });
     const memberChangeList =ref([])
+    const changeName=ref(null)
     const labs = ref( [
         {
           name: '统计',
@@ -255,8 +258,11 @@ export default defineComponent({
             flag:val2
         }).then((e)=>{
           if(val3===1){
-            leftListIndex.value=String(0)
+            leftListIndex.value=0
+            console.log(1);
+            topTitle.value='成员统计'
             headselect.value.type='member'
+            changeName.value=val[0]
           }
           if(e.data.dataUser.length!==0){
             selectType.value='Commits'
@@ -321,6 +327,7 @@ export default defineComponent({
         warehouseTooltip,
         memberTooltip,
         leftListIndex,
+        changeName,
         getTitle,
         contentSelect,
       }

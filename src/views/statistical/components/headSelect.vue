@@ -11,11 +11,11 @@
                         collapse-tags-tooltip
                         clearable
                         filterable
-                        style="width:550px"
+                        style="width:550px;margin-top: 1px;"
                         size="large"
                     />
             </div>    
-            <el-button type="primary" @click="contentSelect('p')">查询</el-button>
+            <el-button type="primary" @click="contentSelect('p')" size="large">查询</el-button>
         </div>
         <div v-show="statisticalType==='member'" class="memberHead">
             <div>
@@ -27,9 +27,9 @@
                 collapse-tags-tooltip
                 filterable
                 :filter-method="(value)=>memberFilter(value)" 
-                style="width:300px;"
+                style="width:300px;margin-top: 1px;"
                 class="m-2" 
-                size="default"
+                size="large"
                 placeholder="Select">
                     <el-option
                     v-for="item in memberOptions"
@@ -39,16 +39,17 @@
                     />
                 </el-select>
             </div>
-            <el-button type="primary" @click="contentSelect('u')">查询</el-button>  
+            <el-button type="primary" @click="contentSelect('u')" size="large">查询</el-button>  
         </div>
     </div>
 </template>
 <script>
-import { defineComponent, ref ,onMounted  } from "vue";
+import { defineComponent, ref ,onMounted,onBeforeUpdate,watch } from "vue";
 import axios from '@/http';
 export default defineComponent({
     name:'headSelect',
-    props:{statisticalType:String},
+    props:{statisticalType:String,
+        changeName:String},
     setup(props,cxt){
         const groupValue=ref(null);
         const projectValue=ref(null);
@@ -81,13 +82,12 @@ export default defineComponent({
             })
         };
         const contentSelect = (val)=>{
-            
-            warehouseValue.value=warehouseValue.value.map((item)=>{
+            let selectValue=warehouseValue.value.map((item)=>{
                 return item[item.length-1]
             })
             if(props.statisticalType==='project'){
                 
-                cxt.emit('contentSelect',warehouseValue.value,val,0)
+                cxt.emit('contentSelect',selectValue,val,0)
             }else{
                 cxt.emit('contentSelect',memberValue.value,val,0)
             }
@@ -119,7 +119,7 @@ export default defineComponent({
           var usercd = getUserid[1].trim();
         }
       }
-      memberValue.value=[usercd]
+        memberValue.value=[usercd]
       setInterval
       setTimeout(()=>{
         contentSelect('u')
@@ -132,6 +132,15 @@ export default defineComponent({
         setTimeout(() => {
             getMemberOptions();
         }, 1000);
+        let chengvalue = null
+        onBeforeUpdate(()=>{ 
+            console.log(chengvalue);
+            if(chengvalue !== props.changeName){
+                chengvalue=props.changeName
+                memberValue.value=[props.changeName]
+            }
+            
+        })
         return{
             groupValue,
             projectValue,
