@@ -45,7 +45,12 @@ export default defineComponent({
     setup(props, cxt) {
         const dialogTableVisible=ref(false)
         const skipMember = () => {
-            cxt.emit("contentSelect", [props.warehouseCardData.id], "u", 1);
+            if(props.warehouseCardData.id){
+                cxt.emit("contentSelect", [props.warehouseCardData.id], "u", 1);
+            }else{
+                cxt.emit("contentSelect", [], "u", 0);
+            }
+            
         };
         const drawLine = () => {
             let warehouseCardEcharts = echarts.init(document.getElementById("warehouseCardEcharts" + props.echartsId));
