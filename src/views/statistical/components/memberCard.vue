@@ -108,4 +108,7 @@ export default defineComponent({
         color: red;
     }
 }
+.el-popup-parent--hidden {
+      padding-right: 0 !important;
+    }
 </style>

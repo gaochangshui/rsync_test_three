@@ -129,18 +129,12 @@ export default defineComponent({
         getInitPicture()
         getWarehouseOptions();
     })
+    watch(()=>props.changeName,()=>{
+        memberValue.value=[props.changeName]
+    })
         setTimeout(() => {
             getMemberOptions();
         }, 1000);
-        let chengvalue = null
-        onBeforeUpdate(()=>{ 
-            console.log(chengvalue);
-            if(chengvalue !== props.changeName){
-                chengvalue=props.changeName
-                memberValue.value=[props.changeName]
-            }
-            
-        })
         return{
             groupValue,
             projectValue,

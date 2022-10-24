@@ -1665,6 +1665,9 @@ height: 32px !important;
   position: relative;
   top: 80%;
 }
+.el-popup-parent--hidden {
+      padding-right: 0 !important;
+    }
 .pointFrom:focus {
   outline: none;
 }

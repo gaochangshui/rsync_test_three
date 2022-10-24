@@ -1720,6 +1720,9 @@ export default {
 .el-table__header {
   height: 48px;
 }
+.el-popup-parent--hidden {
+      padding-right: 0 !important;
+    }
 .el-table {
   tbody tr:hover > td {
     background: #fafafa !important;

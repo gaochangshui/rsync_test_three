@@ -259,7 +259,6 @@ export default defineComponent({
         }).then((e)=>{
           if(val3===1){
             leftListIndex.value=0
-            console.log(1);
             topTitle.value='成员统计'
             headselect.value.type='member'
             changeName.value=val[0]
