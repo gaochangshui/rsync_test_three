@@ -71,11 +71,10 @@ export default defineComponent({
   ]
         })  
     }
-    watch(props.memberCardData, () => {
+    watch(()=>props.memberCardData, () => {
       echarts.init(document.getElementById('memberCardEcharts'+props.echartsId)).dispose();
       drawLine()
-    },
-    { deep: true });
+    });
         onMounted(()=>{
             drawLine()
         })

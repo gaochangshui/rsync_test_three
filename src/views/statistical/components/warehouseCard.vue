@@ -80,7 +80,7 @@ export default defineComponent({
         const openDialog = () => {
             dialogTableVisible.value=true
         };
-        watch(props.warehouseCardData, () => {
+        watch(()=>props.warehouseCardData, () => {
             echarts.init(document.getElementById("warehouseCardEcharts" + props.echartsId)).dispose();
             drawLine();
         }, { deep: true });
