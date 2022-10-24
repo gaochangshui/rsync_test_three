@@ -38,13 +38,13 @@
           >
           </el-option>
           <el-option
-          value="additions"
-          label="additions"
+          value="Additions"
+          label="Additions"
           >
           </el-option>
           <el-option
-          value="deletions"
-          label="deletions"
+          value="Deletions"
+          label="Deletions"
           >
           </el-option>
         </el-select>
@@ -169,7 +169,7 @@ export default defineComponent({
           val.sort(function (a, b) {
           return b.cntTotal - a.cntTotal;
         });
-        }else if(selectType.value==='additions'){
+        }else if(selectType.value==='Additions'){
           val.sort(function (a, b) {
           return b.addTotal - a.addTotal;
         });
@@ -214,7 +214,7 @@ export default defineComponent({
           ojb.stack='Total'+i
           if(selectType.value==='Commits'){
           ojb.data=val[i].countData
-        }else if(selectType.value==='additions'){
+        }else if(selectType.value==='Additions'){
           ojb.data=val[i].additionsData
         }else{
           ojb.data=val[i].deletionsData
@@ -239,7 +239,7 @@ export default defineComponent({
           cardOjb.del=allcardlist[k].delTotal
           if(selectType.value==='Commits'){
             cardOjb.data=allcardlist[k].countData
-        }else if(selectType.value==='additions'){
+        }else if(selectType.value==='Additions'){
           cardOjb.data=allcardlist[k].additionsData
         }else{
           cardOjb.data=allcardlist[k].deletionsData

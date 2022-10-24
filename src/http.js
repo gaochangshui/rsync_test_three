@@ -46,7 +46,7 @@ axios.interceptors.request.use((config) => {
 //     }
 //   }
   return config;
-},(error) => {
+},() => {
   return ;
 });
 
@@ -56,7 +56,6 @@ axios.interceptors.response.use((response) => {
   if(response.data.Success==false){
     router.replace({ name: 'login' });
     localStorage.clear('token');
-    
   }
   return response;
 }, error => {

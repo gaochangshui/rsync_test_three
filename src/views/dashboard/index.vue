@@ -1711,6 +1711,9 @@ height: 32px !important;
 .selectTag {
   justify-content: space-between !important;
 }
+.el-tag__content{
+  font-size: 12px;
+}
 .selectTag .el-tag__content {
 width: 480px;
 overflow: hidden;
@@ -1831,9 +1834,6 @@ color: red;
   border: none;
   height: 20px;
 }
-.el-tag__content{
-  font-size: 12px;
-}
 .starClass:hover{
   width: 20px !important;
   height: 20px !important;
@@ -1858,14 +1858,6 @@ color: red;
 }
 .expendTime span:hover{
   color:#039BE5;
-}
-.reserveTime{
-  display:flex;
-  cursor: pointer;
-}
-.reserveTime span{
-padding: 3px 8px;
-border-radius: 5px;
 }
 .reserveTime img{
   width:16px;

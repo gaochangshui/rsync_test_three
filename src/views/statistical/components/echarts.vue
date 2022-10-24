@@ -55,13 +55,13 @@ export default defineComponent({
         '</span>' +  "commit次数: " + (props.warehouseTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "additions: " + (props.warehouseTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "Additions: " + (props.warehouseTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "deletions: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        '</span>' +  "Deletions: " + (props.warehouseTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
         if(props.selectType==='Commits'){
           str=str+time+add+del;
-        }else if(props.selectType==='additions'){
+        }else if(props.selectType==='Additions'){
           str=str+time+all+del;
         }else{
           str=str+time+all+add;
@@ -122,13 +122,13 @@ padding:[0,50,0,0],
         '</span>' + "Commits : " + (props.memberTooltip[params.seriesIndex].cntTooltip[params.dataIndex])+'</p><br/>';
 		let add='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' + "additions: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
+        '</span>' + "Additions: " + (props.memberTooltip[params.seriesIndex].addTooltip[params.dataIndex])+'</p><br/>';
 		let del='<p style="display:inline-block;">'+
         '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+params.color+'">'+
-        '</span>' +  "deletions: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
+        '</span>' +  "Deletions: " + (props.memberTooltip[params.seriesIndex].delTooltip[params.dataIndex])+'</p>';
         if(props.selectType==='Commits'){
           str=str+time+add+del;
-        }else if(props.selectType==='additions'){
+        }else if(props.selectType==='Additions'){
           str=str+time+all+del;
         }else{
           str=str+time+all+add;
