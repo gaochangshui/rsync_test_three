@@ -284,6 +284,8 @@ export default defineComponent({
           ElMessage.error('查询数据为空')
         }
         loading.close()
+        }).catch(()=>{
+          loading.close()
         })
       };
       watch(selectType,()=>{
