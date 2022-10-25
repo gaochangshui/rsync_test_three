@@ -60,20 +60,19 @@ axios.interceptors.response.use((response) => {
   return response;
 }, error => {
   if (error.response) {
-    switch (error.response.status) {
-        case 401:
+    if (error.response.status===401) {
             // 返回 401 清除 token 信息并跳转到登录页面
             router.replace({ name: 'login' });
             localStorage.clear('token');
+    }else{
+      ElMessage({
+        type: 'error',
+        showClose: true,
+        dangerouslyUseHTMLString: true,
+        message: 'データ抽出失敗しました'
+      });
     }
 }
-  ElMessage({
-    type: 'error',
-    showClose: true,
-    dangerouslyUseHTMLString: true,
-    message: 'データ抽出失敗しました'
-  });
-
   return Promise.reject(error);
 });
 
