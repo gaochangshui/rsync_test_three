@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- 仓库统计 -->
         <div v-show="statisticalType==='project'" class="projectHead" >
             <div style="display:flex">
                 <span style="width:48px;margin-top: 8px;">仓库：</span>
@@ -17,6 +18,7 @@
             </div>    
             <el-button type="primary" @click="contentSelect('p')" size="large">查询</el-button>
         </div>
+        <!-- 成员统计 -->
         <div v-show="statisticalType==='member'" class="memberHead">
             <div>
                 <span>成员：</span>
@@ -41,16 +43,52 @@
             </div>
             <el-button type="primary" @click="contentSelect('u')" size="large">查询</el-button>  
         </div>
+        <!-- 工时统计 -->
+        <div v-show="statisticalType==='takentime'" class="memberHead">
+            <div>
+                <span>项目：</span>
+                <el-select 
+                v-model="timeValue"
+                multiple 
+                collapse-tags 
+                collapse-tags-tooltip
+                filterable
+                remote
+                reserve-keyword
+                clearable
+                placeholder="请选择"
+                style="width:450px;margin-top: 1px;"
+                :remote-method="remoteMethod"
+                size="large"
+                >
+                <el-option
+                style="height:60px"
+                v-for="item in timeOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value+': '+item.link"
+                >
+                <div class="value" style="line-height: normal">
+                {{ item.value }}
+              </div>
+              <span class="link">{{ item.link }}</span>
+                </el-option>
+                </el-select>
+            </div>
+        <el-button type="primary" @click="timeSelect()" size="large">查询</el-button> 
+        </div>
     </div>
 </template>
 <script>
 import { defineComponent, ref ,onMounted,onBeforeUpdate,watch } from "vue";
 import axios from '@/http';
+import { getProjectlist } from "@/api/qcd";
 export default defineComponent({
     name:'headSelect',
     props:{statisticalType:String,
         changeName:String},
     setup(props,cxt){
+        const timeValue=ref(null)
         const groupValue=ref(null);
         const projectValue=ref(null);
         const warehouseValue=ref([]);
@@ -64,6 +102,7 @@ export default defineComponent({
         const warehouseOptions=ref([]);
         const memberOptions=ref([]);
         const copyMemberOputio=ref([]);
+        const timeOption=ref([])
         const getMemberOptions = ()=>{
             axios.get('/actionapi/GitlabCodeAnalysis/GetMembers'
             ).then((e)=>{
@@ -110,6 +149,19 @@ export default defineComponent({
         memberOptions.value=copyMemberOputio.value
       }
     };
+    const remoteMethod = (query) => {
+        console.log(query);
+      if (query !== "") {
+        getProjectlist(query).then((res) => {
+            timeOption.value = res.data.map((item) => ({
+            value: item.ProjectCode,
+            link: item.ProjectName,
+          }));
+        });
+      } else {
+        timeOption.value = [];
+      }
+    }
     const getInitPicture = ()=>{
         var allCookie = document.cookie;
       var aryCookie = allCookie.split(';');
@@ -128,6 +180,12 @@ export default defineComponent({
     onMounted(()=>{
         getInitPicture()
         getWarehouseOptions();
+        getProjectlist("").then((res) => {
+        timeOption.value = res.data.map((item) => ({
+          value: item.ProjectCode,
+          link: item.ProjectName,
+        }));
+      });
     })
     watch(()=>props.changeName,()=>{
         memberValue.value=[props.changeName]
@@ -144,9 +202,12 @@ export default defineComponent({
             warehouseOptions,
             memberValue,
             memberOptions,
+            timeOption,
+            timeValue,
             getWarehouseOptions,
             contentSelect,
             memberFilter,
+            remoteMethod,
             props1
         }
     }
