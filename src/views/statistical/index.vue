@@ -91,6 +91,15 @@
               :memberCardData="item"></MemberCard>
             </div>
           </el-space>   
+          <el-space wrap v-show="headselect.type==='takentime'">
+            <div v-for="(item,index) in memberCardList" :key="index">
+              <TimeCard 
+              :echartsId="index+1"
+              :selectType="selectType"
+              :memberShow="memberShow"
+              :memberCardData="item"></TimeCard>
+            </div>
+          </el-space>   
         </div>
     </div>
     </div>
@@ -102,13 +111,15 @@ import Echarts from "./components/echarts.vue";
 import HeadSelect from "./components/headSelect.vue";
 import WarehouseCard from './components/warehouseCard.vue';
 import MemberCard from './components/memberCard.vue';
+import TimeCard from './components/timeCard.vue'
 import { ElMessage , ElLoading } from 'element-plus'
 export default defineComponent({
   components: {
     Echarts,
     HeadSelect,
     WarehouseCard,
-    MemberCard
+    MemberCard,
+    TimeCard
 },
   name: 'Statistical',
   setup(){

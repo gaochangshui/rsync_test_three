@@ -79,18 +79,18 @@ export default defineComponent({
           width: document.documentElement.clientWidth - 350,
           height: 260,
         });
-        timeEchartsTask.resize({
-          width: document.documentElement.clientWidth - 1500,
-          height: 260,
-        });
-        timeEchartsLine.resize({
-          width: document.documentElement.clientWidth - 1200,
-          height: 260,
-        });
-        timeEchartsMember.resize({
-          width: document.documentElement.clientWidth - 1400,
-          height: 260,
-        });
+        // timeEchartsTask.resize({
+        //   width: document.documentElement.clientWidth - 1450,
+        //   height: 260,
+        // });
+        // timeEchartsLine.resize({
+        //   width: document.documentElement.clientWidth - 1200,
+        //   height: 260,
+        // });
+        // timeEchartsMember.resize({
+        //   width: document.documentElement.clientWidth - 1450,
+        //   height: 260,
+        // });
       };
       // 仓库统计图表数据
       projectEcharts.setOption({
