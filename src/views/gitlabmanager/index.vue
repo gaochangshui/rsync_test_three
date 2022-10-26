@@ -939,6 +939,10 @@ export default {
             {
               name: '模板仓库',
               number: ''
+            },
+            {
+              name: '组件仓库',
+              number: ''
             }
           ]
         }
@@ -1133,6 +1137,9 @@ export default {
         this.getTableData();
       } else if (val === '模板仓库') {
         this.warehouseType = 'ProjectsTemplate';
+        this.getTableData();
+      } else if(val === '组件仓库'){
+        this.warehouseType = 'ProjectsComponet';
         this.getTableData();
       }
       this.topTitle = val;
@@ -1608,6 +1615,7 @@ export default {
           this.labs[0].children[1].number = e.data.num.my;
           this.labs[0].children[2].number = e.data.num.starred;
           this.labs[0].children[3].number = e.data.num.temp;
+          this.labs[0].children[4].number = e.data.num.compo;
           this.loading = false;
         });
     }
