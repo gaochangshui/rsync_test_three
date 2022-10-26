@@ -8,7 +8,7 @@
       id="memberEcharts"
       v-show="statisticalType === 'member' && memberShow"
     ></div>
-    <div v-show="statisticalType === 'takentime'" style="display:flex">
+    <div v-show="statisticalType === 'takentime'" style="display:flex;margin-left: 40px;">
       <div id="timeEchartsTask"></div>
       <div id="timeEchartsLine"></div>
       <div id="timeEchartsMember"></div>
@@ -58,7 +58,7 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsTask.resize({
-        width: document.documentElement.clientWidth - 1450,
+        width: document.documentElement.clientWidth - 1480,
         height: 260,
       });
       timeEchartsLine.resize({
@@ -66,7 +66,7 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsMember.resize({
-        width: document.documentElement.clientWidth - 1450,
+        width: document.documentElement.clientWidth - 1480,
         height: 260,
       });
       // 监听浏览器宽高变化改变图标宽度
@@ -79,18 +79,6 @@ export default defineComponent({
           width: document.documentElement.clientWidth - 350,
           height: 260,
         });
-        // timeEchartsTask.resize({
-        //   width: document.documentElement.clientWidth - 1450,
-        //   height: 260,
-        // });
-        // timeEchartsLine.resize({
-        //   width: document.documentElement.clientWidth - 1200,
-        //   height: 260,
-        // });
-        // timeEchartsMember.resize({
-        //   width: document.documentElement.clientWidth - 1450,
-        //   height: 260,
-        // });
       };
       // 仓库统计图表数据
       projectEcharts.setOption({
@@ -269,7 +257,7 @@ export default defineComponent({
       // 工时统计饼状图task别
       timeEchartsTask.setOption({
         title: {
-          text: "工时统计tesk别",
+          text: "工时统计任务别",
           left: "right",
         },
         tooltip: {

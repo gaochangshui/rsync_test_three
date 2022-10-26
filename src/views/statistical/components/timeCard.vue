@@ -53,7 +53,6 @@ export default defineComponent({
     {
       data: [2,5,8,6,9,7,4,5,9],
       type: 'line',
-      areaStyle: {}
     }
   ]
         })  
