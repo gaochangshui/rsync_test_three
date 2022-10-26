@@ -151,6 +151,9 @@ export default defineComponent({
             },
             {
               name: '仓库统计',
+            },
+            {
+              name: '工时统计'
             }
           ]
         }
@@ -162,6 +165,9 @@ export default defineComponent({
       } else if (val === '成员统计') {
         topTitle.value = '成员统计'
         headselect.value.type='member'
+      }else if(val === '工时统计'){
+        topTitle.value = '工时统计'
+        headselect.value.type='takentime'
       }
       };
       const dataSort = (val)=>{
