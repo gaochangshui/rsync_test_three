@@ -8,7 +8,7 @@
       id="memberEcharts"
       v-show="statisticalType === 'member' && memberShow"
     ></div>
-    <div v-show="statisticalType === 'takentime'" style="display:flex;margin-left: 40px;">
+    <div id="echartsBox" v-show="statisticalType === 'takentime'" class="timeEchartsBox">
       <div id="timeEchartsTask"></div>
       <div id="timeEchartsLine"></div>
       <div id="timeEchartsMember"></div>
@@ -58,15 +58,15 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsTask.resize({
-        width: document.documentElement.clientWidth - 1480,
+        width: document.getElementById('echartsBox').clientWidth/3.5,
         height: 260,
       });
       timeEchartsLine.resize({
-        width: document.documentElement.clientWidth - 1300,
+        width: document.getElementById('echartsBox').clientWidth/2.35,
         height: 260,
       });
       timeEchartsMember.resize({
-        width: document.documentElement.clientWidth - 1480,
+        width: document.getElementById('echartsBox').clientWidth/3.5,
         height: 260,
       });
       // 监听浏览器宽高变化改变图标宽度
@@ -79,6 +79,18 @@ export default defineComponent({
           width: document.documentElement.clientWidth - 350,
           height: 260,
         });
+        timeEchartsTask.resize({
+          width: document.getElementById('echartsBox').clientWidth/3.5,
+        height: 260,
+      });
+      timeEchartsLine.resize({
+        width: document.getElementById('echartsBox').clientWidth/2.35,
+        height: 260,
+      });
+      timeEchartsMember.resize({
+        width: document.getElementById('echartsBox').clientWidth/3.5,
+        height: 260,
+      });
       };
       // 仓库统计图表数据
       projectEcharts.setOption({
@@ -258,7 +270,7 @@ export default defineComponent({
       timeEchartsTask.setOption({
         title: {
           text: "工时统计任务别",
-          left: "center",
+          right: "25%",
         },
         tooltip: {
           trigger: "item",
@@ -273,7 +285,7 @@ export default defineComponent({
             name: "Access From",
             type: "pie",
             radius: "50%",
-            center: ["50%", "50%"],
+            center: ["60%", "60%"],
             data: [
               { value: 1048, name: "Search Engine" },
               { value: 735, name: "Direct" },
@@ -388,7 +400,7 @@ export default defineComponent({
       timeEchartsMember.setOption({
         title: {
           text: "工时统计人别",
-          left: "center",
+          left: "25%",
         },
         tooltip: {
           trigger: "item",
@@ -396,14 +408,14 @@ export default defineComponent({
         legend: {
           orient: "vertical",
           left: "right",
-          top:'10%'
+          top:'10%',
         },
         series: [
           {
             name: "Access From",
             type: "pie",
             radius: "50%",
-            center: ["50%", "50%"],
+            center: ["40%", "60%"],
             data: [
               { value: 1048, name: "Search Engine" },
               { value: 735, name: "Direct" },
@@ -445,3 +457,13 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.timeEchartsBox{
+  display:flex;
+  margin-left: 40px;
+  border: 1px solid #e4e7ed;
+  margin-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+</style>

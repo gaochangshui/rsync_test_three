@@ -427,6 +427,7 @@ export default defineComponent({
   }
 }
 .cardBox{
+  margin-top: 20px;
   margin-left: 42px;
 }
 </style>
