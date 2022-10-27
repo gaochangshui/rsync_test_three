@@ -1,5 +1,5 @@
 <template>
-    <div v-show="memberShow">
+    <div v-show="timeShow">
         <el-card class="timebox-card" shadow="hover">
                 <span class="timebox-card-name" >{{memberCardData.name}}</span>
              <div style="cursor: pointer;width:480px;height: 250px;">
@@ -24,7 +24,7 @@ export default defineComponent({
     },
     props:{
         echartsId:Number,
-        memberShow:Boolean,
+        timeShow:Boolean,
         memberCardData:Object,
         selectType:String
     },
@@ -58,7 +58,7 @@ export default defineComponent({
         })  
     }
     watch(()=>props.memberCardData, () => {
-      echarts.init(document.getElementById('memberCardEcharts'+props.echartsId)).dispose();
+      echarts.init(document.getElementById('timeCardEchartss'+props.echartsId)).dispose();
       drawLine()
     });
         onMounted(()=>{

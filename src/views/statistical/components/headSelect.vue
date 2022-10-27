@@ -132,6 +132,13 @@ export default defineComponent({
             }
             
         };
+        const timeSelect =()=>{
+          let timeData=[]
+          timeValue.value.map((item)=>{
+            timeData.push(item.split(':')[0])
+          })
+          cxt.emit('timeSelect',timeData)
+        }
         const  memberFilter =(val)=>{
       if(val){
         let arr=[]
@@ -208,6 +215,7 @@ export default defineComponent({
             contentSelect,
             memberFilter,
             remoteMethod,
+            timeSelect,
             props1
         }
     }

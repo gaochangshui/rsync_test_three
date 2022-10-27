@@ -8,10 +8,10 @@
       id="memberEcharts"
       v-show="statisticalType === 'member' && memberShow"
     ></div>
-    <div id="echartsBox" v-show="statisticalType === 'takentime'" class="timeEchartsBox">
-      <div id="timeEchartsTask"></div>
-      <div id="timeEchartsLine"></div>
-      <div id="timeEchartsMember"></div>
+    <div id="echartsBox"   class="timeEchartsBox">
+      <div id="timeEchartsTask" v-show="statisticalType === 'takentime' && timeShow" style="border-right: 1px solid #e4e7ed;"></div>
+      <div id="timeEchartsLine" v-show="statisticalType === 'takentime' && timeShow" style="padding-left:10px;padding-right:30px"></div>
+      <div id="timeEchartsMember" v-show="statisticalType === 'takentime' && timeShow" style="border-left: 1px solid #e4e7ed;"></div>
     </div>
   </div>
 </template>
@@ -27,8 +27,10 @@ export default defineComponent({
     memberList: Object,
     warehouseShow: Boolean,
     memberShow: Boolean,
+    timeShow:Boolean,
     warehouseChangeList: Array,
     memberChangeList: Array,
+    timeList:Object,
     warehouseTooltip: Array,
     memberTooltip: Array,
   },
@@ -58,7 +60,7 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsTask.resize({
-        width: document.getElementById('echartsBox').clientWidth/3.5,
+        width: document.getElementById('echartsBox').clientWidth/3.7,
         height: 260,
       });
       timeEchartsLine.resize({
@@ -66,7 +68,7 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsMember.resize({
-        width: document.getElementById('echartsBox').clientWidth/3.5,
+        width: document.getElementById('echartsBox').clientWidth/3.7,
         height: 260,
       });
       // 监听浏览器宽高变化改变图标宽度
@@ -80,7 +82,7 @@ export default defineComponent({
           height: 260,
         });
         timeEchartsTask.resize({
-          width: document.getElementById('echartsBox').clientWidth/3.5,
+          width: document.getElementById('echartsBox').clientWidth/3.7,
         height: 260,
       });
       timeEchartsLine.resize({
@@ -88,7 +90,7 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsMember.resize({
-        width: document.getElementById('echartsBox').clientWidth/3.5,
+        width: document.getElementById('echartsBox').clientWidth/3.7,
         height: 260,
       });
       };
@@ -282,18 +284,11 @@ export default defineComponent({
         },
         series: [
           {
-            name: "Access From",
+            name: "消耗时间",
             type: "pie",
             radius: "50%",
             center: ["60%", "60%"],
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-              { value: 300, name: "Video" },
-            ],
+            data: props.timeList.taskPie,
             label: {
              //echarts饼图内部显示百分比设置
              show: true,
@@ -316,56 +311,11 @@ export default defineComponent({
       timeEchartsLine.setOption({
          title: {},
         tooltip: {
-          trigger: "item",
+          trigger: "axis",
           showContent: true,
-          formatter: function (params) {
-            let str = params.seriesName + "<br/>";
-            let time = params.name + "<br/>";
-            let all =
-              '<p style="display:inline-block;">' +
-              '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' +
-              params.color +
-              '">' +
-              "</span>" +
-              "Commits : " +
-              props.memberTooltip[params.seriesIndex].cntTooltip[
-                params.dataIndex
-              ] +
-              "</p><br/>";
-            let add =
-              '<p style="display:inline-block;">' +
-              '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' +
-              params.color +
-              '">' +
-              "</span>" +
-              "Additions: " +
-              props.memberTooltip[params.seriesIndex].addTooltip[
-                params.dataIndex
-              ] +
-              "</p><br/>";
-            let del =
-              '<p style="display:inline-block;">' +
-              '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' +
-              params.color +
-              '">' +
-              "</span>" +
-              "Deletions: " +
-              props.memberTooltip[params.seriesIndex].delTooltip[
-                params.dataIndex
-              ] +
-              "</p>";
-            if (props.selectType === "Commits") {
-              str = str + time + add + del;
-            } else if (props.selectType === "Additions") {
-              str = str + time + all + del;
-            } else {
-              str = str + time + all + add;
-            }
-            return str;
-          },
         },
         legend: {
-          data: props.memberList.nameList,
+          data: props.timeList.taskList,
         },
         grid: {
           left: "3%",
@@ -381,7 +331,7 @@ export default defineComponent({
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: props.memberList.xList,
+          data: props.timeList.date,
         },
         yAxis: {
           type: "value",
@@ -394,7 +344,7 @@ export default defineComponent({
             end: 100,
           },
         ],
-        series: props.memberList.yList,
+        series: props.timeList.yList,
       })
       // 工时统计饼状图人别
       timeEchartsMember.setOption({
@@ -416,13 +366,7 @@ export default defineComponent({
             type: "pie",
             radius: "50%",
             center: ["40%", "60%"],
-            data: [
-              { value: 1048, name: "Search Engine" },
-              { value: 735, name: "Direct" },
-              { value: 580, name: "Email" },
-              { value: 484, name: "Union Ads" },
-              { value: 300, name: "Video Ads" },
-            ],
+            data: props.timeList.userPie,
             label: {
              //echarts饼图内部显示百分比设置
              show: true,
@@ -450,6 +394,19 @@ export default defineComponent({
       echarts.init(document.getElementById("memberEcharts")).dispose();
       drawLine();
     });
+    watch(props.timeList,()=>{
+      console.log(11);
+      echarts.init(
+        document.getElementById("timeEchartsTask")
+      ).dispose;
+      echarts.init(
+        document.getElementById("timeEchartsLine")
+      ).dispose;
+      echarts.init(
+        document.getElementById("timeEchartsMember")
+      ).dispose;
+      drawLine();
+    })
     onMounted(() => {
       drawLine();
     });
@@ -461,9 +418,6 @@ export default defineComponent({
 .timeEchartsBox{
   display:flex;
   margin-left: 40px;
-  border: 1px solid #e4e7ed;
   margin-right: 40px;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 </style>

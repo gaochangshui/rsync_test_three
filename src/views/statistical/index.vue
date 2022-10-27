@@ -31,7 +31,8 @@
         v-model="selectType" 
         style="float:right;margin-right:20px;width:150px"
         size="large"
-        v-show="(warehouseShow && headselect.type==='project')||(headselect.type==='member' && memberShow)">
+        v-show="(warehouseShow && headselect.type==='project')||
+        (headselect.type==='member' && memberShow)">
           <el-option
           value="Commits"
           label="Commits"
@@ -54,7 +55,8 @@
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
             :changeName="changeName"
-            @contentSelect="contentSelect"></HeadSelect>
+            @contentSelect="contentSelect"
+            @timeSelect="timeSelect"></HeadSelect>
         </div>
       </div>
         <div class="echartsBox">
@@ -69,6 +71,8 @@
             :memberChangeList="memberChangeList"
             :warehouseShow="warehouseShow"
             :memberShow="memberShow"
+            :timeShow="timeShow"
+            :timeList="timeList"
             ></Echarts>
         </div>
         <div class="cardBox">
@@ -96,7 +100,7 @@
               <TimeCard 
               :echartsId="index+1"
               :selectType="selectType"
-              :memberShow="memberShow"
+              :timeShow="timeShow"
               :memberCardData="item"></TimeCard>
             </div>
           </el-space>   
@@ -126,6 +130,7 @@ export default defineComponent({
     const selectType=ref('Commits')
     const warehouseShow=ref(false);
     const memberShow=ref(false);
+    const timeShow=ref(false);
     const leftListIndex=ref('0')
     const name = ref('statistical');
     const topTitle = ref('成员统计');
@@ -144,6 +149,18 @@ export default defineComponent({
       xList:[],
       nameList:[],
       yList:[]
+    });
+    const timeList =ref({
+      date:[],
+      yList:[],
+      taskList:[],
+      taskPie:[],
+      userPie:[]
+    });
+    const timeCardList =ref({
+      date:[],
+      yList:[],
+      taskList:[]
     });
     const warehouseChangeList =ref([]);
     const memberList = ref({
@@ -305,6 +322,42 @@ export default defineComponent({
           loading.close()
         })
       };
+      const timeSelect = (val)=>{
+        console.log(val);
+        axios.get('/api/GraphAnalysis',{
+          params:{
+            projects:val.join()
+          }
+        }).then((e)=>{
+          console.log(e.data);
+          if(e.data.Date.length !== 0){
+            let lineList=timeListProcessing(e.data.Project)
+            timeList.value.date=e.data.Date;
+            timeList.value.yList=lineList.yArr;
+            timeList.value.taskList=lineList.nameArr;
+            timeList.value.taskPie=e.data.TaskPie;
+            timeList.value.userPie=e.data.UserPie;
+            console.log(timeList.value);
+          }else{
+            ElMessage.error('查询数据为空')
+          }
+        })
+        timeShow.value=true
+      };
+      const timeListProcessing = (val) =>{
+        let yArr = []
+        let nameArr = []
+        for(let i = 0 ; i < val.length;i++){
+          let obj = {}
+          obj.name=val[i].name;
+          obj.data=val[i].hours;
+          obj.type='line';
+          obj.stack='Total'+i;
+          yArr.push(obj)
+          nameArr.push(val[i].name)
+        }
+        return {yArr,nameArr}
+      }
       watch(selectType,()=>{
           if(headselect.value.type==='project'){
             let changBigList=bigListProcessing(warehouseData,warehouseList.value.xList)
@@ -346,8 +399,11 @@ export default defineComponent({
         memberTooltip,
         leftListIndex,
         changeName,
+        timeShow,
+        timeList,
         getTitle,
         contentSelect,
+        timeSelect
       }
   }
 });
