@@ -96,12 +96,12 @@
             </div>
           </el-space>   
           <el-space wrap v-show="headselect.type==='takentime'">
-            <div v-for="(item,index) in memberCardList" :key="index">
+            <div v-for="(item,index) in timeCardList" :key="index">
               <TimeCard 
               :echartsId="index+1"
               :selectType="selectType"
               :timeShow="timeShow"
-              :memberCardData="item"></TimeCard>
+              :timeCardData="item"></TimeCard>
             </div>
           </el-space>   
         </div>
@@ -157,11 +157,7 @@ export default defineComponent({
       taskPie:[],
       userPie:[]
     });
-    const timeCardList =ref({
-      date:[],
-      yList:[],
-      taskList:[]
-    });
+    const timeCardList =ref([]);
     const warehouseChangeList =ref([]);
     const memberList = ref({
       xList:[],
@@ -337,7 +333,8 @@ export default defineComponent({
             timeList.value.taskList=lineList.nameArr;
             timeList.value.taskPie=e.data.TaskPie;
             timeList.value.userPie=e.data.UserPie;
-            console.log(timeList.value);
+            let lineCardList=timeCardListProcessing(e.data)
+            timeCardList.value=lineCardList
           }else{
             ElMessage.error('查询数据为空')
           }
@@ -358,6 +355,24 @@ export default defineComponent({
         }
         return {yArr,nameArr}
       }
+        const timeCardListProcessing = (val)=>{
+          let timeArr=[]
+          for(let i = 0;i<val.User.length;i++){
+            let obj = {}
+            obj.date=val.Date
+            obj.name=val.User[i].name
+            obj.nameList=val.User[i].user.map((item)=>([item.name]))
+            obj.udata=val.User[i].user.map((item,index)=>({
+              data:item.hours,
+              name:item.name,
+              type:'line',
+              stack: "totle" + index,
+            }))
+            timeArr.push(obj)
+          }
+          console.log(timeArr,1);
+          return timeArr
+        }
       watch(selectType,()=>{
           if(headselect.value.type==='project'){
             let changBigList=bigListProcessing(warehouseData,warehouseList.value.xList)
@@ -401,6 +416,7 @@ export default defineComponent({
         changeName,
         timeShow,
         timeList,
+        timeCardList,
         getTitle,
         contentSelect,
         timeSelect

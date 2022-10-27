@@ -10,7 +10,8 @@ export default defineComponent({
   name: "messageEcharts",
   props:{
     warehouseCardData:Object,
-    echartsId: Number
+    echartsId: Number,
+    timeCardData:Object
   },
   setup(props) {
     const drawLine = () => {
