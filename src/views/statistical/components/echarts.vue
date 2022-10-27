@@ -258,7 +258,7 @@ export default defineComponent({
       timeEchartsTask.setOption({
         title: {
           text: "工时统计任务别",
-          left: "right",
+          left: "center",
         },
         tooltip: {
           trigger: "item",
@@ -266,20 +266,30 @@ export default defineComponent({
         legend: {
           orient: "vertical",
           left: "left",
+          top:"10%"
         },
         series: [
           {
             name: "Access From",
             type: "pie",
             radius: "50%",
-            center: ["60%", "60%"],
+            center: ["50%", "50%"],
             data: [
               { value: 1048, name: "Search Engine" },
               { value: 735, name: "Direct" },
               { value: 580, name: "Email" },
               { value: 484, name: "Union Ads" },
               { value: 300, name: "Video Ads" },
+              { value: 300, name: "Video" },
             ],
+            label: {
+             //echarts饼图内部显示百分比设置
+             show: true,
+             position: "inside", //outside 外部显示  inside 内部显示
+             formatter: `{d}%`,
+             color: "#ffffff", //颜色
+             fontSize: 11//字体大小
+           },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -378,7 +388,7 @@ export default defineComponent({
       timeEchartsMember.setOption({
         title: {
           text: "工时统计人别",
-          left: "left",
+          left: "center",
         },
         tooltip: {
           trigger: "item",
@@ -386,13 +396,14 @@ export default defineComponent({
         legend: {
           orient: "vertical",
           left: "right",
+          top:'10%'
         },
         series: [
           {
             name: "Access From",
             type: "pie",
             radius: "50%",
-            center: ["40%", "60%"],
+            center: ["50%", "50%"],
             data: [
               { value: 1048, name: "Search Engine" },
               { value: 735, name: "Direct" },
@@ -400,6 +411,14 @@ export default defineComponent({
               { value: 484, name: "Union Ads" },
               { value: 300, name: "Video Ads" },
             ],
+            label: {
+             //echarts饼图内部显示百分比设置
+             show: true,
+             position: "inside", //outside 外部显示  inside 内部显示
+             formatter: `{d}%`,
+             color: "#ffffff", //颜色
+             fontSize: 11//字体大小
+           },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
