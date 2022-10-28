@@ -22,7 +22,8 @@
         </el-card>
         <el-dialog v-model="dialogTableVisible" :width="920" :title="memberCardData.name+' : '+selectType">
             <MassageEcharts :warehouseCardData="memberCardData"
-            :echartsId="echartsId"></MassageEcharts>
+            :echartsId="echartsId"
+            :timeCardFlag="timeCardFlag"></MassageEcharts>
         </el-dialog>
     </div>
 </template>
@@ -43,6 +44,7 @@ export default defineComponent({
     },
     setup(props){
         const dialogTableVisible=ref(false)
+        const timeCardFlag=ref(false)
         const openDialog=()=>{
             dialogTableVisible.value=true
         }
@@ -80,6 +82,7 @@ export default defineComponent({
         })
         return {
             openDialog,
+            timeCardFlag,
             dialogTableVisible
         }
     }

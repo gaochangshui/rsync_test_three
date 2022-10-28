@@ -9,32 +9,33 @@
     <el-dialog
       v-model="dialogTableVisible"
       :width="920"
-      :title="timeCardData.name + ' : ' + selectType"
+      :title="timeCardData.name"
     >
-      <MassageEcharts
-        :timeCardData="timeCardData"
+      <TimeMassageEcharts
         :echartsId="echartsId"
-      ></MassageEcharts>
+        :timeCardData="timeCardData"
+        :timeCardFlag="timeCardFlag"
+      ></TimeMassageEcharts>
     </el-dialog>
   </div>
 </template>
 <script>
 import { defineComponent, ref, onMounted, watch } from "vue";
-import MassageEcharts from "./massageEcharts.vue";
+import TimeMassageEcharts from "./timeMassageEcharts.vue";
 import * as echarts from "echarts";
 export default defineComponent({
   name: "timeCard",
   components: {
-    MassageEcharts,
+    TimeMassageEcharts,
   },
   props: {
     echartsId: Number,
     timeShow: Boolean,
     timeCardData: Object,
-    selectType: String,
   },
   setup(props) {
     const dialogTableVisible = ref(false);
+    const timeCardFlag = ref(true)
     const openDialog = () => {
       dialogTableVisible.value = true;
     };
@@ -90,6 +91,7 @@ export default defineComponent({
     });
     return {
       openDialog,
+      timeCardFlag,
       dialogTableVisible,
     };
   },

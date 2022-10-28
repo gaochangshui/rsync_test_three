@@ -22,7 +22,8 @@
         </el-card>
         <el-dialog v-model="dialogTableVisible" :width="920" :title="warehouseCardData.name+' : '+selectType">
             <MassageEcharts :warehouseCardData="warehouseCardData"
-            :echartsId="echartsId"></MassageEcharts>
+            :echartsId="echartsId"
+            :timeCardFlag="timeCardFlag"></MassageEcharts>
         </el-dialog>
 
     </div>
@@ -44,6 +45,7 @@ export default defineComponent({
     },
     setup(props, cxt) {
         const dialogTableVisible=ref(false)
+        const timeCardFlag=ref(false)
         const skipMember = () => {
             if(props.warehouseCardData.id){
                 cxt.emit("contentSelect", [props.warehouseCardData.id], "u", 1);
@@ -90,6 +92,7 @@ export default defineComponent({
         return {
             skipMember,
             openDialog,
+            timeCardFlag,
             dialogTableVisible
         };
     },

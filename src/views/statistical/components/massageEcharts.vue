@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :id="'messageEcharts'+echartsId"></div>
+    <div :id="'messageEcharts'+echartsId" ></div>
   </div>
 </template>
 <script>
@@ -11,7 +11,6 @@ export default defineComponent({
   props:{
     warehouseCardData:Object,
     echartsId: Number,
-    timeCardData:Object
   },
   setup(props) {
     const drawLine = () => {
@@ -21,7 +20,8 @@ export default defineComponent({
       messageEcharts.resize({
         width: 900,
         height: 260,
-      }); 
+      });  
+      // 成员、仓库统计card图表
       messageEcharts.setOption({
         title: {},
         tooltip: {
@@ -59,14 +59,14 @@ export default defineComponent({
             data:props.warehouseCardData.data
         }]
             
-      });
+      });   
     };
-    watch(props.warehouseCardData.name, () => {
+    
+    watch(()=>props.warehouseCardData, () => {
       echarts.init(document.getElementById("messageEcharts")).dispose();
       setTimeout(() => {
         drawLine();
-      }, 1000);
-      
+      }, 1000); 
     },{deep:true});
     onMounted(() => {
       drawLine();

@@ -99,7 +99,6 @@
             <div v-for="(item,index) in timeCardList" :key="index">
               <TimeCard 
               :echartsId="index+1"
-              :selectType="selectType"
               :timeShow="timeShow"
               :timeCardData="item"></TimeCard>
             </div>
