@@ -545,7 +545,7 @@
       max-height="570px"
     >
       <el-table-column fixed prop="EmployeeCode" label="社員CD" width="95" />
-      <el-table-column fixed prop="EmployeeName" label="名前" width="70">
+      <el-table-column fixed prop="EmployeeName" label="名前" width="100">
       </el-table-column>
       <el-table-column
         :prop="head"
