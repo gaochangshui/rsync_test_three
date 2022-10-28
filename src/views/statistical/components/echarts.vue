@@ -268,8 +268,8 @@ export default defineComponent({
         ],
         series: props.memberList.yList,
       });
-      // 工时统计饼状图task别
-      timeEchartsTask.setOption({
+      // 工时统计饼状图task别			
+      let option={
         title: {
           text: "工时统计任务别",
           right: "25%",
@@ -293,7 +293,14 @@ export default defineComponent({
              //echarts饼图内部显示百分比设置
              show: true,
              position: "inside", //outside 外部显示  inside 内部显示
-             formatter: `{d}%`,
+             formatter: function (params){
+              console.log(params);
+              let all=0
+              for(let i = 0;i<option.series[0].data.length;i++){
+                all=all+Number(option.series[0].data[i].value)
+              }
+              return ((Number(params.value)/all)*100).toFixed(2)+'%'
+             },
              color: "#ffffff", //颜色
              fontSize: 11//字体大小
            },
@@ -306,7 +313,8 @@ export default defineComponent({
             },
           },
         ],
-      });
+      }
+      timeEchartsTask.setOption(option);
       // 工时统计项目折线图
       timeEchartsLine.setOption({
          title: {},
@@ -371,7 +379,14 @@ export default defineComponent({
              //echarts饼图内部显示百分比设置
              show: true,
              position: "inside", //outside 外部显示  inside 内部显示
-             formatter: `{d}%`,
+             formatter: function (params){
+              console.log(params);
+              let all=0
+              for(let i = 0;i<option.series[0].data.length;i++){
+                all=all+Number(option.series[0].data[i].value)
+              }
+              return ((Number(params.value)/all)*100).toFixed(2)+'%'
+             },
              color: "#ffffff", //颜色
              fontSize: 11//字体大小
            },

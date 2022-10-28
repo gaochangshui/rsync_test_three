@@ -318,14 +318,18 @@ export default defineComponent({
         })
       };
       const timeSelect = (val)=>{
-        console.log(val);
+        const loading=ElLoading.service({
+              lock: true,
+              text: '数据查询中，请稍候',
+              background: 'rgba(0, 0, 0, 0.7)',})
         axios.get('/api/GraphAnalysis',{
           params:{
             projects:val.join()
           }
         }).then((e)=>{
+          loading.close()
           console.log(e.data);
-          if(e.data.Date.length !== 0){
+          if(e.data.User.length !== 0){
             let lineList=timeListProcessing(e.data.Project)
             timeList.value.date=e.data.Date;
             timeList.value.yList=lineList.yArr;
@@ -334,11 +338,13 @@ export default defineComponent({
             timeList.value.userPie=e.data.UserPie;
             let lineCardList=timeCardListProcessing(e.data)
             timeCardList.value=lineCardList
+            timeShow.value=true
           }else{
+            timeShow.value=false
             ElMessage.error('查询数据为空')
           }
         })
-        timeShow.value=true
+        
       };
       const timeListProcessing = (val) =>{
         let yArr = []
