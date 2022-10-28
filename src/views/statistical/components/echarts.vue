@@ -271,11 +271,29 @@ export default defineComponent({
       // 工时统计饼状图task别			
       let option={
         title: {
-          text: "工时统计任务别",
-          right: "25%",
+          text: "任务别",
+          right: "32%",
         },
         tooltip: {
           trigger: "item",
+          formatter: function (params){
+            let str = "消耗工时<br/>";
+            let add =
+              '<p style="display:inline-block;">' +
+              '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' +
+              params.color +
+              '">' +
+              "</span>" +
+              params.name +
+              params.value +
+              "</p>";
+              console.log(params);
+              let all=0
+              for(let i = 0;i<option.series[0].data.length;i++){
+                all=all+Number(option.series[0].data[i].value)
+              }
+              return str+add+'('+((Number(params.value)/all)*100).toFixed(2)+'%)'
+             },
         },
         legend: {
           type: "scroll",
@@ -295,12 +313,7 @@ export default defineComponent({
              show: true,
              position: "inside", //outside 外部显示  inside 内部显示
              formatter: function (params){
-              console.log(params);
-              let all=0
-              for(let i = 0;i<option.series[0].data.length;i++){
-                all=all+Number(option.series[0].data[i].value)
-              }
-              return ((Number(params.value)/all)*100).toFixed(2)+'%'
+              return params.value
              },
              color: "#ffffff", //颜色
              fontSize: 11//字体大小
@@ -354,11 +367,29 @@ export default defineComponent({
       // 工时统计饼状图人别
       timeEchartsMember.setOption({
         title: {
-          text: "工时统计人别",
-          left: "25%",
+          text: "人别",
+          left: "34%",
         },
         tooltip: {
           trigger: "item",
+          formatter: function (params){
+            let str = "消耗工时<br/>";
+            let add =
+              '<p style="display:inline-block;">' +
+              '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:' +
+              params.color +
+              '">' +
+              "</span>" +
+              params.name +
+              params.value +
+              "</p>";
+              console.log(params);
+              let all=0
+              for(let i = 0;i<option.series[0].data.length;i++){
+                all=all+Number(option.series[0].data[i].value)
+              }
+              return str+add+'('+((Number(params.value)/all)*100).toFixed(2)+'%)'
+             },
         },
         legend: {
           type: "scroll",
@@ -378,12 +409,7 @@ export default defineComponent({
              show: true,
              position: "inside", //outside 外部显示  inside 内部显示
              formatter: function (params){
-              console.log(params);
-              let all=0
-              for(let i = 0;i<option.series[0].data.length;i++){
-                all=all+Number(option.series[0].data[i].value)
-              }
-              return ((Number(params.value)/all)*100).toFixed(2)+'%'
+              return params.value
              },
              color: "#ffffff", //颜色
              fontSize: 11//字体大小
