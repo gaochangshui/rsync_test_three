@@ -278,6 +278,7 @@ export default defineComponent({
           trigger: "item",
         },
         legend: {
+          type: "scroll",
           orient: "vertical",
           left: "left",
           top:"10%"
@@ -324,17 +325,13 @@ export default defineComponent({
         },
         legend: {
           data: props.timeList.taskList,
+          type: "scroll",
         },
         grid: {
           left: "3%",
           right: "4%",
           bottom: "17%",
           containLabel: true,
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
-          },
         },
         xAxis: {
           type: "category",
@@ -364,6 +361,7 @@ export default defineComponent({
           trigger: "item",
         },
         legend: {
+          type: "scroll",
           orient: "vertical",
           left: "right",
           top:'10%',
