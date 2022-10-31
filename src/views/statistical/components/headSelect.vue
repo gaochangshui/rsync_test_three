@@ -179,7 +179,6 @@ export default defineComponent({
         }
       }
         memberValue.value=[usercd]
-      setInterval
       setTimeout(()=>{
         contentSelect('u')
             },100);

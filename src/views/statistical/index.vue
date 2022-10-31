@@ -328,7 +328,6 @@ export default defineComponent({
           }
         }).then((e)=>{
           loading.close()
-          console.log(e.data);
           if(e.data.User.length !== 0){
             let lineList=timeListProcessing(e.data.Project)
             timeList.value.date=e.data.Date;
@@ -343,6 +342,8 @@ export default defineComponent({
             timeShow.value=false
             ElMessage.error('查询数据为空')
           }
+        }).catch(()=>{
+          loading.close()
         })
         
       };
