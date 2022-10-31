@@ -1,7 +1,16 @@
 <template>
   <div v-show="timeShow">
     <el-card class="timebox-card" shadow="hover">
-      <span class="timebox-card-name">{{ timeCardData.name }}</span>
+      <div>
+        <span class="timebox-card-name">{{ timeCardData.name }}</span>
+        <span style="float:right;color: gray;">#{{echartsId}}</span>
+      </div>
+      <div style="margin-top:10px">
+                <span>消耗总数:
+                    <span >
+                        11
+                    </span></span>
+             </div>
       <div style="cursor: pointer; width: 480px; height: 250px">
         <div :id="'timeCardEcharts' + echartsId" @click="openDialog"></div>
       </div>
