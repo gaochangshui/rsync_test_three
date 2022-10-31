@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 20px; height: 500px">
+  <div style="margin-top: 20px;height: 300px">
     <div
       id="projectEcharts"
       v-show="statisticalType === 'project' && warehouseShow"
@@ -8,14 +8,11 @@
       id="memberEcharts"
       v-show="statisticalType === 'member' && memberShow"
     ></div>
-    <div id="echartsBox">
-      <div class="timeEchartsBox">
+    <div id="echartsBox" class="timeEchartsBox">
         <div id="timeEchartsTask" v-show="statisticalType === 'takentime' && timeShow" style="border-right: 1px solid #e4e7ed;"></div>
-        <div id="allTimeEcharts" v-show="statisticalType === 'takentime' && timeShow" style="border-right: 1px solid #e4e7ed;"></div>
+        <div id="timeEchartsLine" v-show="statisticalType === 'takentime' && timeShow" style="padding-left:10px;padding-right:30px"></div>
       <div id="timeEchartsMember" v-show="statisticalType === 'takentime' && timeShow" style="border-left: 1px solid #e4e7ed;"></div>
       </div>
-      <div id="timeEchartsLine" v-show="statisticalType === 'takentime' && timeShow" style="padding-left:10px;padding-right:30px"></div>
-    </div>
   </div>
 </template>
 <script>
@@ -54,9 +51,6 @@ export default defineComponent({
       let timeEchartsMember = echarts.init(
         document.getElementById("timeEchartsMember")
       );
-      let allTimeEcharts = echarts.init(
-        document.getElementById("allTimeEcharts")
-      );
       projectEcharts.resize({
         width: document.documentElement.clientWidth - 350,
         height: 260,
@@ -70,15 +64,11 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsLine.resize({
-        width: document.documentElement.clientWidth - 350,
+        width: document.getElementById('echartsBox').clientWidth/2.3,
         height: 260,
       });
       timeEchartsMember.resize({
         width: document.getElementById('echartsBox').clientWidth/3.7,
-        height: 260,
-      });
-      allTimeEcharts.resize({
-        width: document.getElementById('echartsBox').clientWidth/2.5,
         height: 260,
       });
       // 监听浏览器宽高变化改变图标宽度
@@ -96,15 +86,11 @@ export default defineComponent({
         height: 260,
       });
       timeEchartsLine.resize({
-        width: document.documentElement.clientWidth - 350,
+        width: document.getElementById('echartsBox').clientWidth/2.3,
         height: 260,
       });
       timeEchartsMember.resize({
         width: document.getElementById('echartsBox').clientWidth/3.7,
-        height: 260,
-      });
-      allTimeEcharts.resize({
-        width: document.getElementById('echartsBox').clientWidth/2.5,
         height: 260,
       });
       };
@@ -438,38 +424,6 @@ export default defineComponent({
           },
         ],
       });
-      allTimeEcharts.setOption({
-        title: {
-    text: '全部工时',
-    left: 'center'
-  },
-  series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: ['60%', '70%'],
-      avoidLabelOverlap: false,
-      itemStyle: {
-        borderRadius: 10,
-        borderColor: '#13ce66',
-        color: '#13ce66',
-        borderWidth: 2
-      },
-      label: {
-        show: true,
-        fontSize: '40',
-        position: 'center'
-      },
-      data: [
-        { value: 1048, name: '1048' },
-        // { value: 735, name: 'Direct' },
-        // { value: 580, name: 'Email' },
-        // { value: 484, name: 'Union Ads' },
-        // { value: 300, name: 'Video Ads' }
-      ]
-    }
-  ]
-      })
     };
     watch(props.warehouseList, () => {
       echarts.init(document.getElementById("projectEcharts")).dispose();

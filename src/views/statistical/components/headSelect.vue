@@ -44,8 +44,8 @@
             <el-button type="primary" @click="contentSelect('u')" size="large">查询</el-button>  
         </div>
         <!-- 工时统计 -->
-        <div v-show="statisticalType==='takentime'" class="memberHead">
-            <div>
+        <div v-show="statisticalType==='takentime'" >
+            <div style="margin-bottom:10px">
                 <span>项目：</span>
                 <el-select 
                 v-model="timeValue"
@@ -57,7 +57,7 @@
                 reserve-keyword
                 clearable
                 placeholder="请选择"
-                style="width:450px;margin-top: 1px;"
+                style="width:870px;margin-top: 1px;"
                 :remote-method="remoteMethod"
                 size="large"
                 >
@@ -75,19 +75,50 @@
                 </el-option>
                 </el-select>
             </div>
-        <el-button type="primary" @click="timeSelect()" size="large">查询</el-button> 
+            <div class="memberHead">
+              <span style="margin-top:7px">成员：</span>
+              <el-cascader
+            v-model="takenEmployeeList"
+            :options="options"
+            :props="props1"
+            class="el-select el-marginLR"
+            collapse-tags
+            clearable
+            filterable
+            :filter-method="(value,item)=>employeeFilter(value,item)"
+            placeholder="请选择"
+            style="margin-right:10px;width:480px"
+            size="large"
+          />
+          <span style="margin-top:7px">期间：</span>
+          <el-date-picker
+            v-model="date"
+            type="daterange"
+            range-separator="To"
+            value-format="YYYY-MM-DD"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            class="el-marginLR"
+            style="width: 250px"
+            size="large"
+          ></el-date-picker>
+          <el-button type="primary" @click="timeSelect()" size="large">查询</el-button> 
+            </div>
         </div>
     </div>
 </template>
 <script>
 import { defineComponent, ref ,onMounted,onBeforeUpdate,watch } from "vue";
 import axios from '@/http';
-import { getProjectlist } from "@/api/qcd";
+import { getProjectlist , getEmployeelist} from "@/api/qcd";
 export default defineComponent({
     name:'headSelect',
     props:{statisticalType:String,
         changeName:String},
     setup(props,cxt){
+        const takenEmployeeList = ref([]);
+        const options = ref([]);
+        const date = ref("");
         const timeValue=ref(null)
         const groupValue=ref(null);
         const projectValue=ref(null);
@@ -169,6 +200,9 @@ export default defineComponent({
         timeOption.value = [];
       }
     }
+    const employeeFilter = (val,item)=>{
+      return val.text.indexOf(item.trim())!==-1  
+    }
     const getInitPicture = ()=>{
         var allCookie = document.cookie;
       var aryCookie = allCookie.split(';');
@@ -199,6 +233,24 @@ export default defineComponent({
         setTimeout(() => {
             getMemberOptions();
         }, 1000);
+        getEmployeelist().then((res) => {
+        options.value = res.data.map((item) => ({
+          value: item.LocationID,
+          label: item.LocationName,
+          children: item.SectionList.map((item) => ({
+            value: item.SectionID,
+            label: item.SectionName,
+            children: item.BelongList.map((item) => ({
+              value: item.BelongID,
+              label: item.BelongName,
+              children: item.EmployeeList.map((item) => ({
+                value: item.EmpolyeeCD,
+                label: `${item.EmployeeName}(${item.EmpolyeeCD})`,
+              })),
+            })),
+          })),
+        }));
+      });
         return{
             groupValue,
             projectValue,
@@ -210,12 +262,16 @@ export default defineComponent({
             memberOptions,
             timeOption,
             timeValue,
+            options,
+            takenEmployeeList,
             getWarehouseOptions,
             contentSelect,
             memberFilter,
             remoteMethod,
             timeSelect,
-            props1
+            employeeFilter,
+            props1,
+            date
         }
     }
 
