@@ -367,7 +367,7 @@ export default defineComponent({
             let obj = {}
             obj.date=val.Date
             obj.name=val.User[i].name
-            obj.nameList=val.User[i].user.map((item)=>([item.name]))
+            obj.nameList=val.User[i].user.map((item)=>(item.name))
             obj.udata=val.User[i].user.map((item,index)=>({
               data:item.hours,
               name:item.name,

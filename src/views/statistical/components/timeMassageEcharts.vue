@@ -20,7 +20,7 @@
         );
         timemessageEcharts.resize({
           width: 900,
-          height: 260,
+          height: 400,
         }); 
         //工时统计card图表
           timemessageEcharts.setOption({
@@ -31,17 +31,15 @@
           },
           legend: {
             data: props.timeCardData.nameList,
+            type: "scroll", //分页类型
+          orient: "horizontal",
+          padding: [0, 50, 0, 0],
           },
           grid: {
             left: "3%",
             right: "4%",
             bottom: "17%",
             containLabel: true,
-          },
-          toolbox: {
-            feature: {
-              saveAsImage: {},
-            },
           },
           xAxis: {
             type: "category",

@@ -52,19 +52,11 @@ export default defineComponent({
           trigger: "axis",
           showContent: true,
         },
-        legend: {
-          data: props.timeCardData.nameList,
-        },
         grid: {
           left: "3%",
           right: "4%",
           bottom: "17%",
           containLabel: true,
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
-          },
         },
         xAxis: {
           type: "category",
