@@ -116,7 +116,7 @@ export default defineComponent({
     props:{statisticalType:String,
         changeName:String},
     setup(props,cxt){
-        const takenEmployeeList = ref([]);
+        const takenEmployeeList = ref(null);
         const options = ref([]);
         const date = ref("");
         const timeValue=ref(null)
@@ -164,12 +164,31 @@ export default defineComponent({
             
         };
         const timeSelect =()=>{
-          let timeData=[]
-          timeValue.value.map((item)=>{
+          let timeData=null
+          if(timeValue.value){
+            timeData=[]
+            timeValue.value.map((item)=>{
             timeData.push(item.split(':')[0])
           })
-          cxt.emit('timeSelect',timeData)
+          timeData=timeData.join()
+          }
+          let userList=null
+          if(takenEmployeeList.value){
+            userList=takenEmployeeList.value.map((item)=>([
+            item[item.length-1]
+          ]))
+          userList = userList.join()
         }
+        if(timeData===''){
+          timeData=null
+        }
+        if(userList===''){
+          userList=null
+        }
+        console.log(date.value);
+        cxt.emit('timeSelect',timeData,userList,date.value)
+          }
+          
         const  memberFilter =(val)=>{
       if(val){
         let arr=[]

@@ -317,14 +317,23 @@ export default defineComponent({
           loading.close()
         })
       };
-      const timeSelect = (val)=>{
+      const timeSelect = (val,val2,val3)=>{
+        let start=null
+        let end = null
+        if(val3){
+          start=val3[0]
+          end=val3[1]
+        }
         const loading=ElLoading.service({
               lock: true,
               text: '数据查询中，请稍候',
               background: 'rgba(0, 0, 0, 0.7)',})
         axios.get('/api/GraphAnalysis',{
           params:{
-            projects:val.join()
+            projects:val,
+            id:val2,
+            beginat:start,
+            endat:end
           }
         }).then((e)=>{
           loading.close()
