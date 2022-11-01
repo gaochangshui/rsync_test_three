@@ -8,7 +8,7 @@
       <div style="margin-top:10px">
                 <span>消耗总数:
                     <span >
-                        11
+                        {{ timeCardData.total }}
                     </span></span>
              </div>
       <div style="cursor: pointer; width: 480px; height: 250px">
@@ -43,6 +43,7 @@ export default defineComponent({
     timeCardData: Object,
   },
   setup(props) {
+    console.log(props.timeCardData);
     const dialogTableVisible = ref(false);
     const timeCardFlag = ref(true)
     const openDialog = () => {

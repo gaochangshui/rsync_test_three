@@ -438,6 +438,7 @@ export default defineComponent({
           },
         ],
       });
+      console.log(props.timeList);
       allTimeEcharts.setOption({
         title: {
     text: '全部工时',
@@ -447,7 +448,7 @@ export default defineComponent({
     {
       name: 'Access From',
       type: 'pie',
-      radius: ['40%', '70%'],
+      radius: ['55%', '70%'],
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
@@ -461,7 +462,7 @@ export default defineComponent({
         position: 'center'
       },
       data: [
-        { value: 1048, name: '1048' }
+        { value: props.timeList.allTotal, name: props.timeList.allTotal }
       ]
     }
   ]

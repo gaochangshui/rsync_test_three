@@ -335,6 +335,7 @@ export default defineComponent({
             timeList.value.taskList=lineList.nameArr;
             timeList.value.taskPie=e.data.TaskPie;
             timeList.value.userPie=e.data.UserPie;
+            timeList.value.allTotal=e.data.Project[0].total
             let lineCardList=timeCardListProcessing(e.data)
             timeCardList.value=lineCardList
             timeShow.value=true
@@ -367,6 +368,7 @@ export default defineComponent({
             let obj = {}
             obj.date=val.Date
             obj.name=val.User[i].name
+            obj.total=val.User[i].total
             obj.nameList=val.User[i].user.map((item)=>(item.name))
             obj.udata=val.User[i].user.map((item,index)=>({
               data:item.hours,
