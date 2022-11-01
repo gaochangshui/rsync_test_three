@@ -60,6 +60,14 @@
         </div>
       </div>
         <div class="echartsBox">
+          <img 
+          src="../../assets/images/projectImag.png" 
+          style="margin-left: 10%;margin-top: 50px; width: 80%;height: calc(100vh - 450px);" 
+          v-show="headselect.type==='project'&&!warehouseShow"/>
+          <img 
+          src="../../assets/images/timeImag.png" 
+          style="margin-left: 10%;margin-top: 50px; width: 80%;height: calc(100vh - 450px);" 
+          v-show="headselect.type==='takentime'&&!timeShow"/>
             <Echarts 
             :statisticalType="headselect.type" 
             :selectType="selectType"
