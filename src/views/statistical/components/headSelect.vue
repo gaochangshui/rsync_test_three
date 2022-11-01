@@ -87,7 +87,7 @@
             filterable
             :filter-method="(value,item)=>employeeFilter(value,item)"
             placeholder="请选择"
-            style="margin-right:10px;width:480px"
+            style="margin-right:10px;width:485px"
             size="large"
           />
           <span style="margin-top:7px">期间：</span>
