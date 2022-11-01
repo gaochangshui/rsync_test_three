@@ -185,7 +185,6 @@ export default defineComponent({
         if(userList===''){
           userList=null
         }
-        console.log(date.value);
         cxt.emit('timeSelect',timeData,userList,date.value)
           }
           

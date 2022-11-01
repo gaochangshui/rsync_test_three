@@ -58,10 +58,6 @@ export default defineComponent({
         height: 250,
       });
       timeCardEcharts.setOption({
-        tooltip: {
-          trigger: "axis",
-          showContent: true,
-        },
         grid: {
           left: "3%",
           right: "4%",
