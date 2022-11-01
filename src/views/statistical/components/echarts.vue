@@ -344,6 +344,7 @@ export default defineComponent({
       }
       timeEchartsTask.setOption(option);
       // 工时统计项目折线图
+      timeEchartsLine.clear()
       timeEchartsLine.setOption({
          title: {},
         tooltip: {

@@ -6,10 +6,10 @@
         <span style="float:right;color: gray;">#{{echartsId}}</span>
       </div>
       <div style="margin-top:10px">
-                <span>消耗总数:
+                <span>工时:
                     <span >
                         {{ timeCardData.total }}
-                    </span></span>
+                    </span> h</span>
              </div>
       <div style="cursor: pointer; width: 480px; height: 250px">
         <div :id="'timeCardEcharts' + echartsId" @click="openDialog"></div>
@@ -58,6 +58,10 @@ export default defineComponent({
         height: 250,
       });
       timeCardEcharts.setOption({
+        tooltip: {
+          trigger: "axis",
+          showContent: true,
+        },
         grid: {
           left: "3%",
           right: "4%",
