@@ -762,6 +762,14 @@ import axios from '@/http'
 export default {
   name: 'GitlabManager',
   data() {
+    var validatePass = (rule, value, callback) => {
+      let regExp = new RegExp("^(?![-|0-9])[a-z0-9|-]+(?<!-)$", 'gi'); 
+        if (regExp.test(value)) {
+          callback();
+        } else {
+          callback(new Error('请输入正确仓库名'));
+        }
+      };
     return {
       name: 'gitlabmanager',
       disabledDate(time) {
@@ -812,7 +820,7 @@ export default {
       formRules:{
         name:[{required:true,message: '请输入仓库名', trigger: 'blur'},
         {max:255,message:'请输入长度小于255的仓库名',trigger: 'blur'},
-        {pattern: /^(?![-|0-9])[a-z0-9|-]+(?<!-)$/ , message: '请输入正确仓库名', trigger: 'blur'}],
+        {validator: validatePass ,  trigger: 'blur'}],
         location:[{required:true,message: '请选择创建的位置', trigger: 'blur'}],
         group:[{required:true,message: '请选择群组', trigger: 'change'}],
         description: [{required:true,message: '请输入仓库描述', trigger: 'blur'},

@@ -22,8 +22,8 @@
         </el-menu-item>
       </el-menu>
     </div>
-    <div class="statistical-right">
-      <div class="statistical-right-headBox">
+    <div class="statistical-right" >
+      <div class="statistical-right-headBox" style="border-bottom:1px solid #ececec ;padding-bottom: 15px;">
         <div class="statistical-right-headBox-title">{{topTitle}}</div>
         <div class="statistical-right-headBox-headSelect">
           <div>
@@ -61,12 +61,12 @@
       </div>
         <div class="echartsBox">
           <img 
-          src="../../assets/images/projectImag.png" 
-          style="margin-left: 10%;margin-top: 50px; width: 80%;height: calc(100vh - 450px);" 
+          src="../../assets/images/statistical.png" 
+          style="margin-left: 30%;margin-top: 100px; width: 570px;" 
           v-show="headselect.type==='project'&&!warehouseShow"/>
           <img 
-          src="../../assets/images/timeImag.png" 
-          style="margin-left: 10%;margin-top: 50px; width: 80%;height: calc(100vh - 450px);" 
+          src="../../assets/images/statistical.png" 
+          style="margin-left: 30%;margin-top: 100px; width: 570px;" 
           v-show="headselect.type==='takentime'&&!timeShow"/>
             <Echarts 
             :statisticalType="headselect.type" 
