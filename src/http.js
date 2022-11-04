@@ -53,10 +53,11 @@ axios.interceptors.request.use((config) => {
 
 // 响应拦截
 axios.interceptors.response.use((response) => {
-  if(response.data.Success==false){
-    router.replace({ name: 'login' });
-    localStorage.clear('token');
-  }
+  console.log(response.data.Success);
+  // if(response.data.Success==false){
+  //   router.replace({ name: 'login' });
+  //   localStorage.clear('token');
+  // }
   return response;
 }, error => {
   if (error.response) {
