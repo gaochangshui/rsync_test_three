@@ -17,22 +17,23 @@ const routes = [
         path:'project',
         name:'项目',
         component: () => import('@/views/dashboard/index.vue'),
-        meta: { title: '项目', icon: 'project',name:'项目'},
+        meta: { title: '项目', icon: 'project',name:'项目',id:'11'},
       },
       {
         path:'project/warehousepage',
         name:'查看仓库',
         component: () => import('@/views/dashboard/warehousepage.vue'),
+        meta: { id:'0' },
       },{
         path: 'virtualmachine',
         name: '虚拟机',
         component: () => import('@/views/virtualmachine/index.vue'),
-        meta: { title: '虚拟机', icon: 'xuniji',name:'虚拟机' },
+        meta: { title: '虚拟机', icon: 'xuniji',name:'虚拟机',id:'0' },
       },{
         path: 'code',
         name: '代码仓库',
         component: () => import('@/views/gitlabmanager/index.vue'),
-        meta: { title: '代码仓库、评审、配置', icon: 'code',name:'代码' }
+        meta: { title: '代码仓库、评审、配置', icon: 'code',name:'代码',id:'12' }
       // },{
       //   path: 'package',
       //   name: '资源包管理',
@@ -43,19 +44,19 @@ const routes = [
         path: 'statistical',
         name: '统计',
         component: () => import('@/views/statistical/index.vue'),
-        meta: { title: '成员、仓库统计', icon: 'statistical',name:'统计' }
+        meta: { title: '成员、仓库统计', icon: 'statistical',name:'统计',id:'18' }
       },
       {
         path: 'Scheduled',
         component: () => import('@/views/mandaysreport/Scheduled.vue'),
         name: '成员预定',
-        meta: { title: '成员预定', icon: 'table',name:'成员预定' }
+        meta: { title: '成员预定', icon: 'table',name:'成员预定',id:'13' }
       },
       {
         path: 'TakenTime',
         component: () => import('@/views/mandaysreport/TakenTime.vue'),
         name: '消耗工时',
-        meta: { title: '消耗工时', icon: 'link',name:'消耗工时' }
+        meta: { title: '消耗工时', icon: 'link',name:'消耗工时', id:'14' }
       }
     ],
   },

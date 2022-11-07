@@ -70,7 +70,9 @@
         show-after="1000"
       >
       <el-menu-item :index="'/'+routes[4].path" >
+        <el-badge is-dot :hidden="showBadge(routes[4].meta?.id)" >
       <svg-icon :icon-class="routes[4].meta?.icon" />
+    </el-badge>
       <span style="position:absolute;top:24px;left:23px;font-size: 12px;">{{routes[4].meta?.name}}</span>
     </el-menu-item>
       </el-tooltip>    
@@ -82,13 +84,20 @@
 
 <script>
 import SidebarItem from './SidebarItem.vue';
-
+import { store } from '@/store/store';
 export default {
   components: { SidebarItem },
   methods: {
+    showBadge(val){
+      if(store.statefather.indexOf(val)!=-1){
+        return false
+      }else{
+        return true
+      }
+    },
     goUrl(url) {
       window.open(url, "_blank");
-    }
+    },
   },
   computed: {
     routes() {

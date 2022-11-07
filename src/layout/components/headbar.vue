@@ -61,12 +61,15 @@
   </div>
 </template>
 <script>
+import { store } from '../../store/store.js'
+import axios from '@/http'
 export default {
   name: 'headbar',
   data(){
     return{
       username:'',
-      avatar:''
+      avatar:'',
+      usercd:''
     }
   },
   methods:{
@@ -80,6 +83,9 @@ export default {
         }
         if(getUserid[0].trim()==='LoginedUserAvatar'){
           this.avatar=getUserid[1];
+        }
+        if(getUserid[0].trim()==='UserCD'){
+          this.usercd=getUserid[1];
         }
      }
     },
@@ -95,12 +101,34 @@ export default {
       }
       localStorage.clear('token')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+    getStateData(){
+      axios.get('/actionapi/FeatureHistory/GetMark',{
+        params:{
+          user_id:this.usercd
+        }
+      }).then((e)=>{
+        store.stateData=JSON.parse(e.data.data)
+        store.statefather=store.stateData.map((item)=>{
+          return item.value
+        })
+        store.statechildren=store.stateData.map((item)=>[
+          item.children.map((item)=>{
+            return item.value
+          })
+        ])
+      })
+      console.log(store.stateData);
     }
   },
-  created(){
+  mounted(){
     this.$nextTick(function(){
-      this.getCookie();
+      this.getStateData()
     })
+    
+  },
+  created(){
+      this.getCookie();
   }
 };
 </script>
